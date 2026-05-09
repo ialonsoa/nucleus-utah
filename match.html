@@ -3,40 +3,52 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your matches · Nucleus Match</title>
+  <title>Your matches · Nucleus</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
-    <div class="nav-links">
-      <a href="demo.html">Demo</a>
-      <a href="index.html">Start over</a>
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+        <div class="nav-links">
+          <a href="ecosystem.html" class="nav-link">Ecosystem</a>
+          <a href="match.html" class="nav-link active">Matches</a>
+          <a href="demo.html" class="nav-link">Demo</a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="index.html" class="btn btn-quiet btn-sm">Start over</a>
+      </div>
     </div>
   </nav>
 
-  <section class="section-sm">
-    <div class="container">
-      <div id="header" class="center">
-        <span class="tag">Your matches</span>
-        <h1 class="mt-2" id="match-title">Top Utah matches for you</h1>
-        <p class="muted" id="match-subtitle">Ranked by 6-criteria fit score · explanations included</p>
+  <div class="page">
+    <div class="container" style="padding-top:40px; padding-bottom:80px;">
+      <div id="match-header" style="margin-bottom:32px;">
+        <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">Your matches</div>
+        <h2 id="match-title" style="font-size:32px;">Top Utah matches for you</h2>
+        <p class="muted" id="match-subtitle" style="margin-top:8px; font-size:15px;">Ranked by 6-criteria fit score · explanations included</p>
       </div>
 
-      <div id="results" class="grid mt-4" style="gap:16px;"></div>
+      <div id="results" style="display:flex; flex-direction:column; gap:12px;"></div>
 
-      <div class="center mt-4">
-        <button class="btn btn-secondary" id="export-csv">Export all to CSV (Affinity)</button>
+      <div style="margin-top:32px; display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn btn-ghost" id="export-csv">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v8M4 5l4 4 4-4M2 13h12"/></svg>
+          Export to CSV (Affinity)
+        </button>
       </div>
     </div>
-  </section>
+  </div>
 
   <div id="toast" class="toast"></div>
   <script src="core/constants.js"></script>
-  <script src="core/signals.js"></script>
   <script src="core/match.js"></script>
   <script src="core/explain.js"></script>
+  <script src="core/signals.js"></script>
   <script src="integrations/affinity.js"></script>
+  <script src="integrations/handshake.js"></script>
   <script src="app.js"></script>
   <script>NM.renderMatches();</script>
 </body>

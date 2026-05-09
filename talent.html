@@ -3,81 +3,78 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign up as Talent · Nucleus Match</title>
+  <title>Join as Talent · Nucleus</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
-    <div class="nav-links"><a href="demo.html">Demo</a></div>
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+      </div>
+      <div class="nav-right">
+        <a href="demo.html" class="btn btn-quiet btn-sm">See demo</a>
+      </div>
+    </div>
   </nav>
 
-  <section class="section-sm">
-    <div class="container">
-      <div class="form">
-        <div class="center">
-          <span class="tag">For Talent</span>
-          <h1 class="mt-2">Tell Utah founders who you are</h1>
-          <p class="muted">90 seconds. No resume upload. We'll match you with founders who actually need you.</p>
-        </div>
+  <!-- Hidden legacy steps for app.js compatibility -->
+  <div class="steps" aria-hidden="true">
+    <div class="step active" data-step="1"></div>
+    <div class="step" data-step="2"></div>
+    <div class="step" data-step="3"></div>
+  </div>
 
-        <!-- AI Profile Builder ----------------------------------------- -->
-        <div class="ai-panel mt-4" id="ai-panel">
-          <div class="ai-header">
-            <span class="ai-spark">✨</span>
+  <div class="onb-shell">
+    <!-- Left panel -->
+    <div class="onb-left">
+      <div>
+        <a href="index.html" class="brand" style="margin-bottom:48px; display:inline-flex;">nucleus<span class="brand-mark">^</span></a>
+        <div class="onb-quote" style="margin-top:48px;">
+          "The right operator at the right stage is worth more than any check."
+        </div>
+        <div class="onb-quote-by">— Utah startup founder, BYU spinout</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:12px;">Who's on Nucleus</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#1E47E6,#7C3AED);">MC</div>
             <div>
-              <strong>Build my profile with AI</strong>
-              <div class="ai-sub">Paste a LinkedIn URL or any bio — we'll structure it in seconds.</div>
-            </div>
-            <span class="ai-badge" id="ai-badge" title="Click to configure your Claude API key">
-              <span class="ai-badge-dot"></span>
-              <span class="ai-badge-text">Powered by Claude</span>
-            </span>
-          </div>
-
-          <div class="ai-keybox" id="ai-keybox" hidden>
-            <label for="ai-key">Claude API key <span class="muted">(stored in your browser only — never sent to us)</span></label>
-            <div class="ai-keyrow">
-              <input type="password" id="ai-key" placeholder="sk-ant-..." autocomplete="off" />
-              <button type="button" class="btn btn-secondary" id="ai-key-save" style="padding:8px 14px;">Save</button>
-              <button type="button" class="btn btn-ghost" id="ai-key-clear" style="padding:8px 14px;">Clear</button>
-            </div>
-            <div class="help">When set, we send your URL + pasted text directly to Anthropic. No key? We use the offline extractor — works great for demos.</div>
-          </div>
-
-          <div class="ai-grid">
-            <div class="field">
-              <label for="ai-url">Profile URL <span class="muted">(LinkedIn, BYU faculty, .edu)</span></label>
-              <input type="text" id="ai-url" placeholder="https://www.linkedin.com/in/maya-chen" />
-            </div>
-            <div class="field">
-              <label for="ai-text">…or paste your bio / About / resume text</label>
-              <textarea id="ai-text" rows="4" placeholder="Paste your LinkedIn About section, faculty bio, or a quick description of yourself…"></textarea>
+              <div style="font-size:13px; font-weight:500;">Maya Chen</div>
+              <div class="muted-2" style="font-size:11px;">Fractional COO · ex-Pluralsight</div>
             </div>
           </div>
-
-          <div class="ai-actions">
-            <button type="button" class="btn btn-primary" id="ai-build">
-              <span class="ai-cta-label">✨ Build my profile</span>
-            </button>
-            <span class="muted" style="font-size:0.86rem;">or try a sample:</span>
-            <button type="button" class="chip ai-sample" data-sample="maya">Maya · ex-Pluralsight VP</button>
-            <button type="button" class="chip ai-sample" data-sample="jacob">Jacob · U of U bioeng student</button>
-            <button type="button" class="chip ai-sample" data-sample="brad">Brad · BYU Mech Eng professor</button>
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0F8B5C,#10B981);">JR</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">Jacob Reyes</div>
+              <div class="muted-2" style="font-size:11px;">Bioengineering MS · U of U</div>
+            </div>
           </div>
-
-          <div id="ai-result" class="ai-result" hidden>
-            <span class="ai-check">✓</span>
-            <span id="ai-result-text"></span>
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#B8730E,#F59E0B);">PS</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">Priya Shah</div>
+              <div class="muted-2" style="font-size:11px;">Sr. Sales Engineer · ex-Qualtrics</div>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="divider"></div>
+    <!-- Right panel (form) -->
+    <div class="onb-right">
+      <div class="onb-form">
+        <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">For Talent</div>
+        <h2 style="font-size:28px; margin-bottom:6px;">Tell Utah founders who you are</h2>
+        <p class="muted" style="font-size:14px; margin-bottom:32px;">90 seconds. No resume upload. We'll match you with founders who actually need you.</p>
 
-        <div class="steps mt-4">
-          <div class="step active" data-step="1"></div>
-          <div class="step" data-step="2"></div>
-          <div class="step" data-step="3"></div>
+        <!-- Progress bar -->
+        <div class="onb-progress" id="talent-progress">
+          <div class="onb-step-bar active" data-bar="1"></div>
+          <div class="onb-step-bar" data-bar="2"></div>
+          <div class="onb-step-bar" data-bar="3"></div>
         </div>
 
         <form id="talent-form" autocomplete="off">
@@ -90,7 +87,7 @@
             </div>
             <div class="field">
               <label for="headline">Short headline</label>
-              <input type="text" id="headline" name="headline" required placeholder="Ex-Pluralsight VP Product · Lehi" />
+              <input type="text" id="headline" name="headline" placeholder="Ex-Pluralsight VP Product · Lehi" />
             </div>
             <div class="field">
               <label for="role_type">I'm looking to contribute as</label>
@@ -106,7 +103,7 @@
               </select>
             </div>
             <div class="field">
-              <label for="school">School / affiliation <span class="muted">(optional)</span></label>
+              <label for="school">School / affiliation <span class="muted-2">(optional)</span></label>
               <select id="school" name="school">
                 <option value="">—</option>
                 <option>BYU</option>
@@ -126,8 +123,8 @@
           <!-- Step 2: Skills + Domains -->
           <div class="form-step" data-step="2" hidden>
             <div class="field">
-              <label>Skills (pick all that apply)</label>
-              <div class="chips" data-multi="skills">
+              <label>Skills <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
+              <div class="chips" data-multi="skills" style="margin-top:8px;">
                 <span class="chip">product strategy</span>
                 <span class="chip">B2B SaaS</span>
                 <span class="chip">GTM</span>
@@ -146,7 +143,7 @@
             </div>
             <div class="field">
               <label>Sectors I want to work in</label>
-              <div class="chips" data-multi="domains">
+              <div class="chips" data-multi="domains" style="margin-top:8px;">
                 <span class="chip" data-value="life-sciences">Life Sciences</span>
                 <span class="chip" data-value="ai">AI</span>
                 <span class="chip" data-value="defense">Defense / Aerospace</span>
@@ -157,9 +154,9 @@
                 <span class="chip" data-value="software">Software</span>
               </div>
             </div>
-            <div class="flex">
-              <button type="button" class="btn btn-secondary" data-back="1">← Back</button>
-              <button type="button" class="btn btn-primary" data-next="3">Continue →</button>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="3">Continue →</button>
             </div>
           </div>
 
@@ -167,7 +164,7 @@
           <div class="form-step" data-step="3" hidden>
             <div class="field">
               <label>Stage preference</label>
-              <div class="chips" data-multi="stage_pref">
+              <div class="chips" data-multi="stage_pref" style="margin-top:8px;">
                 <span class="chip" data-value="idea">Idea</span>
                 <span class="chip" data-value="pre-seed">Pre-seed</span>
                 <span class="chip" data-value="seed">Seed</span>
@@ -188,116 +185,43 @@
             <div class="field">
               <label for="risk_tolerance">Risk tolerance: <span id="risk_val">3</span> / 5</label>
               <input type="range" id="risk_tolerance" name="risk_tolerance" min="1" max="5" value="3"
-                     oninput="document.getElementById('risk_val').textContent=this.value" style="width:100%" />
+                     oninput="document.getElementById('risk_val').textContent=this.value" />
               <div class="help">1 = stable salary required · 5 = founding-team risk welcome</div>
             </div>
             <div class="field">
               <label for="mission">Your mission, in one sentence</label>
               <textarea id="mission" name="mission" rows="2" placeholder="Help Utah-grown deep tech reach national markets."></textarea>
             </div>
-            <div class="flex">
-              <button type="button" class="btn btn-secondary" data-back="2">← Back</button>
-              <button type="submit" class="btn btn-primary">Find my matches →</button>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
+              <button type="submit" class="btn btn-primary flex-1" style="justify-content:center;">Find my matches →</button>
             </div>
           </div>
 
         </form>
       </div>
     </div>
-  </section>
+  </div>
 
   <div id="toast" class="toast"></div>
   <script src="app.js"></script>
-  <script src="profile-builder.js"></script>
   <script>
     NM.initStepForm("#talent-form", "talent");
-
-    (function () {
-      const form = document.getElementById("talent-form");
-      const urlInput = document.getElementById("ai-url");
-      const textInput = document.getElementById("ai-text");
-      const buildBtn = document.getElementById("ai-build");
-      const result = document.getElementById("ai-result");
-      const resultText = document.getElementById("ai-result-text");
-      const badge = document.getElementById("ai-badge");
-      const badgeText = badge.querySelector(".ai-badge-text");
-      const keyBox = document.getElementById("ai-keybox");
-      const keyInput = document.getElementById("ai-key");
-      const keySave = document.getElementById("ai-key-save");
-      const keyClear = document.getElementById("ai-key-clear");
-
-      function refreshBadge() {
-        const live = NMProfileBuilder.hasApiKey();
-        badge.classList.toggle("ai-badge-live", live);
-        badgeText.textContent = live ? "Powered by Claude · live" : "Powered by Claude · local";
-      }
-      refreshBadge();
-
-      badge.addEventListener("click", () => {
-        keyBox.hidden = !keyBox.hidden;
-        if (!keyBox.hidden) {
-          keyInput.value = NMProfileBuilder.getApiKey();
-          keyInput.focus();
-        }
-      });
-      keySave.addEventListener("click", () => {
-        NMProfileBuilder.setApiKey(keyInput.value);
-        refreshBadge();
-        NM.toast(NMProfileBuilder.hasApiKey() ? "Claude key saved · live mode on" : "Claude key cleared");
-        keyBox.hidden = true;
-      });
-      keyClear.addEventListener("click", () => {
-        NMProfileBuilder.setApiKey("");
-        keyInput.value = "";
-        refreshBadge();
-        NM.toast("Claude key cleared · local mode");
-      });
-
-      function setLoading(on) {
-        buildBtn.disabled = on;
-        const live = NMProfileBuilder.hasApiKey();
-        buildBtn.querySelector(".ai-cta-label").textContent =
-          on ? (live ? "✨ Calling Claude…" : "✨ Extracting…") : "✨ Build my profile";
-        if (on) buildBtn.classList.add("ai-loading");
-        else buildBtn.classList.remove("ai-loading");
-      }
-
-      async function runBuild() {
-        const url = urlInput.value.trim();
-        const text = textInput.value.trim();
-        if (!url && !text) {
-          NM.toast("Paste a URL or bio first.");
-          return;
-        }
-        setLoading(true);
-        const t0 = performance.now();
-        try {
-          const profile = await NMProfileBuilder.extract(url, text);
-          const filled = NMProfileBuilder.applyToForm(profile, form);
-          const ms = Math.round(performance.now() - t0);
-          result.hidden = false;
-          resultText.innerHTML =
-            `Profile drafted from <strong>${profile._source || "input"}</strong> in ${ms} ms — ${filled} fields auto-filled. <em class="muted">Review and adjust before submitting.</em>`;
-          NM.toast(`✨ Profile built in ${ms}ms`);
-        } finally {
-          setLoading(false);
-        }
-      }
-
-      buildBtn.addEventListener("click", runBuild);
-
-      document.querySelectorAll(".ai-sample").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const key = btn.dataset.sample;
-          const text = NMProfileBuilder.SAMPLE_TEXTS[key] || "";
-          textInput.value = text;
-          urlInput.value = ({
-            maya:  "https://www.linkedin.com/in/maya-chen",
-            jacob: "https://www.linkedin.com/in/jacob-reyes",
-            brad:  "https://me.byu.edu/faculty/bradadams",
-          })[key] || "";
-          runBuild();
+    // Sync new progress bar with step changes
+    (function() {
+      const bars = document.querySelectorAll('#talent-progress .onb-step-bar');
+      const obs = new MutationObserver(function() {
+        const steps = document.querySelectorAll('.form-step');
+        let cur = 1;
+        steps.forEach(function(s) { if (!s.hidden) cur = Number(s.dataset.step); });
+        bars.forEach(function(b, i) {
+          const n = i + 1;
+          b.classList.toggle('done',   n < cur);
+          b.classList.toggle('active', n === cur);
         });
+      });
+      document.querySelectorAll('.form-step').forEach(function(s) {
+        obs.observe(s, { attributes: true });
       });
     })();
   </script>

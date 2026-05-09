@@ -214,6 +214,24 @@
   };
 
   /* ------------------------------------------------------------------ */
+  /* Avatar background utility                                          */
+  /* ------------------------------------------------------------------ */
+  const AVATAR_COLORS = [
+    "linear-gradient(135deg,#1E47E6,#1A3CC9)",
+    "linear-gradient(135deg,#0F8B5C,#10B981)",
+    "linear-gradient(135deg,#9333EA,#EC4899)",
+    "linear-gradient(135deg,#B8730E,#F59E0B)",
+    "linear-gradient(135deg,#0E1A3D,#1E47E6)",
+    "linear-gradient(135deg,#DC2626,#F97316)",
+  ];
+  function avatarBg(name) {
+    let h = 0;
+    const s = String(name || "");
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0x7fffffff;
+    return AVATAR_COLORS[h % AVATAR_COLORS.length];
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Match card renderer                                                 */
   /* ------------------------------------------------------------------ */
   function renderCard(me, other, score, breakdown, top_reasons, as, demand, bond) {
@@ -223,6 +241,7 @@
     const isStartup = !!other.sector;
     const initials = (other.name || "??")
       .split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+    const bg = avatarBg(other.name);
 
     // The "Rare bond" line is already prepended into top_reasons by match.js,
     // so strip it here to avoid duplication when we render the highlighted ribbon.
@@ -247,7 +266,7 @@
     card.innerHTML = `
       ${bondRibbon}
       <div class="match-card">
-        <div class="avatar">${initials}</div>
+        <div class="avatar avatar-lg" style="background:${bg}">${initials}</div>
         <div>
           <div class="flex between">
             <div>

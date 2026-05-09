@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Profile · Nucleus</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+        <div class="nav-links">
+          <a href="ecosystem.html" class="nav-link">Ecosystem</a>
+          <a href="match.html" class="nav-link">Matches</a>
+          <a href="demo.html" class="nav-link">Demo</a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="talent.html" class="btn btn-primary btn-sm">Get started</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page" id="profile-root">
+    <!-- Rendered by JS -->
+    <div class="container" style="padding-top:40px; padding-bottom:80px; text-align:center;">
+      <div style="width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;margin:60px auto;"></div>
+    </div>
+  </div>
+
+  <style>@keyframes spin{to{transform:rotate(360deg);}}</style>
+  <div id="toast" class="toast"></div>
+
+  <script>
+  const avatarPalette=[['#1E47E6','#7C3AED'],['#0F8B5C','#10B981'],['#B8730E','#F59E0B'],['#0E1A3D','#1E47E6'],['#9333EA','#EC4899'],['#0891B2','#06B6D4'],['#DC2626','#F97316'],['#4338CA','#7C3AED'],['#059669','#84CC16']];
+  function avatarBg(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;const[a,b]=avatarPalette[h%avatarPalette.length];return`linear-gradient(135deg,${a},${b})`;}
+  function initials(name){return String(name||'').split(' ').filter(Boolean).slice(0,2).map(s=>s[0]).join('').toUpperCase();}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function chip(t,cls=''){return`<span class="chip ${cls}" style="cursor:default;">${esc(t)}</span>`;}
+
+  function renderTalentProfile(p, matchInfo) {
+    const isMatch = !!matchInfo;
+    return `
+      <div class="container" style="padding-top:32px; padding-bottom:80px;">
+        <div class="profile-hero">
+          <div class="avatar avatar-xl" style="background:${avatarBg(p.id)};">${initials(p.name)}</div>
+          <div>
+            ${isMatch?`<div class="eyebrow eyebrow-blue">${matchInfo.score}% match</div>`:''}
+            <div class="profile-name" style="margin-top:${isMatch?'6px':'0'}">${esc(p.name)}</div>
+            <div class="profile-title">${esc(p.headline||p.role_type||'')}</div>
+            <div class="profile-meta">
+              ${p.location?`<span>📍 ${esc(p.location)}</span>`:''}
+              ${p.school?`<span>${esc(p.school)}</span>`:''}
+              ${p.availability?`<span>${esc(p.availability)}</span>`:''}
+            </div>
+            ${p.skills&&p.skills.length?`<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">${p.skills.map(s=>chip(s)).join('')}</div>`:''}
+          </div>
+          <div class="row gap-8">
+            ${isMatch?`<button class="btn btn-blue" onclick="sendToAffinity()">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v4M8 11v4M1 8h4M11 8h4M3 3l2.5 2.5M10.5 10.5L13 13M3 13l2.5-2.5M10.5 5.5L13 3"/></svg>
+              Request intro
+            </button>`:''}
+            <button class="btn btn-ghost" onclick="history.back()">← Back</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="profile-grid">
+          <div>
+            ${p.mission?`<div class="profile-section">
+              <h4>Mission</h4>
+              <p class="profile-bio">${esc(p.mission)}</p>
+            </div>`:''}
+
+            ${p.domains&&p.domains.length?`<div class="profile-section">
+              <h4>Domains</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">${p.domains.map(d=>chip(d,'chip-blue')).join('')}</div>
+            </div>`:''}
+
+            ${p.stage_pref&&p.stage_pref.length?`<div class="profile-section">
+              <h4>Stage preference</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">${p.stage_pref.map(s=>chip(s)).join('')}</div>
+            </div>`:''}
+
+            ${isMatch?`<div class="profile-section">
+              <h4>Why we matched you</h4>
+              <div class="card card-pad" style="padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                  <div style="font-weight:600;font-size:16px;">${matchInfo.score}% overall fit</div>
+                  <div class="eyebrow" style="font-size:11px;">${matchInfo.score >= 85 ? 'Strong match' : matchInfo.score >= 70 ? 'Good match' : 'Partial match'}</div>
+                </div>
+                ${Object.entries(matchInfo.breakdown).map(([k,v])=>`
+                  <div class="match-dim">
+                    <div class="dim-label">${k.charAt(0).toUpperCase()+k.slice(1)}</div>
+                    <div class="dim-bar${v<0.5?' warn':''}"><span style="width:${Math.round(v*100)}%"></span></div>
+                    <div class="dim-pct">${Math.round(v*100)}</div>
+                  </div>`).join('')}
+                ${matchInfo.top_reasons&&matchInfo.top_reasons.length?`
+                  <div style="margin-top:16px;padding:14px;background:var(--blue-tint);border-radius:var(--r-md);">
+                    <div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--blue-2);">Why matched?</div>
+                    <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
+                      ${matchInfo.top_reasons.map(r=>`<li style="font-size:13px;color:var(--ink-2);">${esc(r)}</li>`).join('')}
+                    </ul>
+                  </div>`:''}
+              </div>
+            </div>`:''}
+          </div>
+
+          <aside>
+            <div class="card card-pad">
+              <div class="eyebrow">Profile details</div>
+              <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+                ${p.role_type?`<div><div style="font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Role type</div><div style="font-size:14px;font-weight:500;">${esc(p.role_type)}</div></div>`:''}
+                ${p.risk_tolerance?`<div><div style="font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Risk tolerance</div><div style="font-size:14px;font-weight:500;">${esc(p.risk_tolerance)} / 5</div></div>`:''}
+                ${p.availability?`<div><div style="font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Availability</div><div style="font-size:14px;font-weight:500;">${esc(p.availability)}</div></div>`:''}
+              </div>
+            </div>
+
+            <!-- Network bridge -->
+            <div class="bridge-card" style="margin-top:16px;">
+              <div class="bridge-head">
+                <h4>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;"><path d="M3 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM13 9a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM8 8a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 5l2 3M9 8l3 2"/></svg>
+                  Network bridges
+                </h4>
+                <p>Paths through people you already know.</p>
+              </div>
+              <button class="bridge-row" onclick="window.location='ecosystem.html'">
+                <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#1E47E6,#7C3AED);">JL</div>
+                <div>
+                  <div class="bridge-name">Jamie Liu</div>
+                  <div class="bridge-why">BYU CS dept connection · 1st degree · freelanced for multiple Utah startups.</div>
+                </div>
+                <span class="bridge-action">View →</span>
+              </button>
+              <button class="bridge-row" onclick="window.location='ecosystem.html'">
+                <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0F8B5C,#10B981);">SC</div>
+                <div>
+                  <div class="bridge-name">Sarah Chen</div>
+                  <div class="bridge-why">Mutual: Lassonde cohort + U of U research network.</div>
+                </div>
+                <span class="bridge-action">View →</span>
+              </button>
+              <div style="padding:14px 20px;background:var(--bg-mist);border-top:1px solid var(--line);">
+                <button class="btn btn-blue btn-sm btn-block" onclick="toast('Intro request drafted!')">Draft an intro request</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>`;
+  }
+
+  function renderStartupProfile(s, matchInfo) {
+    const isMatch = !!matchInfo;
+    return `
+      <div class="container" style="padding-top:32px; padding-bottom:80px;">
+        <div class="profile-hero">
+          <div class="avatar avatar-xl" style="background:${avatarBg(s.id)}; border-radius:24px;">${initials(s.name)}</div>
+          <div>
+            ${isMatch?`<div class="eyebrow eyebrow-blue">${matchInfo.score}% match</div>`:''}
+            <div class="profile-name" style="margin-top:${isMatch?'6px':'0'}">${esc(s.name)}</div>
+            <div class="profile-title">${esc(s.mission||'')}</div>
+            <div class="profile-meta">
+              ${s.location?`<span>📍 ${esc(s.location)}</span>`:''}
+              ${s.sector?`<span>${esc(s.sector)}</span>`:''}
+              ${s.stage?`<span>${esc(s.stage)}</span>`:''}
+              ${s.funding_status?`<span>${esc(s.funding_status)}</span>`:''}
+            </div>
+          </div>
+          <div class="row gap-8">
+            ${isMatch?`<button class="btn btn-blue" onclick="sendToAffinity()">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1v4M8 11v4M1 8h4M11 8h4M3 3l2.5 2.5M10.5 10.5L13 13M3 13l2.5-2.5M10.5 5.5L13 3"/></svg>
+              Connect
+            </button>`:''}
+            <button class="btn btn-ghost" onclick="history.back()">← Back</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="profile-grid">
+          <div>
+            ${s.needs&&s.needs.length?`<div class="profile-section">
+              <h4>Immediate needs</h4>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">${s.needs.map(n=>chip(n,'chip-blue')).join('')}</div>
+            </div>`:''}
+
+            ${s.origin?`<div class="profile-section">
+              <h4>Origin</h4>
+              <p class="muted">${esc(s.origin)}</p>
+            </div>`:''}
+
+            ${isMatch?`<div class="profile-section">
+              <h4>Why we matched you</h4>
+              <div class="card card-pad" style="padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                  <div style="font-weight:600;font-size:16px;">${matchInfo.score}% overall fit</div>
+                </div>
+                ${Object.entries(matchInfo.breakdown).map(([k,v])=>`
+                  <div class="match-dim">
+                    <div class="dim-label">${k.charAt(0).toUpperCase()+k.slice(1)}</div>
+                    <div class="dim-bar${v<0.5?' warn':''}"><span style="width:${Math.round(v*100)}%"></span></div>
+                    <div class="dim-pct">${Math.round(v*100)}</div>
+                  </div>`).join('')}
+                ${matchInfo.top_reasons&&matchInfo.top_reasons.length?`
+                  <div style="margin-top:16px;padding:14px;background:var(--blue-tint);border-radius:var(--r-md);">
+                    <div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--blue-2);">Why matched?</div>
+                    <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;">
+                      ${matchInfo.top_reasons.map(r=>`<li style="font-size:13px;color:var(--ink-2);">${esc(r)}</li>`).join('')}
+                    </ul>
+                  </div>`:''}
+              </div>
+            </div>`:''}
+          </div>
+
+          <aside>
+            <div class="card card-pad">
+              <div class="eyebrow">Startup details</div>
+              <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px;">
+                ${s.trl?`<div><div style="font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">TRL</div><div style="font-size:14px;font-weight:500;">${esc(s.trl)} / 9</div></div>`:''}
+                ${s.stage?`<div><div style="font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Stage</div><div style="font-size:14px;font-weight:500;">${esc(s.stage)}</div></div>`:''}
+                ${s.funding_status?`<div><div style="font-size:11px;color:var(--ink-4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;">Funding</div><div style="font-size:14px;font-weight:500;">${esc(s.funding_status)}</div></div>`:''}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>`;
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2000);
+  }
+
+  function sendToAffinity() { toast('Sent to Affinity CRM ✓'); }
+
+  async function init() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const kind = params.get('kind') || 'talent';
+    const root = document.getElementById('profile-root');
+
+    if (!id) {
+      root.innerHTML = '<div class="container" style="padding-top:80px;text-align:center;"><p class="muted">No profile ID provided. <a href="ecosystem.html" style="color:var(--blue);">Browse the ecosystem</a></p></div>';
+      return;
+    }
+
+    const [talent, startups] = await Promise.all([
+      fetch('data/talent.json').then(r=>r.json()).catch(()=>[]),
+      fetch('data/startups.json').then(r=>r.json()).catch(()=>[]),
+    ]);
+
+    const profile = kind === 'startup'
+      ? startups.find(s=>s.id===id)
+      : talent.find(t=>t.id===id);
+
+    if (!profile) {
+      root.innerHTML = `<div class="container" style="padding-top:80px;text-align:center;"><p class="muted">Profile not found. <a href="ecosystem.html" style="color:var(--blue);">Browse the ecosystem</a></p></div>`;
+      return;
+    }
+
+    root.className = 'page';
+    root.innerHTML = kind === 'startup'
+      ? renderStartupProfile(profile, null)
+      : renderTalentProfile(profile, null);
+  }
+
+  init();
+  </script>
+</body>
+</html>

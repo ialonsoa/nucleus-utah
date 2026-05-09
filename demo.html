@@ -3,35 +3,88 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Demo scenarios · Nucleus Match</title>
+  <title>Demo · Nucleus</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a class="btn btn-secondary" href="talent.html" style="padding:8px 14px;">Try it yourself</a>
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+        <div class="nav-links">
+          <a href="ecosystem.html" class="nav-link">Ecosystem</a>
+          <a href="match.html" class="nav-link">Matches</a>
+          <a href="demo.html" class="nav-link active">Demo</a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="talent.html" class="btn btn-primary btn-sm">Try it yourself</a>
+      </div>
     </div>
   </nav>
 
-  <section class="section-sm">
-    <div class="container">
-      <div class="center">
-        <span class="tag">For judges</span>
-        <h1 class="mt-2">Three Utah match scenarios</h1>
-        <p class="muted">Each card shows the score, the breakdown, and a plain-English explanation.</p>
+  <div class="page">
+    <!-- Judge hero -->
+    <div style="background:var(--navy); padding:64px 0 56px; position:relative; overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.03) 0 2px,transparent 2px 24px);"></div>
+      <div class="container" style="position:relative;">
+        <div class="eyebrow" style="color:rgba(255,255,255,0.5); margin-bottom:12px;">For judges</div>
+        <h1 style="color:white; font-size:clamp(32px,4vw,52px); max-width:700px; margin-bottom:20px;">
+          Three Utah match scenarios,<br/><span class="serif-i" style="color:#7C9FF0;">explained.</span>
+        </h1>
+        <p style="color:rgba(255,255,255,0.65); font-size:16px; max-width:560px; line-height:1.6;">
+          Each card shows a real match score, the 6-criteria breakdown, and plain-English reasoning —
+          the "why" a judge or Nucleus operator can actually trust.
+        </p>
+        <div style="display:flex; gap:12px; margin-top:32px; flex-wrap:wrap;">
+          <a href="talent.html" class="btn btn-blue btn-lg">Try the live flow</a>
+          <a href="ecosystem.html" class="btn" style="background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">See ecosystem map</a>
+        </div>
       </div>
-      <div id="demo-results" class="grid mt-4" style="gap:16px;"></div>
     </div>
-  </section>
+
+    <!-- Scenario cards -->
+    <div class="container" style="padding-top:64px; padding-bottom:80px;">
+      <div style="display:flex; flex-direction:column; gap:16px;" id="demo-results"></div>
+
+      <!-- Integration callout -->
+      <div style="margin-top:64px; padding:32px; background:var(--bg-tint); border:1px solid var(--blue-tint); border-radius:var(--r-xl);">
+        <div class="eyebrow eyebrow-blue" style="margin-bottom:12px;">Integration story</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:24px;">
+          <div>
+            <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Squarespace</div>
+            <div class="muted" style="font-size:13px;">Drop-in <code style="font-family:Geist Mono,monospace; font-size:11px; background:var(--bg-mist); padding:1px 5px; border-radius:4px;">&lt;iframe&gt;</code> embed. Nucleus keeps their site, we plug in the matching layer.</div>
+          </div>
+          <div>
+            <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Affinity CRM</div>
+            <div class="muted" style="font-size:13px;">One-click "Send to Affinity" fires a webhook. Export CSV matches Affinity's import columns exactly.</div>
+          </div>
+          <div>
+            <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Handshake</div>
+            <div class="muted" style="font-size:13px;">Career fair RSVP data surfaces trending Utah students — a signal traditional job boards miss entirely.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container footer-row">
+        <div class="row gap-12">
+          <span class="brand">nucleus<span class="brand-mark">^</span></span>
+          <span class="muted-2">© 2026 · Nucleus Institute · Salt Lake City</span>
+        </div>
+        <div class="muted-2" style="font-size:13px;">Builder Day Hackathon · May 2026</div>
+      </div>
+    </footer>
+  </div>
 
   <div id="toast" class="toast"></div>
   <script src="core/constants.js"></script>
-  <script src="core/signals.js"></script>
   <script src="core/match.js"></script>
   <script src="core/explain.js"></script>
+  <script src="core/signals.js"></script>
   <script src="integrations/affinity.js"></script>
+  <script src="integrations/handshake.js"></script>
   <script src="app.js"></script>
   <script>NM.renderDemoScenarios();</script>
 </body>

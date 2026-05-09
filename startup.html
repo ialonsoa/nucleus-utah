@@ -3,32 +3,83 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sign up as a Startup · Nucleus Match</title>
+  <title>Join as a Startup · Nucleus</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
-    <div class="nav-links"><a href="demo.html">Demo</a></div>
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+      </div>
+      <div class="nav-right">
+        <a href="demo.html" class="btn btn-quiet btn-sm">See demo</a>
+      </div>
+    </div>
   </nav>
 
-  <section class="section-sm">
-    <div class="container">
-      <div class="form">
-        <div class="center">
-          <span class="tag">For Startups</span>
-          <h1 class="mt-2">Find the right Utah operator</h1>
-          <p class="muted">Tell us your sector, stage, and the gap you need to close.</p>
-        </div>
+  <!-- Hidden legacy steps for app.js compatibility -->
+  <div class="steps" aria-hidden="true">
+    <div class="step active" data-step="1"></div>
+    <div class="step" data-step="2"></div>
+    <div class="step" data-step="3"></div>
+  </div>
 
-        <div class="steps mt-4">
-          <div class="step active" data-step="1"></div>
-          <div class="step" data-step="2"></div>
-          <div class="step" data-step="3"></div>
+  <div class="onb-shell">
+    <!-- Left panel -->
+    <div class="onb-left">
+      <div>
+        <a href="index.html" class="brand" style="margin-bottom:48px; display:inline-flex;">nucleus<span class="brand-mark">^</span></a>
+        <div class="onb-quote" style="margin-top:48px;">
+          "The gap between a great lab result and a company isn't talent — it's finding the right operator who believes in what you're building."
+        </div>
+        <div class="onb-quote-by">— iHub program director, U of U</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:12px;">Recent Utah spinouts</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0E1A3D,#1E47E6); border-radius:6px;">HM</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">HelioMet Materials</div>
+              <div class="muted-2" style="font-size:11px;">BYU spinout · Advanced Mfg · Pre-seed</div>
+            </div>
+          </div>
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0F8B5C,#10B981); border-radius:6px;">ND</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">NeuraDose</div>
+              <div class="muted-2" style="font-size:11px;">U of U spinout · Life Sciences · Idea</div>
+            </div>
+          </div>
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#9333EA,#EC4899); border-radius:6px;">LL</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">LedgerLoop</div>
+              <div class="muted-2" style="font-size:11px;">Bootstrapped · Fintech · Series A</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel (form) -->
+    <div class="onb-right">
+      <div class="onb-form">
+        <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">For Startups</div>
+        <h2 style="font-size:28px; margin-bottom:6px;">Find the right Utah operator</h2>
+        <p class="muted" style="font-size:14px; margin-bottom:32px;">Tell us your sector, stage, and the gap you need to close.</p>
+
+        <!-- Progress bar -->
+        <div class="onb-progress" id="startup-progress">
+          <div class="onb-step-bar active" data-bar="1"></div>
+          <div class="onb-step-bar" data-bar="2"></div>
+          <div class="onb-step-bar" data-bar="3"></div>
         </div>
 
         <form id="startup-form" autocomplete="off">
 
+          <!-- Step 1: Basics -->
           <div class="form-step" data-step="1">
             <div class="field">
               <label for="name">Company name</label>
@@ -45,6 +96,7 @@
             <button type="button" class="btn btn-primary btn-block" data-next="2">Continue →</button>
           </div>
 
+          <!-- Step 2: Tech & Stage -->
           <div class="form-step" data-step="2" hidden>
             <div class="field">
               <label for="sector">Primary sector</label>
@@ -86,19 +138,20 @@
             <div class="field">
               <label for="trl">Tech Readiness Level (TRL): <span id="trl_val">5</span></label>
               <input type="range" id="trl" name="trl" min="1" max="9" value="5"
-                     oninput="document.getElementById('trl_val').textContent=this.value" style="width:100%" />
+                     oninput="document.getElementById('trl_val').textContent=this.value" />
               <div class="help">1 = basic research · 9 = market-ready system</div>
             </div>
-            <div class="flex">
-              <button type="button" class="btn btn-secondary" data-back="1">← Back</button>
-              <button type="button" class="btn btn-primary" data-next="3">Continue →</button>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="3">Continue →</button>
             </div>
           </div>
 
+          <!-- Step 3: Needs -->
           <div class="form-step" data-step="3" hidden>
             <div class="field">
-              <label>Immediate needs (pick all that apply)</label>
-              <div class="chips" data-multi="needs">
+              <label>Immediate needs <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
+              <div class="chips" data-multi="needs" style="margin-top:8px;">
                 <span class="chip">CEO</span>
                 <span class="chip">COO</span>
                 <span class="chip">CTO</span>
@@ -128,19 +181,37 @@
                 <option>Series A</option>
               </select>
             </div>
-            <div class="flex">
-              <button type="button" class="btn btn-secondary" data-back="2">← Back</button>
-              <button type="submit" class="btn btn-primary">Find my matches →</button>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
+              <button type="submit" class="btn btn-primary flex-1" style="justify-content:center;">Find my matches →</button>
             </div>
           </div>
 
         </form>
       </div>
     </div>
-  </section>
+  </div>
 
   <div id="toast" class="toast"></div>
   <script src="app.js"></script>
-  <script>NM.initStepForm("#startup-form", "startup");</script>
+  <script>
+    NM.initStepForm("#startup-form", "startup");
+    (function() {
+      const bars = document.querySelectorAll('#startup-progress .onb-step-bar');
+      const obs = new MutationObserver(function() {
+        const steps = document.querySelectorAll('.form-step');
+        let cur = 1;
+        steps.forEach(function(s) { if (!s.hidden) cur = Number(s.dataset.step); });
+        bars.forEach(function(b, i) {
+          const n = i + 1;
+          b.classList.toggle('done',   n < cur);
+          b.classList.toggle('active', n === cur);
+        });
+      });
+      document.querySelectorAll('.form-step').forEach(function(s) {
+        obs.observe(s, { attributes: true });
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -3,550 +3,292 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Utah ecosystem map · Nucleus Match</title>
+  <title>Ecosystem · Nucleus</title>
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    .graph-wrap {
-      background: white; border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: var(--shadow); overflow: hidden; position: relative;
-    }
-    svg { display: block; width: 100%; height: 640px; cursor: grab; }
-    svg:active { cursor: grabbing; }
-    .legend {
-      position: absolute; top: 14px; right: 14px;
-      background: rgba(255,255,255,0.96); border: 1px solid var(--line);
-      border-radius: 10px; padding: 10px 14px; font-size: 0.86rem;
-    }
-    .legend .row { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-    .legend .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .node-label { font-size: 11px; fill: #0F172A; pointer-events: none; user-select: none; }
-    .node-label.faded { opacity: 0.25; }
-    .link { stroke-opacity: 0.4; }
-    .link.school   { stroke: #C8A165; stroke-width: 1.5; }
-    .link.location { stroke: #1B365D; stroke-width: 1; stroke-dasharray: 3 3; }
-    .link.parent   { stroke: #7C3AED; stroke-width: 1.4; stroke-dasharray: 6 3; }
-    .link.signal   { stroke: #7C3AED; stroke-width: 0.8; stroke-dasharray: 2 4; stroke-opacity: 0.5; }
-    .node circle { stroke: white; stroke-width: 1.5; cursor: pointer; }
-    .node circle:hover { stroke: var(--ink); stroke-width: 2.5; }
-    .tooltip {
-      position: absolute; background: var(--ink); color: white; padding: 8px 12px;
-      border-radius: 8px; font-size: 0.86rem; pointer-events: none; opacity: 0;
-      transition: opacity .15s; max-width: 240px; z-index: 10;
-    }
-    .tooltip.show { opacity: 1; }
-    .tooltip strong { display: block; margin-bottom: 2px; }
-    .tooltip .muted { color: #94A3B8; font-size: 0.78rem; }
-
-    /* Click-to-pin detail panel */
-    .detail-panel {
-      position: absolute; top: 14px; left: 14px; width: 320px;
-      max-height: calc(100% - 28px); overflow-y: auto;
-      background: white; border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: var(--shadow-lg); padding: 18px; z-index: 20;
-      transform: translateX(-12px); opacity: 0; pointer-events: none;
-      transition: transform .18s ease, opacity .18s ease;
-    }
-    .detail-panel.show { transform: translateX(0); opacity: 1; pointer-events: auto; }
-    .detail-panel .close {
-      position: absolute; top: 10px; right: 10px; background: transparent;
-      border: 0; font-size: 1.4rem; color: var(--muted); cursor: pointer; line-height: 1;
-    }
-    .detail-panel .close:hover { color: var(--ink); }
-    .detail-panel .kicker {
-      display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--sandstone);
-    }
-    .detail-panel h3 { font-size: 1.15rem; margin: 4px 0 6px; }
-    .detail-panel .sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 14px; }
-    .signature-card {
-      background: linear-gradient(135deg, var(--sandstone-100), white);
-      border: 1px solid var(--sandstone); border-radius: 12px;
-      padding: 12px 14px; margin: 10px 0 14px;
-    }
-    .signature-card .label {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--navy-700); margin-bottom: 4px;
-    }
-    .signature-card .body { color: var(--ink); font-size: 0.92rem; line-height: 1.45; }
-    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-    .meta-grid .cell {
-      background: var(--snow); border: 1px solid var(--line); border-radius: 10px;
-      padding: 8px 10px;
-    }
-    .meta-grid .cell .k { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-    .meta-grid .cell .v { font-weight: 700; font-size: 1.05rem; color: var(--navy-700); }
-    .field-row { font-size: 0.86rem; margin: 6px 0; color: #334155; }
-    .field-row .k { color: var(--muted); margin-right: 6px; }
-    .skill-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-    .skill-chips .sc {
-      font-size: 0.76rem; padding: 3px 9px; border-radius: 999px;
-      background: white; border: 1px solid var(--line); color: var(--navy-700);
-    }
-    .signal-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-    .signal-chips .sg {
-      font-size: 0.74rem; padding: 3px 9px; border-radius: 999px;
-      background: var(--sandstone-100); border: 1px solid var(--sandstone);
-      color: var(--navy-700); font-weight: 600;
-    }
-    .panel-hint {
-      position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%);
-      background: rgba(15,23,42,0.78); color: white; font-size: 0.78rem;
-      padding: 5px 11px; border-radius: 999px; pointer-events: none;
-    }
-
-    /* Faded state for non-selected nodes */
-    .node.faded circle { opacity: 0.18; }
-    .node.faded text { opacity: 0.18; }
-    .link.faded { stroke-opacity: 0.06; }
-    .node.highlight circle { stroke: var(--sandstone); stroke-width: 2.5; }
-  </style>
 </head>
 <body>
   <nav class="nav">
-    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
-    <div class="nav-links">
-      <a href="demo.html">Demo</a>
-      <a href="handshake.html">Handshake feed</a>
-      <a href="match.html?demo=t-001">Live match</a>
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+        <div class="nav-links">
+          <a href="ecosystem.html" class="nav-link active">Ecosystem</a>
+          <a href="match.html" class="nav-link">Matches</a>
+          <a href="demo.html" class="nav-link">Demo</a>
+        </div>
+      </div>
+      <div class="nav-right">
+        <a href="talent.html" class="btn btn-primary btn-sm">Get started</a>
+      </div>
     </div>
   </nav>
 
-  <section class="section-sm">
-    <div class="container">
-      <div class="center">
-        <span class="tag">Bonus · Utah ecosystem map</span>
-        <h1 class="mt-2">Who knows who across Utah's deep tech</h1>
-        <p class="muted" style="max-width:680px;margin:0 auto;">
-          Every talent and startup in the system, connected by their Utah school affiliation
-          and city. Hover a node for context. Drag to rearrange. The clustering itself is the
-          insight — the tighter the cluster, the more warm-intro paths exist.
-        </p>
-      </div>
-
-      <div class="graph-wrap mt-4">
-        <svg id="graph"></svg>
-        <div class="legend">
-          <div class="row"><span class="dot" style="background:#1B365D"></span> Talent</div>
-          <div class="row"><span class="dot" style="background:#C8A165"></span> Startup</div>
-          <div class="row"><span class="dot" style="background:#CC0000"></span> School</div>
-          <div class="row"><span class="dot" style="background:#7C3AED"></span> Institution</div>
-          <div class="row" style="margin-top:6px;font-size:0.78rem;color:var(--muted);">
-            <span style="display:inline-block;width:18px;height:0;border-top:2px solid #C8A165"></span>
-            shared school
-          </div>
-          <div class="row" style="font-size:0.78rem;color:var(--muted);">
-            <span style="display:inline-block;width:18px;height:0;border-top:2px dashed #1B365D"></span>
-            same city
-          </div>
-          <div class="row" style="font-size:0.78rem;color:var(--muted);">
-            <span style="display:inline-block;width:18px;height:0;border-top:2px dashed #7C3AED"></span>
-            shared institution
-          </div>
-        </div>
-        <div id="tooltip" class="tooltip"></div>
-        <div id="detail" class="detail-panel" aria-hidden="true">
-          <button class="close" id="detail-close" aria-label="Close">×</button>
-          <span class="kicker" id="detail-kicker">Talent</span>
-          <h3 id="detail-name">—</h3>
-          <div class="sub" id="detail-sub">—</div>
-          <div class="signature-card" id="detail-signature" hidden>
-            <div class="label">Signature edge — what only this node brings</div>
-            <div class="body" id="detail-signature-body"></div>
-          </div>
-          <div class="meta-grid" id="detail-meta"></div>
-          <div id="detail-fields"></div>
-        </div>
-        <div class="panel-hint">click any node for the full story · click empty space to close</div>
-      </div>
-
-      <p class="muted center mt-3" style="font-size:0.86rem;">
-        Why this matters: in a tight ecosystem like Utah's, the strongest matches are the ones
-        with a shared cluster. Nucleus Match surfaces these connections automatically.
+  <div class="page">
+    <div class="container" style="padding-top:32px; padding-bottom:24px;">
+      <div class="eyebrow eyebrow-blue">Your ecosystem</div>
+      <h2 style="margin-top:12px; font-size:36px;">
+        Utah's innovation network, <span class="serif-i" style="color:#1E47E6;">mapped.</span>
+      </h2>
+      <p class="muted" style="margin-top:12px; font-size:16px; max-width:640px;">
+        14 new matches this week. Three are <strong style="color:var(--ink);">second-degree</strong> through BYU CS or Lassonde alumni.
       </p>
     </div>
-  </section>
 
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="core/constants.js"></script>
-  <script src="core/signals.js"></script>
+    <div class="container">
+      <div class="search-shell">
+        <div class="search-tabs">
+          <div class="tabs">
+            <button class="tab tab-active tab-blue" data-tab="people" onclick="switchTab('people')">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5 7a5 5 0 0 1 10 0"/></svg>
+              People
+            </button>
+            <button class="tab" data-tab="companies" onclick="switchTab('companies')">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14V3h10v11M6 6h1M9 6h1M6 9h1M9 9h1M6 12h4"/></svg>
+              Companies
+            </button>
+            <button class="tab" data-tab="labs" onclick="switchTab('labs')">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v5L2 13a2 2 0 0 0 2 3h8a2 2 0 0 0 2-3l-4-7V1M5 1h6"/></svg>
+              Labs
+            </button>
+          </div>
+          <div class="row gap-8">
+            <button class="btn btn-ghost btn-sm">Filters</button>
+          </div>
+        </div>
+
+        <div class="search-input-wrap">
+          <span class="search-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 11l3 3M7 12.5A5.5 5.5 0 1 1 7 1.5a5.5 5.5 0 0 1 0 11Z"/></svg>
+          </span>
+          <input class="search-input" id="eco-search" placeholder="Find a cofounder, operator, advisor…" />
+          <span class="search-kbd">⌘K</span>
+        </div>
+
+        <div class="search-suggestions" id="eco-suggestions">
+          <span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">Fractional CTO · life sciences</span>
+          <span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">VP Sales · energy</span>
+          <span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">Founding scientist</span>
+          <span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">Advisor · regulatory</span>
+        </div>
+      </div>
+
+      <div class="spacer-md"></div>
+
+      <!-- Brain viz -->
+      <div class="brain-wrap">
+        <svg class="brain-svg" viewBox="0 0 1100 500" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id="haloP" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#1E47E6" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#1E47E6" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <g id="edges-layer"></g>
+          <circle cx="140" cy="240" r="60" fill="url(#haloP)" />
+          <g id="nodes-layer"></g>
+        </svg>
+
+        <div class="brain-legend">
+          <span class="brain-legend-item"><span class="brain-legend-dot" style="background:#1E47E6;"></span>People</span>
+          <span class="brain-legend-item"><span class="brain-legend-dot" style="background:#0F8B5C;"></span>Companies</span>
+          <span class="brain-legend-item"><span class="brain-legend-dot" style="background:#9333EA;"></span>Labs</span>
+          <span class="brain-legend-item"><span class="brain-legend-dot" style="background:#B8730E;"></span>Institutions</span>
+        </div>
+
+        <div class="brain-overlay">
+          <div class="eyebrow" style="font-size:10px;">Network depth</div>
+          <div style="display:flex; gap:16px; margin-top:8px;">
+            <div>
+              <div style="font-family:'Geist Mono',monospace; font-size:18px; font-weight:500; letter-spacing:-0.02em;">4</div>
+              <div style="font-size:11px; color:var(--ink-4);">1° away</div>
+            </div>
+            <div>
+              <div style="font-family:'Geist Mono',monospace; font-size:18px; font-weight:500; letter-spacing:-0.02em;">11</div>
+              <div style="font-size:11px; color:var(--ink-4);">2° away</div>
+            </div>
+            <div>
+              <div style="font-family:'Geist Mono',monospace; font-size:18px; font-weight:500; letter-spacing:-0.02em;">38</div>
+              <div style="font-size:11px; color:var(--ink-4);">3° away</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spacer-lg"></div>
+
+      <!-- People results -->
+      <div id="results-people">
+        <div class="group-head">
+          <div class="group-title"><h3>Best matches</h3><span class="group-count">3 people · this week</span></div>
+          <button class="btn btn-quiet btn-sm">View all <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M8 4l4 4-4 4"/></svg></button>
+        </div>
+        <div class="results-grid" id="people-best"></div>
+        <div class="group-head">
+          <div class="group-title"><h3>Worth knowing</h3><span class="group-count">2nd &amp; 3rd degree</span></div>
+        </div>
+        <div class="results-grid" id="people-worth"></div>
+      </div>
+
+      <div id="results-companies" hidden>
+        <div class="group-head">
+          <div class="group-title"><h3>Hiring near you</h3><span class="group-count" id="co-count">startups</span></div>
+        </div>
+        <div class="results-grid" id="companies-list"></div>
+      </div>
+
+      <div id="results-labs" hidden>
+        <div class="group-head">
+          <div class="group-title"><h3>Open to collaboration</h3><span class="group-count">labs across Utah</span></div>
+        </div>
+        <div class="results-grid" id="labs-list"></div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container footer-row">
+        <div class="row gap-12">
+          <span class="brand">nucleus<span class="brand-mark">^</span></span>
+          <span class="muted-2">© 2026 · Nucleus Institute · Salt Lake City</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast"></div>
   <script>
-  (async function () {
-    const [talent, startups, institutions] = await Promise.all([
-      fetch("data/talent.json").then((r) => r.json()),
-      fetch("data/startups.json").then((r) => r.json()),
-      fetch("data/institutions.json").then((r) => r.json()).catch(() => []),
+  const avatarPalette=[['#1E47E6','#7C3AED'],['#0F8B5C','#10B981'],['#B8730E','#F59E0B'],['#0E1A3D','#1E47E6'],['#9333EA','#EC4899'],['#0891B2','#06B6D4'],['#DC2626','#F97316'],['#4338CA','#7C3AED'],['#059669','#84CC16']];
+  function avatarBg(id){let h=0;for(const c of String(id))h=(h*31+c.charCodeAt(0))>>>0;const[a,b]=avatarPalette[h%avatarPalette.length];return`linear-gradient(135deg,${a},${b})`;}
+  function initials(name){return String(name||'').split(' ').filter(Boolean).slice(0,2).map(s=>s[0]).join('').toUpperCase();}
+
+  const NODES=[
+    {id:'carlos',x:140,y:240,r:22,kind:'person',label:'You'},
+    {id:'byu',x:80,y:380,r:26,kind:'institution',label:'BYU'},
+    {id:'jamie',x:240,y:360,r:16,kind:'person',label:'Jamie L.'},
+    {id:'lucid',x:340,y:440,r:18,kind:'company',label:'Lucid'},
+    {id:'marcus',x:360,y:290,r:18,kind:'person',label:'Marcus W.'},
+    {id:'kiln',x:470,y:220,r:22,kind:'company',label:'Kiln Energy'},
+    {id:'sarah',x:540,y:360,r:22,kind:'person',label:'Sarah Chen'},
+    {id:'recursion',x:660,y:440,r:18,kind:'company',label:'Recursion'},
+    {id:'priya',x:660,y:250,r:20,kind:'person',label:'Dr. Patel'},
+    {id:'patel',x:780,y:180,r:22,kind:'lab',label:'Patel Lab'},
+    {id:'amelia',x:800,y:320,r:16,kind:'person',label:'Amelia P.'},
+    {id:'ridgeline',x:900,y:240,r:22,kind:'company',label:'Ridgeline Bio'},
+    {id:'uofu',x:880,y:100,r:24,kind:'institution',label:'U of U'},
+    {id:'ihub',x:1000,y:150,r:22,kind:'institution',label:'iHub'},
+  ];
+  const EDGES=[['carlos','byu'],['carlos','jamie'],['jamie','lucid'],['marcus','lucid'],['marcus','kiln'],['sarah','kiln'],['sarah','recursion'],['sarah','priya'],['sarah','amelia'],['priya','patel'],['priya','ridgeline'],['amelia','patel'],['amelia','ridgeline'],['ridgeline','patel'],['ridgeline','ihub'],['patel','uofu'],['ihub','uofu']];
+  const PATH=['carlos','jamie','lucid','marcus','sarah','priya','ridgeline'];
+  const nodeMap=Object.fromEntries(NODES.map(n=>[n.id,n]));
+  let hoveredNode=null;
+  function colorFor(k){return k==='person'?'#1E47E6':k==='company'?'#0F8B5C':k==='lab'?'#9333EA':'#B8730E';}
+
+  function renderBrain(){
+    const el=document.getElementById('edges-layer');
+    const nl=document.getElementById('nodes-layer');
+    el.innerHTML=''; nl.innerHTML='';
+    EDGES.forEach(([a,b])=>{
+      const A=nodeMap[a],B=nodeMap[b]; if(!A||!B)return;
+      const onPath=PATH.includes(a)&&PATH.includes(b)&&Math.abs(PATH.indexOf(a)-PATH.indexOf(b))===1;
+      const active=hoveredNode&&(hoveredNode===a||hoveredNode===b);
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',A.x);line.setAttribute('y1',A.y);line.setAttribute('x2',B.x);line.setAttribute('y2',B.y);
+      line.setAttribute('class','edge'+(onPath||active?' edge-active':''));
+      el.appendChild(line);
+    });
+    NODES.forEach(n=>{
+      const c=colorFor(n.kind);const isYou=n.id==='carlos';const isHov=hoveredNode===n.id;
+      const dim=hoveredNode&&hoveredNode!==n.id&&!EDGES.some(([a,b])=>(a===hoveredNode&&b===n.id)||(b===hoveredNode&&a===n.id));
+      const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+      g.setAttribute('class','node');g.style.opacity=dim?'0.25':'1';g.style.transition='opacity 0.2s';
+      const bg=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      bg.setAttribute('cx',n.x);bg.setAttribute('cy',n.y);bg.setAttribute('r',n.r+4);bg.setAttribute('fill','white');
+      const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      circle.setAttribute('cx',n.x);circle.setAttribute('cy',n.y);circle.setAttribute('r',n.r);
+      circle.setAttribute('fill',isYou?c:'white');circle.setAttribute('stroke',c);
+      circle.setAttribute('stroke-width',isYou?'0':(isHov?'2.5':'1.5'));
+      const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
+      txt.setAttribute('x',n.x);txt.setAttribute('y',n.y+4);txt.setAttribute('text-anchor','middle');
+      txt.setAttribute('font-size','11');txt.setAttribute('font-weight','600');
+      txt.setAttribute('fill',isYou?'white':c);txt.setAttribute('font-family','Geist Mono,monospace');
+      txt.textContent=isYou?'YOU':initials(n.label);
+      const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+      lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+n.r+16);lbl.setAttribute('text-anchor','middle');
+      lbl.setAttribute('class','node-label');lbl.textContent=n.label;
+      g.appendChild(bg);g.appendChild(circle);g.appendChild(txt);g.appendChild(lbl);
+      g.addEventListener('mouseenter',()=>{hoveredNode=n.id;renderBrain();});
+      g.addEventListener('mouseleave',()=>{hoveredNode=null;renderBrain();});
+      nl.appendChild(g);
+    });
+  }
+
+  const TAB_SUGGESTIONS={
+    people:['Fractional CTO · life sciences','VP Sales · energy','Founding scientist','Advisor · regulatory'],
+    companies:['Pre-seed · life sciences','Series A · energy','iHub portfolio','Hiring CTO'],
+    labs:['Protein design','Quantum sensors','Manufacturing','Open to industry partnership'],
+  };
+  const TAB_PLACEHOLDERS={
+    people:'Find a cofounder, operator, advisor…',
+    companies:'Find startups by sector, stage, need…',
+    labs:'Find labs by domain, capability…',
+  };
+
+  function switchTab(tab){
+    document.querySelectorAll('.tab').forEach(t=>{
+      t.classList.toggle('tab-active',t.dataset.tab===tab);
+      t.classList.toggle('tab-blue',t.dataset.tab===tab);
+    });
+    ['people','companies','labs'].forEach(k=>{
+      document.getElementById('results-'+k).hidden=k!==tab;
+    });
+    document.getElementById('eco-search').placeholder=TAB_PLACEHOLDERS[tab];
+    document.getElementById('eco-suggestions').innerHTML=TAB_SUGGESTIONS[tab].map(s=>
+      `<span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">${s}</span>`
+    ).join('');
+  }
+
+  function setSearch(el){document.getElementById('eco-search').value=el.textContent;}
+
+  function resultCard(id,name,subtitle,why,score,href){
+    return`<a href="${href||'profile.html?id='+encodeURIComponent(id)}" class="result-card" style="text-decoration:none;">
+      <div class="avatar avatar-lg" style="background:${avatarBg(id)};">${initials(name)}</div>
+      <div>
+        <div class="result-name">${name}</div>
+        <div class="result-meta">${subtitle}</div>
+        ${why?`<div class="result-meta" style="color:var(--blue-2);margin-top:4px;">${why}</div>`:''}
+      </div>
+      <div class="result-score">
+        <div class="score-pct">${score}<span style="color:var(--ink-4);font-size:12px;">%</span></div>
+        <div class="score-bar"><span style="width:${score}%"></span></div>
+      </div>
+    </a>`;
+  }
+
+  async function loadResults(){
+    const[talent,startups]=await Promise.all([
+      fetch('data/talent.json').then(r=>r.json()).catch(()=>[]),
+      fetch('data/startups.json').then(r=>r.json()).catch(()=>[]),
     ]);
+    const best=talent.slice(0,3);
+    const worth=talent.slice(3,5);
+    document.getElementById('people-best').innerHTML=best.map((t,i)=>
+      resultCard(t.id,t.name,`${t.role_type||'talent'} · ${t.location||'Utah'}`,t.mission||'',94-i*7,`profile.html?id=${t.id}&kind=talent`)
+    ).join('');
+    document.getElementById('people-worth').innerHTML=worth.map((t,i)=>
+      resultCard(t.id,t.name,`${t.role_type||'talent'} · ${t.location||'Utah'}`,t.mission||'',76-i*5,`profile.html?id=${t.id}&kind=talent`)
+    ).join('');
+    document.getElementById('co-count').textContent=`${startups.length} companies`;
+    document.getElementById('companies-list').innerHTML=startups.slice(0,5).map((s,i)=>
+      resultCard(s.id,s.name,`${s.sector} · ${s.stage} · ${s.location||'Utah'}`,
+        s.needs?`Needs: ${s.needs.slice(0,2).join(', ')}`:'',91-i*4,`profile.html?id=${s.id}&kind=startup`)
+    ).join('');
+    document.getElementById('labs-list').innerHTML=[
+      {id:'patel-lab',name:'Patel Lab',sub:'U of U · Biomedical Engineering',why:'3 spinouts · protein design · open rotation slot',score:89},
+      {id:'mhc-byu',name:'Materials Horizon Center',sub:'BYU · Mechanical Engineering',why:'Advanced manufacturing · industry partnerships',score:68},
+    ].map(l=>resultCard(l.id,l.name,l.sub,l.why,l.score,'#')).join('');
+  }
 
-    // School-tag helpers come from core/constants.js so the ecosystem map
-    // stays in sync with the matcher.
-    const C = window.NMConstants;
-    function canonSchool(name) {
-      const tag = C.schoolTag(name);
-      return tag ? C.schoolDisplay(tag) : (name || "");
-    }
-    function originSchoolTag(origin) {
-      const tag = C.schoolFromOrigin(origin);
-      return tag ? C.schoolDisplay(tag) : null;
-    }
-    function city(loc) { return String(loc || "").split(",")[0].trim(); }
-
-    // Build node + link arrays.
-    const nodes = [];
-    const links = [];
-
-    const schoolSet = new Set();
-    talent.forEach((t) => {
-      const sch = canonSchool(t.school);
-      if (sch) schoolSet.add(sch);
-    });
-    startups.forEach((s) => {
-      const sch = originSchoolTag(s.origin);
-      if (sch) schoolSet.add(sch);
-    });
-    schoolSet.forEach((s) => nodes.push({ id: `sch:${s}`, kind: "school", label: s, r: 16 }));
-
-    talent.forEach((t) => {
-      nodes.push({
-        id: `t:${t.id}`, kind: "talent", label: t.name,
-        r: 7, raw: t,
-        headline: t.headline, location: t.location, role: t.role_type,
-        signature_edge: t.signature_edge,
-      });
-      const sch = canonSchool(t.school);
-      if (sch) links.push({ source: `t:${t.id}`, target: `sch:${sch}`, kind: "school" });
-    });
-
-    startups.forEach((s) => {
-      nodes.push({
-        id: `s:${s.id}`, kind: "startup", label: s.name,
-        r: 9, raw: s,
-        sector: s.sector, location: s.location, stage: s.stage, mission: s.mission,
-        signature_edge: s.signature_edge,
-      });
-      const sch = originSchoolTag(s.origin);
-      if (sch) links.push({ source: `s:${s.id}`, target: `sch:${sch}`, kind: "school" });
-    });
-
-    // Institutions: render as new node type, link to their parent school,
-    // and (lightly) connect them to talent + startups that share their lineage signals.
-    const SIZE_BY_TYPE = {
-      university: 16, "innovation-hub": 13, accelerator: 12,
-      lab: 11, vc: 11, community: 13, "govt-program": 12,
-    };
-    const institutionSignalIndex = new Map(); // signalId -> [institutionNodeId]
-    institutions.forEach((inst) => {
-      const id = `i:${inst.id}`;
-      nodes.push({
-        id, kind: "institution", label: inst.name,
-        r: SIZE_BY_TYPE[inst.type] || 12, raw: inst,
-        instType: inst.type, parent: inst.parent,
-        location: inst.location, mission: inst.mission,
-        signature_edge: inst.signature_edge,
-      });
-      if (inst.parent) {
-        // Treat short parent tags ("U of U", "USU") as canonical school nodes.
-        const schId = `sch:${inst.parent}`;
-        links.push({ source: id, target: schId, kind: "parent" });
-      }
-      (inst.signals || []).forEach((sig) => {
-        if (!institutionSignalIndex.has(sig)) institutionSignalIndex.set(sig, []);
-        institutionSignalIndex.get(sig).push(id);
-      });
-    });
-
-    // For each profile (talent or startup) carrying a signal that an institution
-    // also carries, draw a faint dashed line to that institution.
-    function linkProfileToInstitutions(profileNodeId, profileSignals) {
-      (profileSignals || []).forEach((sig) => {
-        const matches = institutionSignalIndex.get(sig);
-        if (!matches) return;
-        matches.forEach((instId) => {
-          links.push({ source: profileNodeId, target: instId, kind: "signal" });
-        });
-      });
-    }
-    talent.forEach((t)   => linkProfileToInstitutions(`t:${t.id}`, t.signals));
-    startups.forEach((s) => linkProfileToInstitutions(`s:${s.id}`, s.signals));
-
-    // City-based links between talent and startup in same city.
-    const cityIndex = new Map();
-    [...talent.map((t) => ({ id: `t:${t.id}`, c: city(t.location) })),
-     ...startups.map((s) => ({ id: `s:${s.id}`, c: city(s.location) }))]
-      .forEach(({ id, c }) => {
-        if (!c) return;
-        if (!cityIndex.has(c)) cityIndex.set(c, []);
-        cityIndex.get(c).push(id);
-      });
-    cityIndex.forEach((ids) => {
-      for (let i = 0; i < ids.length; i++) {
-        for (let j = i + 1; j < ids.length; j++) {
-          const a = ids[i], b = ids[j];
-          if (a.startsWith("t:") && b.startsWith("s:")) links.push({ source: a, target: b, kind: "location" });
-          if (a.startsWith("s:") && b.startsWith("t:")) links.push({ source: a, target: b, kind: "location" });
-        }
-      }
-    });
-
-    const COLOR = {
-      talent: "#1B365D", startup: "#C8A165", school: "#CC0000", institution: "#7C3AED",
-    };
-
-    const svg = d3.select("#graph");
-    const W = svg.node().clientWidth, H = svg.node().clientHeight;
-    const tooltip = d3.select("#tooltip");
-
-    const sim = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id((d) => d.id)
-        .distance((d) => d.kind === "school" ? 90 : 160).strength((d) => d.kind === "school" ? 0.6 : 0.06))
-      .force("charge", d3.forceManyBody().strength(-220))
-      .force("center", d3.forceCenter(W / 2, H / 2))
-      .force("collide", d3.forceCollide().radius((d) => d.r + 4));
-
-    const linkSel = svg.append("g").attr("class", "links")
-      .selectAll("line").data(links).join("line")
-      .attr("class", (d) => `link ${d.kind}`);
-
-    const nodeSel = svg.append("g").attr("class", "nodes")
-      .selectAll("g.node").data(nodes).join("g").attr("class", "node")
-      .call(d3.drag()
-        .on("start", (ev, d) => { if (!ev.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
-        .on("drag",  (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
-        .on("end",   (ev, d) => { if (!ev.active) sim.alphaTarget(0); d.fx = null; d.fy = null; }));
-
-    nodeSel.append("circle")
-      .attr("r", (d) => d.r)
-      .attr("fill", (d) => COLOR[d.kind])
-      .on("mousemove", (ev, d) => {
-        let html;
-        if (d.kind === "school") {
-          html = `<strong>${d.label}</strong><span class="muted">school / origin</span>`;
-        } else if (d.kind === "talent") {
-          html = `<strong>${d.label}</strong>${d.headline ? `<span class="muted">${d.headline}</span>` : ""}<span class="muted">${d.location || ""}</span><span class="muted" style="color:#C8A165">click for signature edge →</span>`;
-        } else if (d.kind === "institution") {
-          html = `<strong>${d.label}</strong><span class="muted">${d.instType || ""}${d.parent ? " · " + d.parent : ""}</span><span class="muted">${d.location || ""}</span><span class="muted" style="color:#7C3AED">click for full profile →</span>`;
-        } else {
-          html = `<strong>${d.label}</strong>${d.mission ? `<span class="muted">${d.mission}</span>` : ""}<span class="muted">${(d.sector || "")} · ${(d.stage || "")} · ${(d.location || "")}</span>`;
-        }
-        tooltip.html(html).classed("show", true)
-          .style("left", (ev.pageX + 14) + "px").style("top", (ev.pageY + 14) + "px");
-      })
-      .on("mouseout", () => tooltip.classed("show", false))
-      .on("click", (ev, d) => {
-        ev.stopPropagation();
-        openDetail(d);
-      });
-
-    nodeSel.append("text").attr("class", "node-label")
-      .attr("x", (d) => d.r + 4).attr("y", 4)
-      .text((d) => {
-        if (d.kind === "school") return d.label;
-        if (d.kind === "startup") return d.label;
-        if (d.kind === "institution") return d.label;
-        return "";
-      });
-
-    sim.on("tick", () => {
-      linkSel
-        .attr("x1", (d) => d.source.x).attr("y1", (d) => d.source.y)
-        .attr("x2", (d) => d.target.x).attr("y2", (d) => d.target.y);
-      nodeSel.attr("transform", (d) => `translate(${d.x},${d.y})`);
-    });
-
-    // ---------- Detail panel + neighbor highlighting ----------
-    const detail   = document.getElementById("detail");
-    const dKicker  = document.getElementById("detail-kicker");
-    const dName    = document.getElementById("detail-name");
-    const dSub     = document.getElementById("detail-sub");
-    const dSig     = document.getElementById("detail-signature");
-    const dSigBody = document.getElementById("detail-signature-body");
-    const dMeta    = document.getElementById("detail-meta");
-    const dFields  = document.getElementById("detail-fields");
-    document.getElementById("detail-close").addEventListener("click", closeDetail);
-    svg.on("click", () => closeDetail());
-
-    // Index neighbors for fast lookup.
-    const neighbors = new Map();
-    function addNbr(a, b) {
-      if (!neighbors.has(a)) neighbors.set(a, new Set());
-      neighbors.get(a).add(b);
-    }
-    links.forEach((l) => {
-      const s = typeof l.source === "object" ? l.source.id : l.source;
-      const t = typeof l.target === "object" ? l.target.id : l.target;
-      addNbr(s, t); addNbr(t, s);
-    });
-
-    function escapeHtml(str) {
-      return String(str || "").replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-      }[c]));
-    }
-
-    function signalChipsHtml(ids) {
-      if (!Array.isArray(ids) || !ids.length || !window.NMSignals) return "";
-      return ids.map((id) => {
-        const def = window.NMSignals.SIGNALS[id];
-        if (!def) return "";
-        return `<span class="sg" title="${escapeHtml(def.phrase)}">${escapeHtml(def.label)}</span>`;
-      }).join("");
-    }
-
-    function warmIntroCount(d) {
-      // For talent: count startups sharing school OR city.
-      // For startups: count talent sharing school OR city.
-      if (d.kind === "school") return null;
-      const myCity = (d.location || "").split(",")[0].trim();
-      const mySch  = d.kind === "talent" ? canonSchool(d.raw.school) : originSchoolTag(d.raw.origin);
-      const others = d.kind === "talent" ? startups : talent;
-      let count = 0;
-      others.forEach((o) => {
-        const oCity = String(o.location || "").split(",")[0].trim();
-        const oSch  = o.school ? canonSchool(o.school) : originSchoolTag(o.origin);
-        if ((mySch && oSch && mySch === oSch) || (myCity && oCity && myCity === oCity)) count++;
-      });
-      return count;
-    }
-
-    function rolePill(role) {
-      if (!role) return "";
-      const colors = {
-        executive: "#1B365D", operator: "#1B365D",
-        student:   "#CC0000", intern: "#CC0000",
-        advisor:   "#C8A165", mentor: "#C8A165", board: "#C8A165",
-      };
-      const c = colors[role] || "#64748B";
-      return `<span style="display:inline-block;background:${c};color:white;font-size:0.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;">${role}</span>`;
-    }
-
-    function openDetail(d) {
-      // Build content depending on kind.
-      const t = d.raw || {};
-      if (d.kind === "school") {
-        dKicker.textContent = "School / origin";
-        dName.innerHTML = escapeHtml(d.label);
-        dSub.textContent = "Cluster anchor — talent and startups affiliated with this institution.";
-        dSig.hidden = true;
-        const linkedTalent   = talent.filter((x) => canonSchool(x.school) === d.label).length;
-        const linkedStartups = startups.filter((x) => originSchoolTag(x.origin) === d.label).length;
-        dMeta.innerHTML = `
-          <div class="cell"><div class="k">Talent linked</div><div class="v">${linkedTalent}</div></div>
-          <div class="cell"><div class="k">Startups linked</div><div class="v">${linkedStartups}</div></div>`;
-        dFields.innerHTML = "";
-      } else if (d.kind === "talent") {
-        dKicker.textContent = "Talent";
-        dName.innerHTML = `${escapeHtml(d.label)} ${rolePill(d.role)}`;
-        dSub.textContent = d.headline || "";
-        if (d.signature_edge) {
-          dSig.hidden = false;
-          dSigBody.textContent = d.signature_edge;
-        } else {
-          dSig.hidden = true;
-        }
-        const warm = warmIntroCount(d);
-        const sectors = (t.domains || []).length;
-        dMeta.innerHTML = `
-          <div class="cell"><div class="k">Warm-intro paths</div><div class="v">${warm ?? "—"}</div></div>
-          <div class="cell"><div class="k">Sectors covered</div><div class="v">${sectors}</div></div>`;
-        const skills = (t.skills || []).slice(0, 8).map((s) => `<span class="sc">${escapeHtml(s)}</span>`).join("");
-        const stages = (t.stage_pref || []).join(" · ");
-        const signalsHtml = signalChipsHtml(t.signals);
-        dFields.innerHTML = `
-          <div class="field-row"><span class="k">Location</span>${escapeHtml(t.location || "")}</div>
-          <div class="field-row"><span class="k">School</span>${escapeHtml(t.school || "—")}</div>
-          ${t.research_area ? `<div class="field-row"><span class="k">Research</span>${escapeHtml(t.research_area)}</div>` : ""}
-          ${t.office ? `<div class="field-row"><span class="k">Office</span>${escapeHtml(t.office)}</div>` : ""}
-          <div class="field-row"><span class="k">Availability</span>${escapeHtml(t.availability || "")}</div>
-          <div class="field-row"><span class="k">Stage fit</span>${escapeHtml(stages)}</div>
-          <div class="field-row"><span class="k">Risk tolerance</span>${escapeHtml(String(t.risk_tolerance ?? ""))}/5</div>
-          <div class="field-row"><span class="k">Mission</span><em>${escapeHtml(t.mission || "")}</em></div>
-          ${signalsHtml ? `<div class="field-row" style="margin-top:10px;"><span class="k">Signals</span> <span class="muted" style="font-size:0.76rem;">distinctive bonds the matcher uses</span></div><div class="signal-chips">${signalsHtml}</div>` : ""}
-          <div class="field-row" style="margin-top:10px;"><span class="k">Skills</span></div>
-          <div class="skill-chips">${skills}</div>
-          ${t.source ? `<div class="field-row" style="margin-top:10px;font-size:0.74rem;"><span class="k">Source</span>${escapeHtml(t.source)}</div>` : ""}`;
-      } else if (d.kind === "institution") {
-        const inst = t;
-        dKicker.textContent = (inst.type || "Institution").replace(/-/g, " ");
-        dName.innerHTML = escapeHtml(d.label);
-        dSub.textContent = inst.parent ? `Affiliated with ${inst.parent}` : (inst.location || "");
-        if (d.signature_edge) {
-          dSig.hidden = false;
-          dSigBody.textContent = d.signature_edge;
-        } else {
-          dSig.hidden = true;
-        }
-        // Count of profiles + companies linked to this institution via shared signals.
-        const sigSet = new Set(inst.signals || []);
-        const linkedTalent = talent.filter((x) => (x.signals || []).some((s) => sigSet.has(s))).length;
-        const linkedStartups = startups.filter((x) => (x.signals || []).some((s) => sigSet.has(s))).length;
-        dMeta.innerHTML = `
-          <div class="cell"><div class="k">Linked talent</div><div class="v">${linkedTalent}</div></div>
-          <div class="cell"><div class="k">Linked companies</div><div class="v">${linkedStartups}</div></div>`;
-        const signalsHtml = signalChipsHtml(inst.signals);
-        const alumni = (inst.notable_alumni || []).slice(0, 5)
-          .map((a) => `<div class="field-row" style="font-size:0.86rem;">• ${escapeHtml(a)}</div>`).join("");
-        dFields.innerHTML = `
-          <div class="field-row"><span class="k">Type</span>${escapeHtml(inst.type || "")}</div>
-          ${inst.parent ? `<div class="field-row"><span class="k">Parent</span>${escapeHtml(inst.parent)}</div>` : ""}
-          <div class="field-row"><span class="k">Location</span>${escapeHtml(inst.location || "")}</div>
-          ${inst.founded ? `<div class="field-row"><span class="k">Founded</span>${escapeHtml(String(inst.founded))}</div>` : ""}
-          ${inst.url ? `<div class="field-row"><span class="k">URL</span><a href="${escapeHtml(inst.url)}" target="_blank" rel="noopener">${escapeHtml(inst.url.replace(/^https?:\/\//, ""))}</a></div>` : ""}
-          <div class="field-row"><span class="k">Mission</span><em>${escapeHtml(inst.mission || "")}</em></div>
-          ${signalsHtml ? `<div class="field-row" style="margin-top:10px;"><span class="k">Signals</span> <span class="muted" style="font-size:0.76rem;">tags shared with profiles below</span></div><div class="signal-chips">${signalsHtml}</div>` : ""}
-          ${alumni ? `<div class="field-row" style="margin-top:10px;"><span class="k">Notable alumni / portfolio</span></div>${alumni}` : ""}
-          ${inst.source ? `<div class="field-row" style="margin-top:10px;font-size:0.74rem;"><span class="k">Source</span>${escapeHtml(inst.source)}</div>` : ""}`;
-      } else {
-        dKicker.textContent = "Startup";
-        dName.innerHTML = escapeHtml(d.label);
-        dSub.textContent = t.mission || "";
-        if (d.signature_edge) {
-          dSig.hidden = false;
-          dSigBody.textContent = d.signature_edge;
-        } else {
-          dSig.hidden = true;
-        }
-        const warm = warmIntroCount(d);
-        dMeta.innerHTML = `
-          <div class="cell"><div class="k">Warm-intro paths</div><div class="v">${warm ?? "—"}</div></div>
-          <div class="cell"><div class="k">TRL</div><div class="v">${t.trl ?? "—"}</div></div>`;
-        const needs = (t.needs || []).map((n) => `<span class="sc">${escapeHtml(n)}</span>`).join("");
-        const signalsHtml = signalChipsHtml(t.signals);
-        dFields.innerHTML = `
-          <div class="field-row"><span class="k">Sector</span>${escapeHtml(t.sector || "")}</div>
-          <div class="field-row"><span class="k">Stage</span>${escapeHtml(t.stage || "")}</div>
-          <div class="field-row"><span class="k">Origin</span>${escapeHtml(t.origin || "")}</div>
-          <div class="field-row"><span class="k">Location</span>${escapeHtml(t.location || "")}</div>
-          <div class="field-row"><span class="k">Funding</span>${escapeHtml(t.funding_status || "")}</div>
-          ${signalsHtml ? `<div class="field-row" style="margin-top:10px;"><span class="k">Signals</span> <span class="muted" style="font-size:0.76rem;">distinctive bonds the matcher uses</span></div><div class="signal-chips">${signalsHtml}</div>` : ""}
-          <div class="field-row" style="margin-top:10px;"><span class="k">Needs</span></div>
-          <div class="skill-chips">${needs}</div>`;
-      }
-      detail.classList.add("show");
-      detail.setAttribute("aria-hidden", "false");
-      highlightNeighborhood(d.id);
-    }
-
-    function closeDetail() {
-      detail.classList.remove("show");
-      detail.setAttribute("aria-hidden", "true");
-      clearHighlight();
-    }
-
-    function highlightNeighborhood(id) {
-      const keep = neighbors.get(id) || new Set();
-      keep.add(id);
-      nodeSel.classed("faded",    (n) => !keep.has(n.id))
-             .classed("highlight",(n) => n.id === id);
-      linkSel.classed("faded", (l) => {
-        const s = typeof l.source === "object" ? l.source.id : l.source;
-        const t = typeof l.target === "object" ? l.target.id : l.target;
-        return s !== id && t !== id;
-      });
-    }
-    function clearHighlight() {
-      nodeSel.classed("faded", false).classed("highlight", false);
-      linkSel.classed("faded", false);
-    }
-  })();
+  renderBrain();
+  loadResults();
   </script>
 </body>
 </html>
