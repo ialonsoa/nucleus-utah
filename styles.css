@@ -145,6 +145,24 @@ p  { margin: 0 0 12px; color: #334155; }
 .why ul { margin: 0; padding-left: 20px; }
 .why li { margin-bottom: 4px; }
 
+/* Rare-bond ribbon — the "what only these two share" signal */
+.bond-ribbon {
+  display: flex; align-items: center; gap: 12px;
+  margin: -22px -22px 16px;
+  padding: 10px 22px;
+  background: linear-gradient(90deg, var(--sandstone-100) 0%, #FFF6E5 60%, white 100%);
+  border-bottom: 1px solid var(--sandstone);
+  border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);
+}
+.bond-kicker {
+  display: inline-block; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--navy-700);
+  background: var(--sandstone); padding: 4px 10px; border-radius: 999px;
+  flex-shrink: 0;
+}
+.bond-body { color: var(--ink); font-size: 0.94rem; font-weight: 500; line-height: 1.4; }
+
 /* Toast */
 .toast {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
@@ -171,4 +189,140 @@ p  { margin: 0 0 12px; color: #334155; }
   display: inline-block; padding: 3px 10px; border-radius: 999px;
   background: var(--sandstone-100); color: var(--navy-700); font-size: 0.78rem; font-weight: 600;
 }
+.trend-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 999px;
+  background: #DCFCE7; color: #166534;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  border: 1px solid #BBF7D0;
+}
 .divider { height: 1px; background: var(--line); margin: 24px 0; }
+
+/* AI Profile Builder ------------------------------------------------- */
+.ai-panel {
+  background: linear-gradient(135deg, #F5EBD7 0%, #FFFFFF 60%, #EAF1FB 100%);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px; box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.ai-panel::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(600px 200px at 110% -20%, rgba(27,54,93,.08), transparent);
+  pointer-events: none;
+}
+.ai-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+  position: relative;
+}
+.ai-header strong { font-size: 1.05rem; color: var(--ink); }
+.ai-sub { font-size: 0.86rem; color: var(--muted); }
+.ai-spark {
+  width: 38px; height: 38px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--navy), var(--sandstone));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 1.2rem; flex: 0 0 auto;
+  box-shadow: 0 6px 18px rgba(27,54,93,.25);
+}
+.ai-badge {
+  margin-left: auto; padding: 5px 12px; border-radius: 999px;
+  background: rgba(27,54,93,.08); color: var(--navy);
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em;
+  cursor: pointer; user-select: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: background .15s, color .15s, transform .12s;
+}
+.ai-badge:hover { transform: translateY(-1px); background: rgba(27,54,93,.14); }
+.ai-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--muted);
+  box-shadow: 0 0 0 0 transparent;
+}
+.ai-badge-live {
+  background: #DCFCE7; color: #166534;
+}
+.ai-badge-live:hover { background: #BBF7D0; }
+.ai-badge-live .ai-badge-dot {
+  background: #16A34A;
+  box-shadow: 0 0 0 4px rgba(22,163,74,.18);
+  animation: ai-pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes ai-pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 4px rgba(22,163,74,.18); }
+  50%      { box-shadow: 0 0 0 7px rgba(22,163,74,.05); }
+}
+
+.ai-keybox {
+  margin-top: 12px; padding: 12px 14px;
+  background: white; border: 1px solid var(--line); border-radius: 10px;
+  position: relative;
+  animation: ai-slidein .2s ease-out;
+}
+.ai-keybox label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.92rem; }
+.ai-keybox .help { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
+.ai-keyrow { display: flex; gap: 8px; align-items: center; }
+.ai-keyrow input {
+  flex: 1; padding: 10px 12px; border: 1px solid var(--line);
+  border-radius: 10px; font-size: 0.95rem; font-family: ui-monospace, monospace;
+}
+.ai-keyrow input:focus {
+  outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(27,54,93,.12);
+}
+.ai-grid {
+  display: grid; gap: 12px; position: relative;
+}
+.ai-grid .field { margin-bottom: 0; }
+.ai-grid input, .ai-grid textarea {
+  background: white;
+}
+.ai-actions {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  margin-top: 14px; position: relative;
+}
+.ai-actions .ai-sample {
+  font-size: 0.82rem; padding: 5px 10px;
+}
+.ai-actions .ai-sample:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.ai-loading {
+  position: relative; pointer-events: none;
+  background: linear-gradient(90deg, var(--navy), var(--sandstone), var(--navy));
+  background-size: 200% 100%;
+  animation: ai-shimmer 1.2s linear infinite;
+}
+@keyframes ai-shimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.ai-result {
+  margin-top: 14px; padding: 10px 14px; border-radius: 10px;
+  background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0;
+  display: flex; align-items: center; gap: 10px; font-size: 0.92rem;
+  animation: ai-slidein .25s ease-out;
+}
+.ai-result .ai-check {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #16A34A; color: white; display: inline-flex;
+  align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700;
+  flex: 0 0 auto;
+}
+.ai-result .muted { color: #166534; opacity: .75; font-style: italic; }
+@keyframes ai-slidein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Highlight fields the AI just filled. */
+.ai-filled {
+  animation: ai-highlight 1.6s ease-out;
+}
+@keyframes ai-highlight {
+  0%   { background: #FEF3C7; box-shadow: 0 0 0 3px rgba(245,158,11,.25); }
+  100% { background: white;   box-shadow: 0 0 0 0 transparent; }
+}
+.chip.ai-pulse {
+  animation: ai-pulse 1.4s ease-out;
+}
+@keyframes ai-pulse {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.10); box-shadow: 0 0 0 4px rgba(27,54,93,.18); }
+  100% { transform: scale(1); }
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Affinity webhook tester · Nucleus Match</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
+    <div class="nav-links"><a href="../demo.html">Demo</a></div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container" style="max-width: 720px;">
+      <span class="tag">Internal · Affinity webhook tester</span>
+      <h1 class="mt-2">Test the Affinity integration</h1>
+      <p class="muted">
+        Use this page during the demo to fire sample payloads at your webhook so judges
+        can refresh the webhook page and see them land in real time.
+      </p>
+
+      <div class="card mt-3">
+        <h3>1 · Webhook URL</h3>
+        <p class="muted">
+          Open <a href="https://webhook.site" target="_blank">webhook.site</a> in another tab,
+          copy your unique URL, and paste it here.
+          (You can also bake it into <code>integrations/affinity.js</code> as the default.)
+        </p>
+        <div class="field">
+          <input type="text" id="webhook-url" placeholder="https://webhook.site/abc123…" />
+          <div class="help">Stored in localStorage so you don't have to retype it.</div>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <h3>2 · Pick a sample match</h3>
+        <div class="field">
+          <select id="sample">
+            <option value="t-001|s-001">Maya → HelioMet (Executive → BYU advanced-manufacturing)</option>
+            <option value="t-002|s-002">Jacob → NeuraDose (Student → U of U life-sciences)</option>
+            <option value="t-003|s-003">Priya → LedgerLoop (Operator → Lehi fintech)</option>
+          </select>
+        </div>
+        <div class="flex">
+          <button class="btn btn-primary" id="fire">Fire payload →</button>
+          <button class="btn btn-secondary" id="fire-all">Fire all 3 (1s apart)</button>
+        </div>
+      </div>
+
+      <div class="card mt-2">
+        <h3>3 · Last payload sent</h3>
+        <pre id="payload" style="background:#0F172A;color:#E2E8F0;padding:14px;border-radius:10px;overflow-x:auto;font-size:0.85rem;line-height:1.5;"></pre>
+        <div id="status" class="muted"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="../core/constants.js"></script>
+  <script src="../core/signals.js"></script>
+  <script src="../core/match.js"></script>
+  <script>
+    const KEY = "nm_webhook_url";
+    const urlInput = document.getElementById("webhook-url");
+    const stored = localStorage.getItem(KEY) || "";
+    urlInput.value = stored;
+    urlInput.addEventListener("input", () => localStorage.setItem(KEY, urlInput.value));
+
+    const payloadEl = document.getElementById("payload");
+    const statusEl = document.getElementById("status");
+
+    async function loadPair(pairId) {
+      const [tid, sid] = pairId.split("|");
+      const [talent, startups] = await Promise.all([
+        fetch("../data/talent.json").then((r) => r.json()),
+        fetch("../data/startups.json").then((r) => r.json()),
+      ]);
+      const t = talent.find((x) => x.id === tid);
+      const s = startups.find((x) => x.id === sid);
+      const r = window.NMMatch.scoreTalentToStartup(t, s);
+      return {
+        source: "nucleus-match",
+        timestamp: new Date().toISOString(),
+        score: r.score,
+        breakdown: r.breakdown,
+        reasons: r.top_reasons,
+        talent_id: t.id,
+        talent_name: t.name,
+        startup_id: s.id,
+        startup_name: s.name,
+      };
+    }
+
+    async function fire(pairId) {
+      const url = urlInput.value.trim();
+      if (!url) {
+        statusEl.textContent = "× Set the webhook URL first.";
+        return;
+      }
+      const payload = await loadPair(pairId);
+      payloadEl.textContent = JSON.stringify(payload, null, 2);
+      statusEl.textContent = "Sending…";
+      try {
+        await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          mode: "no-cors",
+        });
+        statusEl.textContent = "✓ Sent. Refresh webhook.site to see it land.";
+      } catch (e) {
+        statusEl.textContent = "× Network error (CORS may have blocked the response, but the request likely went through). Check webhook.site.";
+      }
+    }
+
+    document.getElementById("fire").addEventListener("click", () => {
+      fire(document.getElementById("sample").value);
+    });
+    document.getElementById("fire-all").addEventListener("click", async () => {
+      const ids = ["t-001|s-001", "t-002|s-002", "t-003|s-003"];
+      for (const id of ids) {
+        await fire(id);
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+    });
+  </script>
+</body>
+</html>

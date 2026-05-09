@@ -21,6 +21,59 @@
           <p class="muted">90 seconds. No resume upload. We'll match you with founders who actually need you.</p>
         </div>
 
+        <!-- AI Profile Builder ----------------------------------------- -->
+        <div class="ai-panel mt-4" id="ai-panel">
+          <div class="ai-header">
+            <span class="ai-spark">✨</span>
+            <div>
+              <strong>Build my profile with AI</strong>
+              <div class="ai-sub">Paste a LinkedIn URL or any bio — we'll structure it in seconds.</div>
+            </div>
+            <span class="ai-badge" id="ai-badge" title="Click to configure your Claude API key">
+              <span class="ai-badge-dot"></span>
+              <span class="ai-badge-text">Powered by Claude</span>
+            </span>
+          </div>
+
+          <div class="ai-keybox" id="ai-keybox" hidden>
+            <label for="ai-key">Claude API key <span class="muted">(stored in your browser only — never sent to us)</span></label>
+            <div class="ai-keyrow">
+              <input type="password" id="ai-key" placeholder="sk-ant-..." autocomplete="off" />
+              <button type="button" class="btn btn-secondary" id="ai-key-save" style="padding:8px 14px;">Save</button>
+              <button type="button" class="btn btn-ghost" id="ai-key-clear" style="padding:8px 14px;">Clear</button>
+            </div>
+            <div class="help">When set, we send your URL + pasted text directly to Anthropic. No key? We use the offline extractor — works great for demos.</div>
+          </div>
+
+          <div class="ai-grid">
+            <div class="field">
+              <label for="ai-url">Profile URL <span class="muted">(LinkedIn, BYU faculty, .edu)</span></label>
+              <input type="text" id="ai-url" placeholder="https://www.linkedin.com/in/maya-chen" />
+            </div>
+            <div class="field">
+              <label for="ai-text">…or paste your bio / About / resume text</label>
+              <textarea id="ai-text" rows="4" placeholder="Paste your LinkedIn About section, faculty bio, or a quick description of yourself…"></textarea>
+            </div>
+          </div>
+
+          <div class="ai-actions">
+            <button type="button" class="btn btn-primary" id="ai-build">
+              <span class="ai-cta-label">✨ Build my profile</span>
+            </button>
+            <span class="muted" style="font-size:0.86rem;">or try a sample:</span>
+            <button type="button" class="chip ai-sample" data-sample="maya">Maya · ex-Pluralsight VP</button>
+            <button type="button" class="chip ai-sample" data-sample="jacob">Jacob · U of U bioeng student</button>
+            <button type="button" class="chip ai-sample" data-sample="brad">Brad · BYU Mech Eng professor</button>
+          </div>
+
+          <div id="ai-result" class="ai-result" hidden>
+            <span class="ai-check">✓</span>
+            <span id="ai-result-text"></span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
         <div class="steps mt-4">
           <div class="step active" data-step="1"></div>
           <div class="step" data-step="2"></div>
@@ -155,6 +208,98 @@
 
   <div id="toast" class="toast"></div>
   <script src="app.js"></script>
-  <script>NM.initStepForm("#talent-form", "talent");</script>
+  <script src="profile-builder.js"></script>
+  <script>
+    NM.initStepForm("#talent-form", "talent");
+
+    (function () {
+      const form = document.getElementById("talent-form");
+      const urlInput = document.getElementById("ai-url");
+      const textInput = document.getElementById("ai-text");
+      const buildBtn = document.getElementById("ai-build");
+      const result = document.getElementById("ai-result");
+      const resultText = document.getElementById("ai-result-text");
+      const badge = document.getElementById("ai-badge");
+      const badgeText = badge.querySelector(".ai-badge-text");
+      const keyBox = document.getElementById("ai-keybox");
+      const keyInput = document.getElementById("ai-key");
+      const keySave = document.getElementById("ai-key-save");
+      const keyClear = document.getElementById("ai-key-clear");
+
+      function refreshBadge() {
+        const live = NMProfileBuilder.hasApiKey();
+        badge.classList.toggle("ai-badge-live", live);
+        badgeText.textContent = live ? "Powered by Claude · live" : "Powered by Claude · local";
+      }
+      refreshBadge();
+
+      badge.addEventListener("click", () => {
+        keyBox.hidden = !keyBox.hidden;
+        if (!keyBox.hidden) {
+          keyInput.value = NMProfileBuilder.getApiKey();
+          keyInput.focus();
+        }
+      });
+      keySave.addEventListener("click", () => {
+        NMProfileBuilder.setApiKey(keyInput.value);
+        refreshBadge();
+        NM.toast(NMProfileBuilder.hasApiKey() ? "Claude key saved · live mode on" : "Claude key cleared");
+        keyBox.hidden = true;
+      });
+      keyClear.addEventListener("click", () => {
+        NMProfileBuilder.setApiKey("");
+        keyInput.value = "";
+        refreshBadge();
+        NM.toast("Claude key cleared · local mode");
+      });
+
+      function setLoading(on) {
+        buildBtn.disabled = on;
+        const live = NMProfileBuilder.hasApiKey();
+        buildBtn.querySelector(".ai-cta-label").textContent =
+          on ? (live ? "✨ Calling Claude…" : "✨ Extracting…") : "✨ Build my profile";
+        if (on) buildBtn.classList.add("ai-loading");
+        else buildBtn.classList.remove("ai-loading");
+      }
+
+      async function runBuild() {
+        const url = urlInput.value.trim();
+        const text = textInput.value.trim();
+        if (!url && !text) {
+          NM.toast("Paste a URL or bio first.");
+          return;
+        }
+        setLoading(true);
+        const t0 = performance.now();
+        try {
+          const profile = await NMProfileBuilder.extract(url, text);
+          const filled = NMProfileBuilder.applyToForm(profile, form);
+          const ms = Math.round(performance.now() - t0);
+          result.hidden = false;
+          resultText.innerHTML =
+            `Profile drafted from <strong>${profile._source || "input"}</strong> in ${ms} ms — ${filled} fields auto-filled. <em class="muted">Review and adjust before submitting.</em>`;
+          NM.toast(`✨ Profile built in ${ms}ms`);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      buildBtn.addEventListener("click", runBuild);
+
+      document.querySelectorAll(".ai-sample").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.dataset.sample;
+          const text = NMProfileBuilder.SAMPLE_TEXTS[key] || "";
+          textInput.value = text;
+          urlInput.value = ({
+            maya:  "https://www.linkedin.com/in/maya-chen",
+            jacob: "https://www.linkedin.com/in/jacob-reyes",
+            brad:  "https://me.byu.edu/faculty/bradadams",
+          })[key] || "";
+          runBuild();
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

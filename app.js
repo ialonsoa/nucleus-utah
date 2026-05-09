@@ -91,25 +91,46 @@
   /* ------------------------------------------------------------------ */
   NM.renderMatches = async function () {
     const params = new URLSearchParams(location.search);
-    const as = params.get("as") || "talent";
-    const me = JSON.parse(
-      localStorage.getItem(as === "talent" ? "nm_talent_profile" : "nm_startup_profile") || "null"
-    );
+    const demoId = params.get("demo");        // e.g. ?demo=t-001 or ?demo=s-001
+    let as = params.get("as") || "talent";
+    if (demoId) as = demoId.startsWith("s-") ? "startup" : "talent";
+
     const title = document.getElementById("match-title");
     const sub = document.getElementById("match-subtitle");
 
-    if (!me) {
-      title.textContent = "No profile yet";
-      sub.textContent = "Sign up first, then we'll find your matches.";
-      return;
-    }
-
-    const [talent, startups] = await Promise.all([
+    const [talent, startups, events] = await Promise.all([
       fetch("data/talent.json").then((r) => r.json()).catch(() => []),
       fetch("data/startups.json").then((r) => r.json()).catch(() => []),
+      fetch("data/handshake-events.json").then((r) => r.json()).catch(() => []),
     ]);
+    if (window.NMMatch && window.NMMatch.setHandshakeEvents) {
+      window.NMMatch.setHandshakeEvents(events);
+    }
+    if (window.NMMatch && window.NMMatch.setAllProfiles) {
+      window.NMMatch.setAllProfiles([...talent, ...startups]);
+    }
 
-    const candidates = as === "talent" ? startups : talent;
+    let me;
+    if (demoId) {
+      me = (demoId.startsWith("s-") ? startups : talent).find((x) => x.id === demoId);
+      if (!me) {
+        title.textContent = "Demo profile not found";
+        sub.textContent = `No profile with id ${demoId} in the data files.`;
+        return;
+      }
+    } else {
+      me = JSON.parse(
+        localStorage.getItem(as === "talent" ? "nm_talent_profile" : "nm_startup_profile") || "null"
+      );
+      if (!me) {
+        title.textContent = "No profile yet";
+        sub.textContent = "Sign up first, then we'll find your matches.";
+        return;
+      }
+    }
+
+    const allCandidates = as === "talent" ? startups : talent;
+    const candidates = allCandidates.filter((c) => c.id !== me.id);
     if (!Array.isArray(candidates) || candidates.length === 0) {
       title.textContent = "Match dataset not loaded yet";
       sub.textContent =
@@ -128,12 +149,12 @@
       .slice(0, 5);
 
     title.textContent = `Top ${scored.length} matches for ${me.name || "you"}`;
-    sub.textContent = `Ranked by 6-criteria fit · ${as === "talent" ? "startups" : "talent"} from across Utah`;
+    sub.textContent = `Ranked by 6-criteria fit + Handshake demand · ${as === "talent" ? "startups" : "talent"} from across Utah${demoId ? " · demo mode" : ""}`;
 
     const root = document.getElementById("results");
     root.innerHTML = "";
-    scored.forEach(({ other, score, breakdown, top_reasons }) => {
-      root.appendChild(renderCard(me, other, score, breakdown, top_reasons, as));
+    scored.forEach(({ other, score, breakdown, top_reasons, demand, bond }) => {
+      root.appendChild(renderCard(me, other, score, breakdown, top_reasons, as, demand, bond));
     });
 
     document.getElementById("export-csv").addEventListener("click", () => {
@@ -146,10 +167,17 @@
   /* ------------------------------------------------------------------ */
   NM.renderDemoScenarios = async function () {
     const root = document.getElementById("demo-results");
-    const [talent, startups] = await Promise.all([
+    const [talent, startups, events] = await Promise.all([
       fetch("data/talent.json").then((r) => r.json()).catch(() => []),
       fetch("data/startups.json").then((r) => r.json()).catch(() => []),
+      fetch("data/handshake-events.json").then((r) => r.json()).catch(() => []),
     ]);
+    if (window.NMMatch && window.NMMatch.setHandshakeEvents) {
+      window.NMMatch.setHandshakeEvents(events);
+    }
+    if (window.NMMatch && window.NMMatch.setAllProfiles) {
+      window.NMMatch.setAllProfiles([...talent, ...startups]);
+    }
     const scenarios = [
       { label: "Executive → Deep-tech startup", talentId: "t-001", startupId: "s-001" },
       { label: "Student → Research spinout",     talentId: "t-002", startupId: "s-002" },
@@ -167,11 +195,20 @@
         return;
       }
       const result = window.NMMatch.scoreTalentToStartup(t, s);
-      const card = renderCard(t, s, result.score, result.breakdown, result.top_reasons, "talent");
+      const card = renderCard(t, s, result.score, result.breakdown, result.top_reasons, "talent", result.demand, result.bond);
+      const header = document.createElement("div");
+      header.className = "flex between mb-0";
       const tag = document.createElement("div");
       tag.className = "tag";
       tag.textContent = sc.label;
-      card.prepend(tag);
+      const live = document.createElement("a");
+      live.className = "btn btn-secondary";
+      live.style.padding = "8px 14px";
+      live.href = `match.html?demo=${sc.talentId}`;
+      live.textContent = `Open live for ${t.name.split(" ")[0]} →`;
+      header.appendChild(tag);
+      header.appendChild(live);
+      card.prepend(header);
       root.appendChild(card);
     });
   };
@@ -179,7 +216,7 @@
   /* ------------------------------------------------------------------ */
   /* Match card renderer                                                 */
   /* ------------------------------------------------------------------ */
-  function renderCard(me, other, score, breakdown, top_reasons, as) {
+  function renderCard(me, other, score, breakdown, top_reasons, as, demand, bond) {
     const card = document.createElement("div");
     card.className = "card";
 
@@ -187,11 +224,28 @@
     const initials = (other.name || "??")
       .split(/\s+/).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 
+    // The "Rare bond" line is already prepended into top_reasons by match.js,
+    // so strip it here to avoid duplication when we render the highlighted ribbon.
+    const reasonsForBullets = (top_reasons || []).filter(
+      (r) => !/^Rare bond — /.test(r)
+    );
     const why = window.NMExplain.toBullets({
-      me, other, breakdown, top_reasons, perspective: as
+      me, other, breakdown, top_reasons: reasonsForBullets, perspective: as
     });
 
+    const trendingPill = (isStartup && demand && demand.score >= 0.4)
+      ? `<span class="trend-pill" title="${escape(demand.headline || "")}">↗ Trending on Handshake · ${demand.students} RSVPs</span>`
+      : "";
+
+    const bondRibbon = bond
+      ? `<div class="bond-ribbon" title="The rarest signal both profiles share.">
+           <span class="bond-kicker">Rare bond</span>
+           <span class="bond-body">${escape(bond.phrase)}</span>
+         </div>`
+      : "";
+
     card.innerHTML = `
+      ${bondRibbon}
       <div class="match-card">
         <div class="avatar">${initials}</div>
         <div>
@@ -205,6 +259,7 @@
                 ${(other.role_type ? `<span class="tag">${other.role_type}</span>` : "")}
                 ${(other.location ? `<span class="tag">${other.location}</span>` : "")}
                 ${(other.school ? `<span class="tag">${other.school}</span>` : "")}
+                ${trendingPill}
               </div>
             </div>
             <div class="score-pill">${Math.round(score)}% fit</div>

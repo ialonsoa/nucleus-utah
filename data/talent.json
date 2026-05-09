@@ -4,41 +4,1316 @@
     "name": "Maya Chen",
     "role_type": "executive",
     "headline": "Ex-Pluralsight VP Product · Lehi",
-    "skills": ["product strategy", "B2B SaaS", "GTM", "team building", "operations"],
-    "domains": ["software", "ai", "advanced-manufacturing"],
-    "stage_pref": ["pre-seed", "seed"],
+    "skills": [
+      "product strategy",
+      "B2B SaaS",
+      "GTM",
+      "team building",
+      "operations"
+    ],
+    "domains": [
+      "software",
+      "ai",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "pre-seed",
+      "seed"
+    ],
     "availability": "fractional",
     "risk_tolerance": 4,
     "mission": "Help Utah-grown deep tech reach national markets.",
     "location": "Lehi, UT",
-    "school": "BYU"
+    "school": "BYU",
+    "signature_edge": "Took Pluralsight from $40M to $250M ARR — has the exact playbook for scaling Utah B2B SaaS through enterprise.",
+    "signals": [
+      "lineage:pluralsight-alum",
+      "arc:big-co-to-startup",
+      "mission:utah-built"
+    ]
   },
   {
     "id": "t-002",
     "name": "Jacob Reyes",
     "role_type": "student",
     "headline": "U of U Bioengineering MS · drug delivery",
-    "skills": ["research", "engineering", "ML / AI"],
-    "domains": ["life-sciences"],
-    "stage_pref": ["idea", "pre-seed"],
+    "skills": [
+      "research",
+      "engineering",
+      "ML / AI"
+    ],
+    "domains": [
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
     "availability": "internship",
     "risk_tolerance": 5,
     "mission": "Translate Utah research from bench to bedside.",
     "location": "Salt Lake City, UT",
-    "school": "University of Utah"
+    "school": "University of Utah",
+    "signature_edge": "Co-author on 3 U of U drug-delivery patents before 25 — direct line into U of U bioengineering labs.",
+    "signals": [
+      "lineage:utah-bme",
+      "mission:bench-to-bedside",
+      "funding:nih"
+    ]
   },
   {
     "id": "t-003",
     "name": "Priya Shah",
     "role_type": "operator",
     "headline": "Ex-Qualtrics Senior Sales Engineer · Provo",
-    "skills": ["sales", "GTM", "B2B SaaS", "engineering"],
-    "domains": ["fintech", "software"],
-    "stage_pref": ["seed", "series-a"],
+    "skills": [
+      "sales",
+      "GTM",
+      "B2B SaaS",
+      "engineering"
+    ],
+    "domains": [
+      "fintech",
+      "software"
+    ],
+    "stage_pref": [
+      "seed",
+      "series-a"
+    ],
     "availability": "full-time",
     "risk_tolerance": 3,
     "mission": "Scale Utah B2B SaaS into enterprise.",
     "location": "Lehi, UT",
-    "school": "BYU"
+    "school": "BYU",
+    "signature_edge": "Closed Qualtrics' first $1M+ deal in financial services — a Series-A fintech can plug her in immediately.",
+    "signals": [
+      "lineage:qualtrics-alum",
+      "mission:utah-built",
+      "arc:big-co-to-startup"
+    ]
+  },
+  {
+    "id": "t-100",
+    "name": "Brad Adams",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · materials microstructure & EBSD",
+    "skills": [
+      "materials science",
+      "microstructure",
+      "EBSD",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Translate microstructure research into Utah deep-tech materials startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "CTB 435-S",
+    "research_area": "Materials microstructure, electron backscatter diffraction",
+    "signature_edge": "EBSD and texture-analysis authority — your phone-a-friend on metallurgical microstructure.",
+    "signals": [
+      "lineage:byu-tech-transfer",
+      "niche:materials-informatics"
+    ]
+  },
+  {
+    "id": "t-101",
+    "name": "Matt Allen",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · structural dynamics & vibrations",
+    "skills": [
+      "structural dynamics",
+      "vibrations",
+      "modal analysis",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Bring rigorous dynamics modeling to Utah aerospace and defense startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350B EB",
+    "research_area": "Structural dynamics, nonlinear vibrations",
+    "signature_edge": "Goes-to expert when your hardware vibrates and shouldn't — works regularly with aerospace primes.",
+    "signals": [
+      "funding:dod",
+      "mission:dual-use"
+    ]
+  },
+  {
+    "id": "t-102",
+    "name": "Sterling Baird",
+    "role_type": "advisor",
+    "headline": "Assistant Professor · BYU Mech Eng · materials informatics & ML",
+    "skills": [
+      "materials informatics",
+      "ML / AI",
+      "Bayesian optimization",
+      "Python",
+      "research"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "ai"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Apply machine learning to accelerate Utah materials discovery.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350Q EB",
+    "research_area": "Materials informatics, ML-driven materials design",
+    "signature_edge": "Bayesian-optimization for materials — the rare prof who codes ML and runs metallurgy experiments.",
+    "signals": [
+      "niche:materials-informatics",
+      "arc:academic-to-industry"
+    ]
+  },
+  {
+    "id": "t-103",
+    "name": "Jonathan Blotter",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · acoustics & non-destructive testing",
+    "skills": [
+      "acoustics",
+      "vibrations",
+      "NDT",
+      "sensors",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply acoustics and NDT to Utah manufacturing and defense.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350P EB",
+    "research_area": "Acoustics, vibrations, non-destructive testing",
+    "signature_edge": "Decades in acoustic NDT — finds defects in your part before customers do.",
+    "signals": [
+      "funding:dod",
+      "mission:dual-use"
+    ]
+  },
+  {
+    "id": "t-104",
+    "name": "Anton Bowden",
+    "role_type": "advisor",
+    "headline": "Professor & Associate Chair · BYU Mech Eng · spine biomechanics",
+    "skills": [
+      "biomechanics",
+      "medical devices",
+      "research",
+      "engineering",
+      "regulatory"
+    ],
+    "domains": [
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Build Utah medtech startups around novel spine and orthopedic devices.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350K EB",
+    "research_area": "Spine biomechanics, orthopedic devices",
+    "signature_edge": "Spine biomechanics with FDA-pathway experience — Associate Chair, knows BYU's IP and tech-transfer machinery.",
+    "signals": [
+      "regulatory:fda-class-ii",
+      "niche:spine-biomechanics",
+      "lineage:byu-tech-transfer"
+    ]
+  },
+  {
+    "id": "t-105",
+    "name": "Steven Charles",
+    "role_type": "advisor",
+    "headline": "Associate Professor & Director, Neuroscience Center · BYU · motor control",
+    "skills": [
+      "neuroscience",
+      "biomechanics",
+      "rehabilitation",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Translate motor-control research into Utah rehabilitation technologies.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350J EB",
+    "research_area": "Motor control, neuroscience, rehabilitation engineering",
+    "signature_edge": "Director of BYU's Neuroscience Center — uniquely bridges mechanical engineering and clinical neuro.",
+    "signals": [
+      "lineage:byu-neuroscience",
+      "niche:focused-ultrasound",
+      "mission:bench-to-bedside"
+    ]
+  },
+  {
+    "id": "t-106",
+    "name": "Mark Colton",
+    "role_type": "mentor",
+    "headline": "Teaching Professor · BYU Mech Eng · controls & haptics",
+    "skills": [
+      "controls",
+      "haptics",
+      "robotics",
+      "teaching",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "ai"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Mentor BYU students into Utah deep-tech founders.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350I EB",
+    "research_area": "Controls, haptics, engineering education",
+    "signature_edge": "Haptic-feedback teaching pro — a fixture for any student team building tactile interfaces.",
+    "signals": [
+      "lineage:byu-tech-transfer"
+    ]
+  },
+  {
+    "id": "t-107",
+    "name": "Douglas Cook",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · plant biomechanics & ag-mech",
+    "skills": [
+      "biomechanics",
+      "structural mechanics",
+      "agricultural engineering",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "life-sciences",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Bring structural-mechanics insight to Utah ag-tech and bio startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350F EB",
+    "research_area": "Plant biomechanics, agricultural mechanics",
+    "signature_edge": "Plant biomechanics — niche but uncontested in Utah; ag-tech founders' shortest path to credibility.",
+    "signals": [
+      "mission:emerging-markets"
+    ]
+  },
+  {
+    "id": "t-108",
+    "name": "Nathan Crane",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · additive manufacturing",
+    "skills": [
+      "additive manufacturing",
+      "3D printing",
+      "process design",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Advance Utah additive-manufacturing companies from lab to scale.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350A EB",
+    "research_area": "Additive manufacturing, 3D printing",
+    "signature_edge": "Built BYU's additive-manufacturing program — first call if you're prototyping a new metal AM process.",
+    "signals": [
+      "niche:additive-manufacturing",
+      "funding:dod",
+      "funding:nsf"
+    ]
+  },
+  {
+    "id": "t-109",
+    "name": "Julie Crockett",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · environmental fluid dynamics",
+    "skills": [
+      "fluid dynamics",
+      "modeling",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply fluid-dynamics expertise to Utah energy and water startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350C EB",
+    "research_area": "Environmental fluid dynamics, internal waves",
+    "signature_edge": "Stratified-flow expert — useful for water, climate, and atmospheric Utah startups.",
+    "signals": [
+      "mission:clean-energy"
+    ]
+  },
+  {
+    "id": "t-110",
+    "name": "Brady Davies",
+    "role_type": "mentor",
+    "headline": "Associate Teaching Professor · BYU Mech Eng",
+    "skills": [
+      "mechanical engineering",
+      "design",
+      "teaching",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 3,
+    "mission": "Mentor BYU students through capstone and industry projects.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350G EB",
+    "research_area": "Mechanical engineering education, design",
+    "signature_edge": "Capstone-program backbone — channels BYU senior teams toward real industry projects."
+  },
+  {
+    "id": "t-111",
+    "name": "Christopher Dillon",
+    "role_type": "advisor",
+    "headline": "Assistant Professor · BYU Mech Eng · biomedical heat transfer",
+    "skills": [
+      "heat transfer",
+      "biomedical engineering",
+      "modeling",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Translate biomedical thermal engineering into Utah medtech.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360F EB",
+    "research_area": "Biomedical heat transfer, focused ultrasound",
+    "signature_edge": "Focused-ultrasound thermal modeling — niche skill set for medical-device founders.",
+    "signals": [
+      "niche:focused-ultrasound",
+      "funding:nih"
+    ]
+  },
+  {
+    "id": "t-112",
+    "name": "David Fullwood",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · materials microstructure & sensors",
+    "skills": [
+      "materials science",
+      "microstructure",
+      "sensors",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Bridge materials microstructure research and Utah hardware companies.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350N EB",
+    "research_area": "Materials microstructure, nano-composite sensors",
+    "signature_edge": "Materials microstructure plus nano-composite sensors — bridges the two worlds rare prof to combine.",
+    "signals": [
+      "funding:dod",
+      "niche:materials-informatics"
+    ]
+  },
+  {
+    "id": "t-113",
+    "name": "Steve Gorrell",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · aerodynamics & turbomachinery",
+    "skills": [
+      "aerodynamics",
+      "turbomachinery",
+      "CFD",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "defense",
+      "energy"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Connect Utah aerospace and energy startups with high-fidelity CFD expertise.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "CTB 435-R",
+    "research_area": "Aerodynamics, turbomachinery, CFD",
+    "signature_edge": "High-fidelity CFD on real turbomachinery — works directly with USAF research labs.",
+    "signals": [
+      "funding:dod",
+      "mission:dual-use",
+      "niche:wind-aero-optimization"
+    ]
+  },
+  {
+    "id": "t-114",
+    "name": "Taylor Greenwood",
+    "role_type": "advisor",
+    "headline": "Assistant Professor · BYU Mech Eng · medical device design",
+    "skills": [
+      "medical devices",
+      "design",
+      "biomechanics",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Help Utah medtech founders translate device prototypes into products.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350-S EB",
+    "research_area": "Medical device design",
+    "signature_edge": "Newly hired surgical-device prof — fresh-perspective collaborator hungry for industry partners.",
+    "signals": [
+      "regulatory:fda-class-ii"
+    ]
+  },
+  {
+    "id": "t-115",
+    "name": "Jeff Hill",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · composites & structures",
+    "skills": [
+      "composites",
+      "structures",
+      "manufacturing",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Bring composite-structures expertise to Utah aerospace startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350H EB",
+    "research_area": "Composite structures, manufacturing",
+    "signature_edge": "Composite structures with manufacturing focus — bridges design and floor-shop reality.",
+    "signals": [
+      "funding:dod"
+    ]
+  },
+  {
+    "id": "t-116",
+    "name": "Eric Homer",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · materials, grain boundaries",
+    "skills": [
+      "materials science",
+      "computational materials",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply computational materials research to Utah hardware companies.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350L EB",
+    "research_area": "Computational materials science, grain boundaries",
+    "signature_edge": "Atomistic simulations of grain boundaries — collaborates with national labs on metals R&D.",
+    "signals": [
+      "funding:dod"
+    ]
+  },
+  {
+    "id": "t-117",
+    "name": "Larry L. Howell",
+    "role_type": "advisor",
+    "headline": "Professor & Assoc. Academic VP · BYU · compliant mechanisms / origami engineering",
+    "skills": [
+      "compliant mechanisms",
+      "origami engineering",
+      "design",
+      "research",
+      "team building"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Spin Utah compliant-mechanism research into deployable hardware companies.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "264-A CB",
+    "research_area": "Compliant mechanisms, origami-inspired engineering",
+    "signature_edge": "BYU's compliant-mechanism godfather — patents licensed by NASA and Johns Hopkins; mentor to founders of multiple Utah hardware spinouts.",
+    "signals": [
+      "lineage:howell-lab",
+      "niche:compliant-mechanisms",
+      "niche:origami-engineering",
+      "lineage:byu-tech-transfer"
+    ]
+  },
+  {
+    "id": "t-118",
+    "name": "Brian Iverson",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · thermal energy & surfaces",
+    "skills": [
+      "thermal engineering",
+      "surface science",
+      "energy",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Translate thermal-surface research into Utah energy hardware.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360J EB",
+    "research_area": "Thermal energy, functional surfaces",
+    "signature_edge": "Phase-change thermal devices — your bench partner for solid-state energy hardware.",
+    "signals": [
+      "mission:clean-energy"
+    ]
+  },
+  {
+    "id": "t-119",
+    "name": "Brian Jensen",
+    "role_type": "advisor",
+    "headline": "Department Chair & Professor · BYU Mech Eng · MEMS / microsystems",
+    "skills": [
+      "MEMS",
+      "microsystems",
+      "compliant mechanisms",
+      "leadership",
+      "research"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Connect Utah MEMS and microsystem founders to BYU resources.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360B EB",
+    "research_area": "MEMS, microsystems, compliant mechanisms",
+    "signature_edge": "Department Chair + MEMS pioneer — the gateway to BYU's hardware infrastructure and student-team pipeline.",
+    "signals": [
+      "niche:mems-microsystems",
+      "lineage:byu-tech-transfer",
+      "niche:compliant-mechanisms"
+    ]
+  },
+  {
+    "id": "t-120",
+    "name": "Oliver Johnson",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · materials / microstructure",
+    "skills": [
+      "materials science",
+      "microstructure",
+      "computational materials",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply microstructure modeling to Utah advanced-manufacturing startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350M EB",
+    "research_area": "Computational materials, microstructure",
+    "signature_edge": "Computational microstructure — Adams/Fullwood collaborator; deep into texture-property links.",
+    "signals": [
+      "niche:materials-informatics"
+    ]
+  },
+  {
+    "id": "t-121",
+    "name": "Matt Jones",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng",
+    "skills": [
+      "mechanical engineering",
+      "design",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Support Utah mechanical-engineering founders with research expertise.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360H EB",
+    "research_area": "Mechanical engineering",
+    "signature_edge": "Senior project mentor — strong network among BYU mech-eng alumni now at Utah hardware companies."
+  },
+  {
+    "id": "t-122",
+    "name": "Marc Killpack",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · soft robotics & human-robot interaction",
+    "skills": [
+      "robotics",
+      "soft robotics",
+      "human-robot interaction",
+      "controls",
+      "research"
+    ],
+    "domains": [
+      "ai",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Build Utah robotics startups that work safely alongside humans.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360E EB",
+    "research_area": "Soft robotics, human-robot interaction",
+    "signature_edge": "Soft robotics for human-safe collaboration — defense and manufacturing prefer this approach for next-gen factories.",
+    "signals": [
+      "niche:soft-robotics",
+      "funding:dod",
+      "mission:dual-use"
+    ]
+  },
+  {
+    "id": "t-123",
+    "name": "Chris Mattson",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · design optimization & global development",
+    "skills": [
+      "design optimization",
+      "product design",
+      "engineering for global development",
+      "research"
+    ],
+    "domains": [
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply rigorous design exploration to Utah hardware founders.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360C EB",
+    "research_area": "Design optimization, engineering for developing communities",
+    "signature_edge": "Pioneer of 'engineering for global development' — your call if your hardware startup targets emerging markets.",
+    "signals": [
+      "mission:emerging-markets"
+    ]
+  },
+  {
+    "id": "t-124",
+    "name": "Daniel Maynes",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · heat transfer & superhydrophobic surfaces",
+    "skills": [
+      "heat transfer",
+      "fluid dynamics",
+      "surface engineering",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Translate heat-transfer research into Utah energy and surface-tech startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360K EB",
+    "research_area": "Heat transfer, superhydrophobic surfaces",
+    "signature_edge": "Superhydrophobic surfaces — niche, patented work with industrial heat-transfer applications.",
+    "signals": [
+      "mission:clean-energy"
+    ]
+  },
+  {
+    "id": "t-125",
+    "name": "Tim McLain",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · multi-vehicle robotics & autonomy (MAGICC Lab)",
+    "skills": [
+      "robotics",
+      "autonomy",
+      "controls",
+      "UAVs",
+      "research"
+    ],
+    "domains": [
+      "defense",
+      "ai"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Connect Utah autonomy and drone startups with the MAGICC research network.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "240I EB",
+    "research_area": "Multi-vehicle UAV coordination, autonomy",
+    "signature_edge": "Runs MAGICC Lab — most BYU autonomy/drone alumni trace back here; deep DoD funding network.",
+    "signals": [
+      "lineage:magicc-lab",
+      "niche:multi-agent-uav",
+      "funding:dod",
+      "mission:dual-use"
+    ]
+  },
+  {
+    "id": "t-126",
+    "name": "Brady Moon",
+    "role_type": "advisor",
+    "headline": "Assistant Professor · BYU Mech Eng · robotics & autonomy",
+    "skills": [
+      "robotics",
+      "autonomy",
+      "planning",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "ai",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Support Utah autonomy founders with planning and decision-making research.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350-U EB",
+    "research_area": "Robotics, autonomy, planning under uncertainty",
+    "signature_edge": "Planning under uncertainty — bridges classical robotics and modern learning-based autonomy.",
+    "signals": [
+      "lineage:magicc-lab",
+      "niche:multi-agent-uav"
+    ]
+  },
+  {
+    "id": "t-127",
+    "name": "Troy Munro",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · thermophysics & sensors",
+    "skills": [
+      "thermophysics",
+      "sensors",
+      "instrumentation",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply thermal sensing to Utah energy and process-monitoring startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350E EB",
+    "research_area": "Thermophysical properties, optical sensors",
+    "signature_edge": "Optical thermal sensors — the rare prof building both the physics and the instrumentation."
+  },
+  {
+    "id": "t-128",
+    "name": "Todd Nelson",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · compliant mechanisms / origami",
+    "skills": [
+      "compliant mechanisms",
+      "origami engineering",
+      "design",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Build deployable-structure startups from BYU origami-engineering research.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360N EB",
+    "research_area": "Compliant mechanisms, origami-inspired structures",
+    "signature_edge": "Co-developer of origami-inspired engineering with Howell — deployable structures for space and defense.",
+    "signals": [
+      "lineage:howell-lab",
+      "niche:compliant-mechanisms",
+      "niche:origami-engineering"
+    ]
+  },
+  {
+    "id": "t-129",
+    "name": "Andrew Ning",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · wind energy & aerodynamic optimization",
+    "skills": [
+      "wind energy",
+      "aerodynamics",
+      "optimization",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Help Utah clean-energy startups optimize wind and renewable systems.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360G EB",
+    "research_area": "Wind energy, aerodynamic shape optimization",
+    "signature_edge": "Built BYU's FLOW Lab — go-to advisor for wind, drones, and aerodynamic shape optimization.",
+    "signals": [
+      "lineage:flow-lab",
+      "niche:wind-aero-optimization",
+      "mission:clean-energy"
+    ]
+  },
+  {
+    "id": "t-130",
+    "name": "Jason Porter",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · combustion & energy",
+    "skills": [
+      "combustion",
+      "energy",
+      "thermal engineering",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Translate combustion research into Utah cleaner-energy startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360P EB",
+    "research_area": "Combustion, radiative heat transfer",
+    "signature_edge": "Combustion + radiative heat transfer — straight pipeline to Utah industrial energy.",
+    "signals": [
+      "mission:clean-energy",
+      "niche:combustion-energy"
+    ]
+  },
+  {
+    "id": "t-131",
+    "name": "Hongjuan Ran",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng",
+    "skills": [
+      "mechanical engineering",
+      "fluid dynamics",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy",
+      "advanced-manufacturing"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Support Utah energy and manufacturing founders with mechanical engineering research.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360Q EB",
+    "research_area": "Mechanical engineering",
+    "signature_edge": "BYU's newer fluid-dynamics presence — early-career prof open to startup collaboration."
+  },
+  {
+    "id": "t-132",
+    "name": "John Salmon",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · design & manufacturing simulation",
+    "skills": [
+      "design",
+      "manufacturing simulation",
+      "data analytics",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Apply design and manufacturing-simulation research to Utah hardware startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360D EB",
+    "research_area": "Design, manufacturing simulation, data-driven design",
+    "signature_edge": "Data-driven design for manufacturing — applies analytics where most mech-eng profs use intuition."
+  },
+  {
+    "id": "t-133",
+    "name": "Nathan Speirs",
+    "role_type": "advisor",
+    "headline": "Assistant Professor · BYU Mech Eng · fluid dynamics",
+    "skills": [
+      "fluid dynamics",
+      "experimental fluids",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Bring experimental fluid-dynamics expertise to Utah energy and defense startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "350 D EB",
+    "research_area": "Experimental fluid dynamics, multiphase flows",
+    "signature_edge": "Multiphase fluid dynamics — naval and underwater applications, rare in Utah's faculty pool."
+  },
+  {
+    "id": "t-134",
+    "name": "Benjamin Terry",
+    "role_type": "advisor",
+    "headline": "Associate Professor · BYU Mech Eng · biomedical devices & in-vivo robotics",
+    "skills": [
+      "medical devices",
+      "biomedical engineering",
+      "robotics",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "life-sciences"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed",
+      "seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Translate in-vivo medical-device research into Utah medtech startups.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360M EB",
+    "research_area": "Biomedical devices, in-vivo robotics",
+    "signature_edge": "Helped build the field of in-vivo robotics — devices that actually work inside the human body.",
+    "signals": [
+      "niche:in-vivo-robotics",
+      "regulatory:fda-class-ii",
+      "funding:nih"
+    ]
+  },
+  {
+    "id": "t-135",
+    "name": "Dale R. Tree",
+    "role_type": "advisor",
+    "headline": "Professor · BYU Mech Eng · combustion & energy systems",
+    "skills": [
+      "combustion",
+      "energy systems",
+      "engines",
+      "research",
+      "engineering"
+    ],
+    "domains": [
+      "energy"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 4,
+    "mission": "Help Utah energy founders apply combustion and engine research.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "CTB 435-T",
+    "research_area": "Combustion, internal combustion engines",
+    "signature_edge": "Senior combustion expert — long history with Utah's industrial energy majors.",
+    "signals": [
+      "niche:combustion-energy",
+      "mission:clean-energy"
+    ]
+  },
+  {
+    "id": "t-136",
+    "name": "Nathan Usevitch",
+    "role_type": "advisor",
+    "headline": "Assistant Professor · BYU Mech Eng · soft robotics & shape-changing structures",
+    "skills": [
+      "robotics",
+      "soft robotics",
+      "structured materials",
+      "design",
+      "research"
+    ],
+    "domains": [
+      "ai",
+      "advanced-manufacturing",
+      "defense"
+    ],
+    "stage_pref": [
+      "idea",
+      "pre-seed"
+    ],
+    "availability": "advisory",
+    "risk_tolerance": 5,
+    "mission": "Build Utah robotics and shape-changing-structure startups from BYU research.",
+    "location": "Provo, UT",
+    "school": "BYU",
+    "source": "BYU Mechanical Engineering Faculty (me.byu.edu/faculty)",
+    "office": "360 I EB",
+    "research_area": "Soft robotics, shape-changing structures, isoperimetric robots",
+    "signature_edge": "Inventor of isoperimetric robots — fresh from Stanford; shape-changing structures with defense interest.",
+    "signals": [
+      "niche:soft-robotics",
+      "funding:dod"
+    ]
   }
 ]

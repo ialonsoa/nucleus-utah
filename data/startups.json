@@ -9,7 +9,9 @@
     "needs": ["COO", "biz dev", "regulatory"],
     "funding_status": "SBIR Phase I",
     "location": "Provo, UT",
-    "mission": "Aluminum alloys 3x stronger for aerospace and defense."
+    "mission": "Aluminum alloys 3x stronger for aerospace and defense.",
+    "signals": ["lineage:byu-tech-transfer", "funding:sbir", "funding:dod", "mission:dual-use", "niche:additive-manufacturing", "mission:utah-built"],
+    "signature_edge": "BYU-spun aluminum-alloy startup with SBIR Phase I in hand — the rare Utah hardware company already inside DoD funding circles."
   },
   {
     "id": "s-002",
@@ -21,7 +23,9 @@
     "needs": ["interns", "research", "regulatory"],
     "funding_status": "NIH grant",
     "location": "Salt Lake City, UT",
-    "mission": "Targeted drug delivery from Utah lab research to clinical trials."
+    "mission": "Targeted drug delivery from Utah lab research to clinical trials.",
+    "signals": ["lineage:utah-bme", "funding:nih", "mission:bench-to-bedside", "regulatory:fda-class-ii"],
+    "signature_edge": "U of U bioengineering spinout pre-clinical with active NIH funding — clinical-translation pipeline already underway."
   },
   {
     "id": "s-003",
@@ -33,6 +37,99 @@
     "needs": ["sales", "biz dev", "marketing"],
     "funding_status": "Series A",
     "location": "Lehi, UT",
-    "mission": "Scaling B2B SaaS billing for the Silicon Slopes ecosystem."
+    "mission": "Scaling B2B SaaS billing for the Silicon Slopes ecosystem.",
+    "signals": ["mission:utah-built", "arc:big-co-to-startup", "lineage:silicon-slopes-active"],
+    "signature_edge": "Bootstrapped to Series A in Lehi — built by Silicon Slopes operators serving Silicon Slopes customers."
+  },
+
+  {
+    "id": "s-100",
+    "name": "Recursion Pharmaceuticals",
+    "sector": "life-sciences",
+    "origin": "U of U spinout",
+    "stage": "growth",
+    "trl": 9,
+    "needs": ["engineering", "research", "regulatory"],
+    "funding_status": "Public (NASDAQ: RXRX)",
+    "location": "Salt Lake City, UT",
+    "mission": "Industrialize drug discovery using AI-driven cellular phenotyping at scale.",
+    "signals": ["lineage:utah-bme", "lineage:pivot", "funding:nih", "mission:utah-built", "mission:bench-to-bedside"],
+    "signature_edge": "Utah's flagship AI-bio company — went from U of U lab to NASDAQ. Hires hundreds of engineers and scientists in Salt Lake.",
+    "source": "Public filings + Recursion press."
+  },
+  {
+    "id": "s-101",
+    "name": "Owlet",
+    "sector": "life-sciences",
+    "origin": "BYU spinout",
+    "stage": "growth",
+    "trl": 9,
+    "needs": ["engineering", "regulatory", "biz dev"],
+    "funding_status": "Public (NYSE: OWLT)",
+    "location": "Lehi, UT",
+    "mission": "Smart infant-monitoring devices that turn pediatric data into parental peace of mind.",
+    "signals": ["lineage:byu-sandbox", "lineage:byu-tech-transfer", "regulatory:fda-class-ii", "mission:utah-built", "lineage:owlet-alum"],
+    "signature_edge": "BYU Sandbox alum that took a hardware product to public-market scale and earned FDA Class II clearance — rare combo for Utah medtech.",
+    "source": "Owlet press / 10-K filings."
+  },
+  {
+    "id": "s-102",
+    "name": "Strider Technologies",
+    "sector": "cyber",
+    "origin": "Bootstrapped",
+    "stage": "series-a",
+    "trl": 9,
+    "needs": ["engineering", "sales", "biz dev"],
+    "funding_status": "Series C",
+    "location": "Lehi, UT",
+    "mission": "Open-source intelligence to identify nation-state threats inside global supply chains.",
+    "signals": ["funding:dod", "mission:dual-use", "regulatory:itar", "mission:utah-built", "lineage:strider-alum", "lineage:silicon-slopes-active"],
+    "signature_edge": "Lehi-built nation-state-threat intel platform — rare Utah cyber company already inside DoD and ITAR-cleared workstreams.",
+    "source": "Strider press + Crunchbase."
+  },
+  {
+    "id": "s-103",
+    "name": "Vasion",
+    "sector": "software",
+    "origin": "Bootstrapped",
+    "stage": "growth",
+    "trl": 9,
+    "needs": ["engineering", "sales", "marketing"],
+    "funding_status": "Growth equity",
+    "location": "Lehi, UT",
+    "mission": "Print + workflow automation for enterprises moving off legacy systems.",
+    "signals": ["mission:utah-built", "arc:big-co-to-startup", "lineage:vasion-alum", "lineage:silicon-slopes-active"],
+    "signature_edge": "Bootstrapped to growth-stage in Lehi (formerly PrinterLogic) — quiet operator alumni network worth tapping for first hires.",
+    "source": "Vasion / PrinterLogic press."
+  },
+  {
+    "id": "s-104",
+    "name": "Pattern",
+    "sector": "software",
+    "origin": "Bootstrapped",
+    "stage": "growth",
+    "trl": 9,
+    "needs": ["engineering", "sales", "marketing", "biz dev"],
+    "funding_status": "Private growth",
+    "location": "Lehi, UT",
+    "mission": "Operating partner for global brands selling through online marketplaces.",
+    "signals": ["mission:utah-built", "arc:big-co-to-startup", "lineage:silicon-slopes-active"],
+    "signature_edge": "Lehi-built marketplace ops platform — among the largest privately-held Utah SaaS companies, deep operator pool.",
+    "source": "Pattern press."
+  },
+  {
+    "id": "s-105",
+    "name": "Filevine",
+    "sector": "software",
+    "origin": "Bootstrapped",
+    "stage": "series-a",
+    "trl": 9,
+    "needs": ["engineering", "sales", "marketing"],
+    "funding_status": "Series D",
+    "location": "Salt Lake City, UT",
+    "mission": "Vertical SaaS platform for legal-case management and modern law-firm operations.",
+    "signals": ["mission:utah-built", "arc:big-co-to-startup", "lineage:silicon-slopes-active"],
+    "signature_edge": "Salt Lake-built vertical SaaS that owns a category — proof Utah can produce focused B2B winners outside Lehi.",
+    "source": "Filevine press."
   }
 ]

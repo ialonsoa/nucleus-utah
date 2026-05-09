@@ -66,23 +66,39 @@ The **explanation layer** (`explain.js`) takes the breakdown and the top reasons
 
 ```
 /
-├── index.html          landing
-├── talent.html         talent signup (3-step)
-├── startup.html        startup signup (3-step)
-├── match.html          results page
-├── demo.html           3 hard-coded judge scenarios
-├── embed.html          Squarespace embed
-├── styles.css          design system + Utah palette
-├── app.js              UX glue (forms, rendering)
-├── match.js            weighted scoring engine
-├── explain.js          natural-language explanations
+├── index.html              landing
+├── talent.html             talent signup (3-step + AI builder)
+├── startup.html            startup signup (3-step)
+├── match.html              results page
+├── demo.html               3 hard-coded judge scenarios
+├── ecosystem.html          Utah ecosystem map (D3 force graph)
+├── handshake.html          Handshake events feed
+├── embed.html              Squarespace embed
+├── styles.css              design system + Utah palette
+├── app.js                  UX glue (forms, rendering, toasts)
+├── profile-builder.js      AI Profile Builder (URL fixtures + heuristic extraction)
+├── core/                   matching engine — pure, deterministic, framework-free
+│   ├── constants.js        single source of truth: sectors, stages, schools, weights
+│   ├── signals.js          shared-signal vocabulary + rarity / bond scoring
+│   ├── match.js            6-criteria weighted scorer (talent → startup)
+│   └── explain.js          natural-language bullet generator
 ├── data/
-│   ├── talent.json
-│   └── startups.json
+│   ├── talent.json         40 synthetic Utah talent profiles
+│   ├── startups.json       9 synthetic Utah startups
+│   ├── handshake-events.json  mocked Handshake API events
+│   ├── institutions.json   labs / hubs / accelerators (ecosystem map)
+│   └── validate.js         Node-based schema validator (reads core/constants.js)
 ├── integrations/
-│   └── affinity.js     webhook + CSV export
-└── PLAN.md             full hackathon plan & team split
+│   ├── affinity.js         webhook + CSV export (URL via localStorage)
+│   ├── handshake.js        Handshake API mock (load events, demand signal)
+│   └── test.html           internal Affinity webhook tester
+└── PLAN.md                 full hackathon plan & team split
 ```
+
+**`core/` is the only place the matching logic lives.** Adding a new sector,
+school, or scoring weight is a one-line change in `core/constants.js` — every
+consumer (matcher, ecosystem map, Handshake, validator, integrations) reads from
+that one module.
 
 ## Running locally
 

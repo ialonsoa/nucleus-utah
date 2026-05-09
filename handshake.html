@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Handshake events · Nucleus Match</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .mock-banner {
+      background: linear-gradient(90deg, var(--sandstone-100), #fff);
+      border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 14px 18px; margin-bottom: 24px;
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+    }
+    .mock-banner .pill {
+      background: var(--navy); color: white; padding: 4px 10px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em;
+    }
+    .mock-banner small { color: var(--muted); }
+
+    .hs-toolbar {
+      display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center;
+      background: white; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 14px 16px; box-shadow: var(--shadow); margin-bottom: 18px;
+    }
+    .hs-search {
+      display: flex; align-items: center; gap: 10px;
+      border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px;
+      background: var(--snow);
+    }
+    .hs-search input {
+      border: none; background: transparent; outline: none; flex: 1;
+      font-size: 0.95rem; color: var(--ink);
+    }
+    .hs-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+    .hs-stat {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px;
+      background: white; font-size: 0.88rem; color: var(--ink); font-weight: 600;
+    }
+    .hs-stat .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sandstone); }
+    .hs-stat.alt .dot { background: var(--good); }
+    .hs-stat.alt2 .dot { background: var(--navy); }
+
+    .hs-filters {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+    }
+    .hs-filter {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line);
+      background: white; font-size: 0.88rem; color: var(--ink); cursor: pointer;
+      user-select: none; transition: all .15s;
+    }
+    .hs-filter.active { background: var(--navy); color: white; border-color: var(--navy); }
+    .hs-filter:hover { border-color: var(--navy); }
+
+    .hs-shortcuts {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px; margin-bottom: 36px;
+    }
+    .hs-shortcut {
+      background: white; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 18px; display: flex; flex-direction: column; gap: 8px;
+      cursor: pointer; transition: transform .12s, box-shadow .12s;
+    }
+    .hs-shortcut:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .hs-shortcut .ico {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--sandstone-100); font-size: 1.2rem;
+    }
+    .hs-shortcut h4 { font-size: 0.98rem; margin: 0; line-height: 1.3; }
+    .hs-shortcut .arr { color: var(--navy); font-weight: 700; }
+
+    .hs-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .hs-event {
+      background: white; border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 18px; box-shadow: var(--shadow);
+      display: flex; flex-direction: column; gap: 12px;
+      transition: transform .12s, box-shadow .12s;
+    }
+    .hs-event:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .hs-event .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .hs-event .emp { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .hs-event .emp-logo {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), var(--sandstone));
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.72rem; flex: 0 0 auto;
+    }
+    .hs-event .emp-name {
+      font-size: 0.86rem; color: var(--ink); font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .hs-event .bookmark {
+      color: var(--muted); cursor: pointer; flex: 0 0 auto;
+      width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .hs-event h3 { font-size: 1.05rem; line-height: 1.3; margin: 0; }
+    .hs-event .meta { font-size: 0.86rem; color: var(--muted); }
+    .hs-event .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .hs-event .htag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 4px 10px; border-radius: 999px;
+    }
+    .htag.HIRING        { background: #DCFCE7; color: #166534; }
+    .htag.EMPLOYER       { background: #DBEAFE; color: #1E3A8A; }
+    .htag.GUIDANCE       { background: #EDE9FE; color: #4C1D95; }
+    .htag.CAREER         { background: #FEF3C7; color: #92400E; }
+
+    .hs-event .footer-row {
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--line); padding-top: 10px;
+      font-size: 0.86rem; color: var(--muted);
+    }
+    .hs-event .stack {
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .hs-event .av-stack {
+      display: inline-flex;
+    }
+    .hs-event .av-stack .av {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sandstone), var(--navy));
+      border: 2px solid white; margin-left: -6px;
+    }
+    .hs-event .av-stack .av:first-child { margin-left: 0; }
+
+    .hs-section-title {
+      font-size: 1.4rem; font-weight: 700; margin: 8px 0 16px;
+    }
+
+    .insight-banner {
+      background: var(--navy); color: white; border-radius: var(--radius);
+      padding: 18px 22px; margin-top: 32px;
+      display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center;
+    }
+    .insight-banner h3 { color: white; margin: 0 0 4px; font-size: 1.05rem; }
+    .insight-banner p  { color: #CBD5E1; margin: 0; font-size: 0.9rem; }
+    .insight-banner .btn { background: var(--sandstone); color: var(--navy-700); }
+
+    @media (max-width: 720px) {
+      .hs-toolbar { grid-template-columns: 1fr; }
+      .insight-banner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
+    <div class="nav-links">
+      <a href="demo.html">Demo</a>
+      <a href="ecosystem.html">Ecosystem map</a>
+      <a href="match.html?demo=t-001">Live match</a>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container">
+
+      <div class="mock-banner">
+        <span class="pill">MOCK · INTEGRATION PREVIEW</span>
+        <div>
+          <strong>Handshake events</strong> &nbsp;·&nbsp;
+          <small>What Nucleus Match looks like once we wire to the Handshake Partner API for BYU / U of U / USU career services. Data here is synthetic but schema-accurate, and feeds the matching engine as a real-time demand signal.</small>
+        </div>
+      </div>
+
+      <div class="hs-toolbar">
+        <div class="hs-search">
+          <span style="color:var(--muted);">⌕</span>
+          <input id="hs-q" type="text" placeholder="Search Utah events, employers, or sectors…" />
+        </div>
+        <div class="hs-stats">
+          <span class="hs-stat"><span class="dot"></span> Saved · <span id="stat-saved">0</span></span>
+          <span class="hs-stat alt2"><span class="dot"></span> Registered · <span id="stat-reg">0</span></span>
+          <span class="hs-stat alt"><span class="dot"></span> Check-ins · <span id="stat-checkins">9</span></span>
+        </div>
+      </div>
+
+      <div class="hs-filters" id="hs-filters">
+        <button class="hs-filter active" data-filter="all">All Utah</button>
+        <button class="hs-filter" data-filter="byu">BYU</button>
+        <button class="hs-filter" data-filter="u of u">U of U</button>
+        <button class="hs-filter" data-filter="usu">USU</button>
+        <button class="hs-filter" data-filter="hiring">Hiring</button>
+        <button class="hs-filter" data-filter="career-fair">Career fairs</button>
+        <button class="hs-filter" data-filter="employer-info">Employer info</button>
+        <button class="hs-filter" data-filter="guidance">Guidance</button>
+        <button class="hs-filter" data-filter="virtual">Virtual</button>
+      </div>
+
+      <div class="hs-shortcuts">
+        <div class="hs-shortcut" data-filter="career-fair">
+          <div class="ico">✦</div>
+          <h4>Career fairs<br /><span class="arr">at your school →</span></h4>
+        </div>
+        <div class="hs-shortcut" data-filter="employer-info">
+          <div class="ico">⊕</div>
+          <h4>Career center<br /><span class="arr">employer events →</span></h4>
+        </div>
+        <div class="hs-shortcut" data-filter="guidance">
+          <div class="ico">★</div>
+          <h4>Career center<br /><span class="arr">guidance events →</span></h4>
+        </div>
+        <div class="hs-shortcut" data-filter="hiring">
+          <div class="ico">⚒</div>
+          <h4>Events hosted<br /><span class="arr">by employers →</span></h4>
+        </div>
+      </div>
+
+      <h2 class="hs-section-title">All events</h2>
+      <div id="hs-grid" class="hs-grid"></div>
+
+      <div class="insight-banner">
+        <div>
+          <h3>Why this matters for matching</h3>
+          <p>Each RSVP is a real-time demand signal. We weight startups higher when their sector is trending on Handshake — e.g. <span id="insight-line">Lehi B2B SaaS hiring drew 213 students this month, boosting LedgerLoop by +12%</span>.</p>
+        </div>
+        <a class="btn" href="match.html?demo=t-001">See it in matching →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="core/constants.js"></script>
+  <script src="integrations/handshake.js"></script>
+  <script>
+  (async function () {
+    const events = await NMHandshake.loadEvents();
+    const grid = document.getElementById("hs-grid");
+    const search = document.getElementById("hs-q");
+    const filterEls = document.querySelectorAll("[data-filter]");
+
+    let activeFilter = "all";
+
+    function tagClass(t) {
+      if (!t) return "";
+      if (t.startsWith("HIRING")) return "HIRING";
+      if (t.startsWith("EMPLOYER")) return "EMPLOYER";
+      if (t.startsWith("GUIDANCE")) return "GUIDANCE";
+      if (t.startsWith("CAREER")) return "CAREER";
+      return "";
+    }
+
+    function avatars(n) {
+      const count = Math.min(3, Math.max(2, Math.floor(n / 50)));
+      let html = '<span class="av-stack">';
+      for (let i = 0; i < count; i++) html += '<span class="av"></span>';
+      html += "</span>";
+      return html;
+    }
+
+    function matchesFilter(ev, f) {
+      if (f === "all") return true;
+      if (f === "virtual") return ev.medium === "virtual";
+      if (["byu", "u of u", "usu", "uvu"].includes(f)) {
+        return (ev.schools || []).some((s) => s.toLowerCase().includes(f));
+      }
+      return ev.type === f;
+    }
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      const filtered = events.filter((ev) => {
+        if (!matchesFilter(ev, activeFilter)) return false;
+        if (!q) return true;
+        const hay = [ev.title, ev.employer, (ev.sectors || []).join(" "), (ev.tags || []).join(" ")]
+          .join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+
+      grid.innerHTML = filtered.map((ev) => `
+        <div class="hs-event">
+          <div class="top">
+            <div class="emp">
+              <span class="emp-logo">${ev.employer_initials || "•"}</span>
+              <span class="emp-name">${ev.employer || ""}</span>
+            </div>
+            <span class="bookmark" title="Save">♡</span>
+          </div>
+          <h3>${ev.title}</h3>
+          <div class="meta">
+            ${ev.medium === "virtual" ? "Virtual" : "In-person"}
+            · ${ev.date_label || ""}
+          </div>
+          <div class="tag-row">
+            ${(ev.tags || []).map((t) => `<span class="htag ${tagClass(t)}">${t}</span>`).join("")}
+          </div>
+          <div class="footer-row">
+            <span class="stack">${avatars(ev.students_going)} ${ev.students_going} students going</span>
+            <span style="font-size:0.78rem;">${(ev.schools || []).join(" · ")}</span>
+          </div>
+        </div>
+      `).join("");
+
+      // Update top-line stats based on filter (purely cosmetic).
+      document.getElementById("stat-saved").textContent = Math.min(7, filtered.length);
+      document.getElementById("stat-reg").textContent = Math.min(3, filtered.length);
+    }
+
+    filterEls.forEach((el) => {
+      el.addEventListener("click", () => {
+        activeFilter = el.dataset.filter;
+        document.querySelectorAll(".hs-filter").forEach((b) => b.classList.remove("active"));
+        const matchBtn = document.querySelector(`.hs-filter[data-filter="${activeFilter}"]`);
+        if (matchBtn) matchBtn.classList.add("active");
+        render();
+      });
+    });
+
+    search.addEventListener("input", render);
+
+    render();
+  })();
+  </script>
+</body>
+</html>
