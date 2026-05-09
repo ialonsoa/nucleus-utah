@@ -18,11 +18,12 @@
     </div>
   </nav>
 
-  <!-- Hidden legacy steps for app.js compatibility -->
+  <!-- Hidden legacy steps for app.js compatibility (4 steps now) -->
   <div class="steps" aria-hidden="true">
     <div class="step active" data-step="1"></div>
     <div class="step" data-step="2"></div>
     <div class="step" data-step="3"></div>
+    <div class="step" data-step="4"></div>
   </div>
 
   <div class="onb-shell">
@@ -66,21 +67,61 @@
     <!-- Right panel (form) -->
     <div class="onb-right">
       <div class="onb-form">
-        <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">For Startups</div>
-        <h2 style="font-size:28px; margin-bottom:6px;">Find the right Utah operator</h2>
-        <p class="muted" style="font-size:14px; margin-bottom:32px;">Tell us your sector, stage, and the gap you need to close.</p>
+        <div class="row" style="justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+          <div class="eyebrow eyebrow-blue">For Startups</div>
+          <span id="startup-intent-pill-host"></span>
+        </div>
+        <h2 id="startup-step-title" style="font-size:28px; margin-bottom:6px;">Find the right Utah operator</h2>
+        <p class="muted" id="startup-step-sub" style="font-size:14px; margin-bottom:32px;">Tell us your sector, stage, and the gap you need to close.</p>
 
-        <!-- Progress bar -->
+        <!-- Progress bar (4 segments) -->
         <div class="onb-progress" id="startup-progress">
           <div class="onb-step-bar active" data-bar="1"></div>
           <div class="onb-step-bar" data-bar="2"></div>
           <div class="onb-step-bar" data-bar="3"></div>
+          <div class="onb-step-bar" data-bar="4"></div>
         </div>
 
         <form id="startup-form" autocomplete="off">
 
-          <!-- Step 1: Basics -->
+          <!-- ============================================================ -->
+          <!-- Step 1: Intent picker  ─ what are you looking for?            -->
+          <!-- ============================================================ -->
           <div class="form-step" data-step="1">
+            <div class="intent-grid" id="startup-intent-grid">
+              <button type="button" class="intent-card" data-intent="hire-employee">
+                <div class="intent-emoji">🚀</div>
+                <div class="intent-label">Hire a full-time employee</div>
+                <div class="intent-sub">Engineer, operator, exec — W-2 hire on the founding team.</div>
+              </button>
+              <button type="button" class="intent-card" data-intent="find-cofounder">
+                <div class="intent-emoji">🤝</div>
+                <div class="intent-label">Find a co-founder</div>
+                <div class="intent-sub">Missing piece of the founding team — equity-aligned partner.</div>
+              </button>
+              <button type="button" class="intent-card" data-intent="bring-advisors">
+                <div class="intent-emoji">📈</div>
+                <div class="intent-label">Bring on advisors</div>
+                <div class="intent-sub">Fractional / part-time advisors or board members.</div>
+              </button>
+              <button type="button" class="intent-card" data-intent="recruit-interns">
+                <div class="intent-emoji">🎓</div>
+                <div class="intent-label">Recruit interns</div>
+                <div class="intent-sub">Student talent for projects, research, or summer roles.</div>
+              </button>
+              <button type="button" class="intent-card" data-intent="founder-mentor">
+                <div class="intent-emoji">💡</div>
+                <div class="intent-label">Get founder mentorship</div>
+                <div class="intent-sub">Advisors who've built companies in your space.</div>
+              </button>
+            </div>
+            <input type="hidden" name="intent" id="startup-intent-hidden" />
+          </div>
+
+          <!-- ============================================================ -->
+          <!-- Step 2: Basics                                                -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="2" hidden>
             <div class="field">
               <label for="name">Company name</label>
               <input type="text" id="name" name="name" required placeholder="HelioMet Materials" />
@@ -93,11 +134,16 @@
               <label for="location">Headquarters</label>
               <input type="text" id="location" name="location" placeholder="Provo, UT" />
             </div>
-            <button type="button" class="btn btn-primary btn-block" data-next="2">Continue →</button>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="3">Continue →</button>
+            </div>
           </div>
 
-          <!-- Step 2: Tech & Stage -->
-          <div class="form-step" data-step="2" hidden>
+          <!-- ============================================================ -->
+          <!-- Step 3: Tech & Stage                                          -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="3" hidden>
             <div class="field">
               <label for="sector">Primary sector</label>
               <select id="sector" name="sector" required>
@@ -142,13 +188,15 @@
               <div class="help">1 = basic research · 9 = market-ready system</div>
             </div>
             <div class="row">
-              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
-              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="3">Continue →</button>
+              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="4">Continue →</button>
             </div>
           </div>
 
-          <!-- Step 3: Needs -->
-          <div class="form-step" data-step="3" hidden>
+          <!-- ============================================================ -->
+          <!-- Step 4: Needs + INTENT-SPECIFIC block                         -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="4" hidden>
             <div class="field">
               <label>Immediate needs <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
               <div class="chips" data-multi="needs" style="margin-top:8px;">
@@ -181,8 +229,145 @@
                 <option>Series A</option>
               </select>
             </div>
+
+            <!-- ===== Intent-specific blocks (only one shown at a time) ===== -->
+            <!-- hire-employee: full-time hire -->
+            <div class="intent-block" data-intent-block="hire-employee" hidden>
+              <div class="intent-block-header">Hiring specifics <span class="label">— help us send aligned operators</span></div>
+              <div class="field">
+                <label for="priority_role">Priority role you're hiring for</label>
+                <input type="text" id="priority_role" name="priority_role" placeholder="VP of Engineering" />
+              </div>
+              <div class="field">
+                <label for="target_start">When do you want them to start?</label>
+                <select id="target_start" name="target_start">
+                  <option value="">Select…</option>
+                  <option value="asap">ASAP</option>
+                  <option value="1mo">Within 1 month</option>
+                  <option value="3mo">Within 3 months</option>
+                  <option value="6mo">3–6 months out</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="comp_range">Compensation range</label>
+                <select id="comp_range" name="comp_range">
+                  <option value="">Select…</option>
+                  <option value="80-120k">$80–120k + equity</option>
+                  <option value="120-180k">$120–180k + equity</option>
+                  <option value="180-250k">$180–250k + equity</option>
+                  <option value="250k+">$250k+ + meaningful equity</option>
+                  <option value="equity-heavy">Equity-heavy / below market</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- find-cofounder: equity-aligned partner -->
+            <div class="intent-block" data-intent-block="find-cofounder" hidden>
+              <div class="intent-block-header">Co-founder specifics <span class="label">— what gap are you filling?</span></div>
+              <div class="field">
+                <label for="founder_gap">Founding-team gap you're trying to fill</label>
+                <select id="founder_gap" name="founder_gap">
+                  <option value="">Select…</option>
+                  <option value="technical">Technical (CTO / engineering)</option>
+                  <option value="business">Business (CEO / GTM / sales)</option>
+                  <option value="domain">Domain expert (regulatory / clinical / industry)</option>
+                  <option value="design">Design / product</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="equity_offered">Equity you'd offer</label>
+                <select id="equity_offered" name="equity_offered">
+                  <option value="">Select…</option>
+                  <option value="20-30">20–30%</option>
+                  <option value="10-20">10–20%</option>
+                  <option value="5-10">5–10%</option>
+                  <option value="open">Open / depends on contribution</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="founder_story">What's the story so far?</label>
+                <textarea id="founder_story" name="founder_story" rows="2" placeholder="Lab demo working at TRL-4, won SBIR Phase I, talking to two pilot customers."></textarea>
+              </div>
+            </div>
+
+            <!-- bring-advisors: fractional advisors -->
+            <div class="intent-block" data-intent-block="bring-advisors" hidden>
+              <div class="intent-block-header">Advisor specifics <span class="label">— shape, count, comp</span></div>
+              <div class="field">
+                <label for="advisor_count">How many advisors do you want?</label>
+                <select id="advisor_count" name="advisor_count">
+                  <option value="">Select…</option>
+                  <option value="1">1 (single key hire)</option>
+                  <option value="2-3">2–3 (a small bench)</option>
+                  <option value="4+">4+ (build a board)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="advisor_area">Top area of advisory expertise needed</label>
+                <input type="text" id="advisor_area" name="advisor_area" placeholder="FDA Class II clearance · medical device" />
+              </div>
+              <div class="field">
+                <label for="advisor_comp">Compensation model</label>
+                <select id="advisor_comp" name="advisor_comp">
+                  <option value="">Select…</option>
+                  <option value="equity">Advisory equity (0.25–1%)</option>
+                  <option value="cash">Cash retainer</option>
+                  <option value="cash-equity">Mix</option>
+                  <option value="open">Open</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- recruit-interns: student talent -->
+            <div class="intent-block" data-intent-block="recruit-interns" hidden>
+              <div class="intent-block-header">Internship specifics <span class="label">— shape, scope, comp</span></div>
+              <div class="field">
+                <label for="intern_count">How many interns?</label>
+                <select id="intern_count" name="intern_count">
+                  <option value="">Select…</option>
+                  <option value="1">1</option>
+                  <option value="2-3">2–3</option>
+                  <option value="4+">4+</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="intern_project">Project type</label>
+                <input type="text" id="intern_project" name="intern_project" placeholder="ML inference benchmarks · summer 2026" />
+              </div>
+              <div class="field">
+                <label for="intern_paid">Paid?</label>
+                <select id="intern_paid" name="intern_paid">
+                  <option value="">Select…</option>
+                  <option value="paid">Paid</option>
+                  <option value="credit">Course credit only</option>
+                  <option value="unpaid">Unpaid</option>
+                  <option value="either">Either</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- founder-mentor: mentorship for the founders themselves -->
+            <div class="intent-block" data-intent-block="founder-mentor" hidden>
+              <div class="intent-block-header">Mentorship specifics <span class="label">— where are you and where do you need help?</span></div>
+              <div class="field">
+                <label for="founder_stage">Current founder stage</label>
+                <select id="founder_stage" name="founder_stage">
+                  <option value="">Select…</option>
+                  <option value="solo">Solo founder, just starting</option>
+                  <option value="early-team">Early team, no product yet</option>
+                  <option value="early-revenue">Early revenue / pilots</option>
+                  <option value="raising">Raising first round</option>
+                  <option value="post-funded">Post-funded, scaling</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="founder_challenges">Top challenges you want help with</label>
+                <textarea id="founder_challenges" name="founder_challenges" rows="2" placeholder="Pricing for enterprise · first hire after CTO · navigating SBIR Phase II."></textarea>
+              </div>
+            </div>
+
             <div class="row">
-              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
+              <button type="button" class="btn btn-ghost" data-back="3">← Back</button>
               <button type="submit" class="btn btn-primary flex-1" style="justify-content:center;">Find my matches →</button>
             </div>
           </div>
@@ -195,21 +380,111 @@
   <div id="toast" class="toast"></div>
   <script src="app.js"></script>
   <script>
+    // Per-step copy for the title/subtitle area.
+    const STARTUP_STEP_TITLES = {
+      1: { title: "What are you looking for?",      sub: "We tailor the questions and the matches to your goal." },
+      2: { title: "Tell us about your company",     sub: "The basics — what you're building and where." },
+      3: { title: "Tech & stage",                   sub: "We use these to gauge match maturity & sector fit." },
+      4: { title: "Your gap & next move",           sub: "What you need now, and the shape of help that fits." },
+    };
+
+    // Intent metadata — labels for the pill, and which chip group to pre-select.
+    const STARTUP_INTENT_META = {
+      "hire-employee":   { label: "Hiring full-time",         preselect: ["engineering"] },
+      "find-cofounder":  { label: "Looking for a co-founder", preselect: ["CEO", "CTO"] },
+      "bring-advisors":  { label: "Building advisor bench",   preselect: ["advisors", "board members"] },
+      "recruit-interns": { label: "Recruiting interns",       preselect: ["interns"] },
+      "founder-mentor":  { label: "Seeking founder mentor",   preselect: ["advisors"] },
+    };
+
     NM.initStepForm("#startup-form", "startup");
-    (function() {
-      const bars = document.querySelectorAll('#startup-progress .onb-step-bar');
-      const obs = new MutationObserver(function() {
+
+    (function () {
+      const titleEl = document.getElementById("startup-step-title");
+      const subEl   = document.getElementById("startup-step-sub");
+      const bars    = document.querySelectorAll('#startup-progress .onb-step-bar');
+      const intentHidden = document.getElementById("startup-intent-hidden");
+      const intentPillHost = document.getElementById("startup-intent-pill-host");
+
+      // ---- Step jumper used by the intent pill 'change' link ----
+      function gotoStepGlobal(n) {
+        document.querySelectorAll(".form-step").forEach((s) => {
+          s.hidden = String(s.dataset.step) !== String(n);
+        });
+        document.querySelectorAll(".steps .step").forEach((s) => {
+          s.classList.toggle("active", Number(s.dataset.step) <= n);
+        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // ---- Renders the "LOOKING FOR X · change" pill on steps 2-4 ----
+      function renderIntentPill(currentStep) {
+        const v = intentHidden.value;
+        const meta = STARTUP_INTENT_META[v];
+        if (!meta || currentStep < 2) {
+          intentPillHost.hidden = true;
+          intentPillHost.innerHTML = "";
+          return;
+        }
+        intentPillHost.hidden = false;
+        intentPillHost.innerHTML =
+          `<span class="intent-pill">${meta.label.toUpperCase()}<span class="change" id="startup-intent-change">change</span></span>`;
+        document.getElementById("startup-intent-change").addEventListener("click", () => gotoStepGlobal(1));
+      }
+
+      // ---- Show only the matching intent block on Step 4 ----
+      function renderIntentBlock() {
+        const v = intentHidden.value;
+        document.querySelectorAll('.intent-block').forEach((blk) => {
+          blk.hidden = blk.dataset.intentBlock !== v;
+        });
+      }
+
+      // ---- Sync title, progress bar, intent pill, intent block to current step ----
+      function sync() {
         const steps = document.querySelectorAll('.form-step');
         let cur = 1;
-        steps.forEach(function(s) { if (!s.hidden) cur = Number(s.dataset.step); });
-        bars.forEach(function(b, i) {
+        steps.forEach((s) => { if (!s.hidden) cur = Number(s.dataset.step); });
+        bars.forEach((b, i) => {
           const n = i + 1;
           b.classList.toggle('done',   n < cur);
           b.classList.toggle('active', n === cur);
         });
-      });
-      document.querySelectorAll('.form-step').forEach(function(s) {
-        obs.observe(s, { attributes: true });
+        const t = STARTUP_STEP_TITLES[cur];
+        if (t) { titleEl.textContent = t.title; subEl.textContent = t.sub; }
+        renderIntentPill(cur);
+        renderIntentBlock();
+      }
+      const obs = new MutationObserver(sync);
+      document.querySelectorAll('.form-step').forEach((s) => obs.observe(s, { attributes: true }));
+      sync();
+
+      // ---- Intent picker: select → smart prefill → auto-advance ----
+      const grid = document.getElementById("startup-intent-grid");
+      grid.addEventListener("click", (e) => {
+        const card = e.target.closest(".intent-card");
+        if (!card) return;
+        const v = card.dataset.intent;
+        const meta = STARTUP_INTENT_META[v];
+        if (!meta) return;
+        intentHidden.value = v;
+        grid.querySelectorAll(".intent-card").forEach((c) => c.classList.remove("selected"));
+        card.classList.add("selected");
+
+        // Smart prefill: pre-select the most relevant "needs" chips based on intent.
+        // app.js uses ".active" (not ".selected") for chip toggle state, so we match that.
+        // We only set chips that aren't already active, and never clear user choices.
+        if (Array.isArray(meta.preselect)) {
+          const chipBox = document.querySelector('.chips[data-multi="needs"]');
+          if (chipBox) {
+            chipBox.querySelectorAll(".chip").forEach((c) => {
+              if (meta.preselect.includes(c.textContent.trim()) && !c.classList.contains("active")) {
+                c.classList.add("active");
+              }
+            });
+          }
+        }
+        setTimeout(() => gotoStepGlobal(2), 220);
       });
     })();
   </script>

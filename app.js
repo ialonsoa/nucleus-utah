@@ -73,6 +73,18 @@
     });
   };
 
+  // Inferred when the talent UI doesn't ask for it (we hide stage_pref because it
+  // confuses non-VC users). Matcher still uses the field, so we keep it populated.
+  const STAGE_BY_ROLE = {
+    executive: ["pre-seed", "seed", "series-a"],
+    operator:  ["seed", "series-a", "growth"],
+    student:   ["idea", "pre-seed"],
+    intern:    ["idea", "pre-seed"],
+    advisor:   ["idea", "pre-seed", "seed"],
+    mentor:    ["pre-seed", "seed"],
+    board:     ["seed", "series-a"],
+  };
+
   function collect(form, kind) {
     const fd = new FormData(form);
     const obj = {};
@@ -83,6 +95,14 @@
     obj.id = (kind === "talent" ? "t-" : "s-") + Date.now().toString(36);
     if (obj.risk_tolerance) obj.risk_tolerance = Number(obj.risk_tolerance);
     if (obj.trl) obj.trl = Number(obj.trl);
+    // Auto-infer stage_pref from role_type for talent (UI no longer asks).
+    if (kind === "talent" && (!obj.stage_pref || obj.stage_pref.length === 0)) {
+      obj.stage_pref = STAGE_BY_ROLE[obj.role_type] || ["seed"];
+    }
+    // Strip secrets we collect for sign-up but should never go into the matcher.
+    if (kind === "talent") {
+      delete obj.password;
+    }
     return obj;
   }
 
