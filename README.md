@@ -94,7 +94,7 @@ python3 -m http.server 8000
 
 ## The team
 
-- **Person A** — UX / Frontend (`index.html`, `talent.html`, `startup.html`, `match.html`, `demo.html`, `styles.css`, `app.js`)
-- **Person B** — Matching engine + data + integrations (`match.js`, `explain.js`, `data/*.json`, `integrations/affinity.js`)
+- **Carlos** — UX / Frontend (`index.html`, `talent.html`, `startup.html`, `match.html`, `demo.html`, `styles.css`, `app.js`)
+- **Alonso** ([@ialonsoa](https://github.com/ialonsoa)) — Matching engine + data + integrations (`match.js`, `explain.js`, `data/*.json`, `integrations/affinity.js`)
 
 See [`PLAN.md`](./PLAN.md) for the full timeline, schema contract, and Claude-chat prompts each side can use.

@@ -90,6 +90,13 @@ Sectors (canonical list — must match in both files):
 
 ---
 
+## Team assignment
+
+- **Person A — UX / Frontend → Carlos** (`carlos.incaroca@gmail.com`)
+- **Person B — Matching Engine, Data & Integration → Alonso** (`@ialonsoa`)
+
+---
+
 ## Person A — UX / Frontend (owns 40% of the score)
 
 **Goal:** beautiful, intuitive single-page app that demonstrates signup → match → explain.
