@@ -548,10 +548,7 @@
 
       const data=await resp.json();
       let text=data.content[0].text;
-<<<<<<< Updated upstream
-=======
       // Strip markdown code fences if present
->>>>>>> Stashed changes
       text=text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,'').trim();
       const result=JSON.parse(text);
       renderAIResults(result);
@@ -592,7 +589,6 @@
       ${matchCards}
       ${result.next_step?`<div style="margin-top:16px;padding:14px 18px;background:var(--bg-mist);border-left:3px solid var(--blue);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:14px;color:var(--ink-2);"><strong>Next step:</strong> ${result.next_step}</div>`:''}
     `;
-  }
   }
 
   function setSearch(el){
