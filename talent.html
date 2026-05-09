@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign up as Talent · Nucleus Match</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
+    <div class="nav-links"><a href="demo.html">Demo</a></div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="form">
+        <div class="center">
+          <span class="tag">For Talent</span>
+          <h1 class="mt-2">Tell Utah founders who you are</h1>
+          <p class="muted">90 seconds. No resume upload. We'll match you with founders who actually need you.</p>
+        </div>
+
+        <div class="steps mt-4">
+          <div class="step active" data-step="1"></div>
+          <div class="step" data-step="2"></div>
+          <div class="step" data-step="3"></div>
+        </div>
+
+        <form id="talent-form" autocomplete="off">
+
+          <!-- Step 1: Basics -->
+          <div class="form-step" data-step="1">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input type="text" id="name" name="name" required placeholder="Maya Chen" />
+            </div>
+            <div class="field">
+              <label for="headline">Short headline</label>
+              <input type="text" id="headline" name="headline" required placeholder="Ex-Pluralsight VP Product · Lehi" />
+            </div>
+            <div class="field">
+              <label for="role_type">I'm looking to contribute as</label>
+              <select id="role_type" name="role_type" required>
+                <option value="">Select…</option>
+                <option value="executive">Executive (CoFounder, COO, CRO, fractional)</option>
+                <option value="operator">Operator (engineer, sales, marketing)</option>
+                <option value="student">Student</option>
+                <option value="intern">Intern</option>
+                <option value="board">Board Member</option>
+                <option value="advisor">Advisor (equity / paid)</option>
+                <option value="mentor">Mentor (free)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="school">School / affiliation <span class="muted">(optional)</span></label>
+              <select id="school" name="school">
+                <option value="">—</option>
+                <option>BYU</option>
+                <option>University of Utah</option>
+                <option>Utah State University</option>
+                <option>Utah Valley University</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="location">Where in Utah?</label>
+              <input type="text" id="location" name="location" placeholder="Salt Lake City" />
+            </div>
+            <button type="button" class="btn btn-primary btn-block" data-next="2">Continue →</button>
+          </div>
+
+          <!-- Step 2: Skills + Domains -->
+          <div class="form-step" data-step="2" hidden>
+            <div class="field">
+              <label>Skills (pick all that apply)</label>
+              <div class="chips" data-multi="skills">
+                <span class="chip">product strategy</span>
+                <span class="chip">B2B SaaS</span>
+                <span class="chip">GTM</span>
+                <span class="chip">sales</span>
+                <span class="chip">marketing</span>
+                <span class="chip">engineering</span>
+                <span class="chip">ML / AI</span>
+                <span class="chip">hardware</span>
+                <span class="chip">regulatory</span>
+                <span class="chip">finance</span>
+                <span class="chip">operations</span>
+                <span class="chip">design</span>
+                <span class="chip">research</span>
+                <span class="chip">manufacturing</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Sectors I want to work in</label>
+              <div class="chips" data-multi="domains">
+                <span class="chip" data-value="life-sciences">Life Sciences</span>
+                <span class="chip" data-value="ai">AI</span>
+                <span class="chip" data-value="defense">Defense / Aerospace</span>
+                <span class="chip" data-value="cyber">Cyber</span>
+                <span class="chip" data-value="energy">Energy</span>
+                <span class="chip" data-value="advanced-manufacturing">Advanced Manufacturing</span>
+                <span class="chip" data-value="fintech">Fintech</span>
+                <span class="chip" data-value="software">Software</span>
+              </div>
+            </div>
+            <div class="flex">
+              <button type="button" class="btn btn-secondary" data-back="1">← Back</button>
+              <button type="button" class="btn btn-primary" data-next="3">Continue →</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Preferences -->
+          <div class="form-step" data-step="3" hidden>
+            <div class="field">
+              <label>Stage preference</label>
+              <div class="chips" data-multi="stage_pref">
+                <span class="chip" data-value="idea">Idea</span>
+                <span class="chip" data-value="pre-seed">Pre-seed</span>
+                <span class="chip" data-value="seed">Seed</span>
+                <span class="chip" data-value="series-a">Series A</span>
+                <span class="chip" data-value="growth">Growth</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="availability">Availability</label>
+              <select id="availability" name="availability" required>
+                <option value="">Select…</option>
+                <option value="full-time">Full-time</option>
+                <option value="fractional">Fractional</option>
+                <option value="advisory">Advisory</option>
+                <option value="internship">Internship</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="risk_tolerance">Risk tolerance: <span id="risk_val">3</span> / 5</label>
+              <input type="range" id="risk_tolerance" name="risk_tolerance" min="1" max="5" value="3"
+                     oninput="document.getElementById('risk_val').textContent=this.value" style="width:100%" />
+              <div class="help">1 = stable salary required · 5 = founding-team risk welcome</div>
+            </div>
+            <div class="field">
+              <label for="mission">Your mission, in one sentence</label>
+              <textarea id="mission" name="mission" rows="2" placeholder="Help Utah-grown deep tech reach national markets."></textarea>
+            </div>
+            <div class="flex">
+              <button type="button" class="btn btn-secondary" data-back="2">← Back</button>
+              <button type="submit" class="btn btn-primary">Find my matches →</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+  <script>NM.initStepForm("#talent-form", "talent");</script>
+</body>
+</html>

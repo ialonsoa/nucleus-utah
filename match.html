@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your matches · Nucleus Match</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
+    <div class="nav-links">
+      <a href="demo.html">Demo</a>
+      <a href="index.html">Start over</a>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container">
+      <div id="header" class="center">
+        <span class="tag">Your matches</span>
+        <h1 class="mt-2" id="match-title">Top Utah matches for you</h1>
+        <p class="muted" id="match-subtitle">Ranked by 6-criteria fit score · explanations included</p>
+      </div>
+
+      <div id="results" class="grid mt-4" style="gap:16px;"></div>
+
+      <div class="center mt-4">
+        <button class="btn btn-secondary" id="export-csv">Export all to CSV (Affinity)</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+  <script src="match.js"></script>
+  <script src="explain.js"></script>
+  <script src="integrations/affinity.js"></script>
+  <script src="app.js"></script>
+  <script>NM.renderMatches();</script>
+</body>
+</html>

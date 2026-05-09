@@ -1,0 +1,38 @@
+[
+  {
+    "id": "s-001",
+    "name": "HelioMet Materials",
+    "sector": "advanced-manufacturing",
+    "origin": "BYU spinout",
+    "stage": "pre-seed",
+    "trl": 5,
+    "needs": ["COO", "biz dev", "regulatory"],
+    "funding_status": "SBIR Phase I",
+    "location": "Provo, UT",
+    "mission": "Aluminum alloys 3x stronger for aerospace and defense."
+  },
+  {
+    "id": "s-002",
+    "name": "NeuraDose",
+    "sector": "life-sciences",
+    "origin": "U of U spinout",
+    "stage": "idea",
+    "trl": 3,
+    "needs": ["interns", "research", "regulatory"],
+    "funding_status": "NIH grant",
+    "location": "Salt Lake City, UT",
+    "mission": "Targeted drug delivery from Utah lab research to clinical trials."
+  },
+  {
+    "id": "s-003",
+    "name": "LedgerLoop",
+    "sector": "fintech",
+    "origin": "Bootstrapped",
+    "stage": "series-a",
+    "trl": 9,
+    "needs": ["sales", "biz dev", "marketing"],
+    "funding_status": "Series A",
+    "location": "Lehi, UT",
+    "mission": "Scaling B2B SaaS billing for the Silicon Slopes ecosystem."
+  }
+]

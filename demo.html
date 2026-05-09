@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo scenarios · Nucleus Match</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a class="btn btn-secondary" href="talent.html" style="padding:8px 14px;">Try it yourself</a>
+    </div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="center">
+        <span class="tag">For judges</span>
+        <h1 class="mt-2">Three Utah match scenarios</h1>
+        <p class="muted">Each card shows the score, the breakdown, and a plain-English explanation.</p>
+      </div>
+      <div id="demo-results" class="grid mt-4" style="gap:16px;"></div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+  <script src="match.js"></script>
+  <script src="explain.js"></script>
+  <script src="integrations/affinity.js"></script>
+  <script src="app.js"></script>
+  <script>NM.renderDemoScenarios();</script>
+</body>
+</html>

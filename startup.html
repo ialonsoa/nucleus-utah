@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign up as a Startup · Nucleus Match</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html"><span class="brand-mark"></span><span>Nucleus Match</span></a>
+    <div class="nav-links"><a href="demo.html">Demo</a></div>
+  </nav>
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="form">
+        <div class="center">
+          <span class="tag">For Startups</span>
+          <h1 class="mt-2">Find the right Utah operator</h1>
+          <p class="muted">Tell us your sector, stage, and the gap you need to close.</p>
+        </div>
+
+        <div class="steps mt-4">
+          <div class="step active" data-step="1"></div>
+          <div class="step" data-step="2"></div>
+          <div class="step" data-step="3"></div>
+        </div>
+
+        <form id="startup-form" autocomplete="off">
+
+          <div class="form-step" data-step="1">
+            <div class="field">
+              <label for="name">Company name</label>
+              <input type="text" id="name" name="name" required placeholder="HelioMet Materials" />
+            </div>
+            <div class="field">
+              <label for="mission">One-line mission</label>
+              <input type="text" id="mission" name="mission" required placeholder="Aluminum alloys 3x stronger for aerospace." />
+            </div>
+            <div class="field">
+              <label for="location">Headquarters</label>
+              <input type="text" id="location" name="location" placeholder="Provo, UT" />
+            </div>
+            <button type="button" class="btn btn-primary btn-block" data-next="2">Continue →</button>
+          </div>
+
+          <div class="form-step" data-step="2" hidden>
+            <div class="field">
+              <label for="sector">Primary sector</label>
+              <select id="sector" name="sector" required>
+                <option value="">Select…</option>
+                <option value="life-sciences">Life Sciences</option>
+                <option value="ai">AI</option>
+                <option value="defense">Defense / Aerospace</option>
+                <option value="cyber">Cyber</option>
+                <option value="energy">Energy</option>
+                <option value="advanced-manufacturing">Advanced Manufacturing</option>
+                <option value="fintech">Fintech</option>
+                <option value="software">Software</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="origin">Origin</label>
+              <select id="origin" name="origin" required>
+                <option value="">Select…</option>
+                <option>BYU spinout</option>
+                <option>U of U spinout</option>
+                <option>USU spinout</option>
+                <option>UVU spinout</option>
+                <option>Bootstrapped</option>
+                <option>Independent</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="stage">Stage</label>
+              <select id="stage" name="stage" required>
+                <option value="">Select…</option>
+                <option value="idea">Idea</option>
+                <option value="pre-seed">Pre-seed</option>
+                <option value="seed">Seed</option>
+                <option value="series-a">Series A</option>
+                <option value="growth">Growth</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="trl">Tech Readiness Level (TRL): <span id="trl_val">5</span></label>
+              <input type="range" id="trl" name="trl" min="1" max="9" value="5"
+                     oninput="document.getElementById('trl_val').textContent=this.value" style="width:100%" />
+              <div class="help">1 = basic research · 9 = market-ready system</div>
+            </div>
+            <div class="flex">
+              <button type="button" class="btn btn-secondary" data-back="1">← Back</button>
+              <button type="button" class="btn btn-primary" data-next="3">Continue →</button>
+            </div>
+          </div>
+
+          <div class="form-step" data-step="3" hidden>
+            <div class="field">
+              <label>Immediate needs (pick all that apply)</label>
+              <div class="chips" data-multi="needs">
+                <span class="chip">CEO</span>
+                <span class="chip">COO</span>
+                <span class="chip">CTO</span>
+                <span class="chip">CRO</span>
+                <span class="chip">biz dev</span>
+                <span class="chip">sales</span>
+                <span class="chip">marketing</span>
+                <span class="chip">regulatory</span>
+                <span class="chip">engineering</span>
+                <span class="chip">research</span>
+                <span class="chip">finance</span>
+                <span class="chip">interns</span>
+                <span class="chip">board members</span>
+                <span class="chip">advisors</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="funding_status">Funding status</label>
+              <select id="funding_status" name="funding_status">
+                <option value="">Select…</option>
+                <option>Bootstrapped</option>
+                <option>SBIR Phase I</option>
+                <option>SBIR Phase II</option>
+                <option>NIH grant</option>
+                <option>Pre-seed angel</option>
+                <option>Seed VC</option>
+                <option>Series A</option>
+              </select>
+            </div>
+            <div class="flex">
+              <button type="button" class="btn btn-secondary" data-back="2">← Back</button>
+              <button type="submit" class="btn btn-primary">Find my matches →</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+  <script>NM.initStepForm("#startup-form", "startup");</script>
+</body>
+</html>

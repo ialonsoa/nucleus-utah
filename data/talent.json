@@ -1,0 +1,44 @@
+[
+  {
+    "id": "t-001",
+    "name": "Maya Chen",
+    "role_type": "executive",
+    "headline": "Ex-Pluralsight VP Product · Lehi",
+    "skills": ["product strategy", "B2B SaaS", "GTM", "team building", "operations"],
+    "domains": ["software", "ai", "advanced-manufacturing"],
+    "stage_pref": ["pre-seed", "seed"],
+    "availability": "fractional",
+    "risk_tolerance": 4,
+    "mission": "Help Utah-grown deep tech reach national markets.",
+    "location": "Lehi, UT",
+    "school": "BYU"
+  },
+  {
+    "id": "t-002",
+    "name": "Jacob Reyes",
+    "role_type": "student",
+    "headline": "U of U Bioengineering MS · drug delivery",
+    "skills": ["research", "engineering", "ML / AI"],
+    "domains": ["life-sciences"],
+    "stage_pref": ["idea", "pre-seed"],
+    "availability": "internship",
+    "risk_tolerance": 5,
+    "mission": "Translate Utah research from bench to bedside.",
+    "location": "Salt Lake City, UT",
+    "school": "University of Utah"
+  },
+  {
+    "id": "t-003",
+    "name": "Priya Shah",
+    "role_type": "operator",
+    "headline": "Ex-Qualtrics Senior Sales Engineer · Provo",
+    "skills": ["sales", "GTM", "B2B SaaS", "engineering"],
+    "domains": ["fintech", "software"],
+    "stage_pref": ["seed", "series-a"],
+    "availability": "full-time",
+    "risk_tolerance": 3,
+    "mission": "Scale Utah B2B SaaS into enterprise.",
+    "location": "Lehi, UT",
+    "school": "BYU"
+  }
+]
