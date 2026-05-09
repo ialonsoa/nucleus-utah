@@ -309,10 +309,12 @@
     setTimeout(()=>t.classList.remove('show'),2000);
   }
 
-  // Load API key from storage
+  // Load API key from storage (or use default demo key)
+  const DEMO_KEY='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';
   (function(){
+    if(!localStorage.getItem('nm_claude_key'))localStorage.setItem('nm_claude_key',DEMO_KEY);
     const k=localStorage.getItem('nm_claude_key');
-    if(k)document.getElementById('ai-key-input').value=k;
+    document.getElementById('ai-key-input').value=k;
   })();
 
   async function runAIMatch(){
