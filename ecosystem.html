@@ -481,10 +481,8 @@
     setTimeout(()=>t.classList.remove('show'),2000);
   }
 
-  const DEMO_KEY='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';
   (function(){
-    if(!localStorage.getItem('nm_claude_key'))localStorage.setItem('nm_claude_key',DEMO_KEY);
-    const k=localStorage.getItem('nm_claude_key');
+    const k=localStorage.getItem('nm_claude_key')||'';
     document.getElementById('ai-key-input').value=k;
   })();
 
