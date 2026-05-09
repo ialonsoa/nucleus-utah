@@ -98,16 +98,28 @@
     const title = document.getElementById("match-title");
     const sub = document.getElementById("match-subtitle");
 
-    const [talent, startups, events] = await Promise.all([
+    // Wire export-csv up front so it never silently no-ops on early returns.
+    // We rebind with the real payload once scoring succeeds.
+    const exportBtn = document.getElementById("export-csv");
+    let exportHandler = () => NM.toast("No matches to export yet — load a profile first.");
+    if (exportBtn) {
+      exportBtn.addEventListener("click", (e) => exportHandler(e));
+    }
+
+    const [talent, startups, events, institutions] = await Promise.all([
       fetch("data/talent.json").then((r) => r.json()).catch(() => []),
       fetch("data/startups.json").then((r) => r.json()).catch(() => []),
       fetch("data/handshake-events.json").then((r) => r.json()).catch(() => []),
+      fetch("data/institutions.json").then((r) => r.json()).catch(() => []),
     ]);
     if (window.NMMatch && window.NMMatch.setHandshakeEvents) {
       window.NMMatch.setHandshakeEvents(events);
     }
     if (window.NMMatch && window.NMMatch.setAllProfiles) {
       window.NMMatch.setAllProfiles([...talent, ...startups]);
+    }
+    if (window.NMMatch && window.NMMatch.setInstitutions) {
+      window.NMMatch.setInstitutions(institutions);
     }
 
     let me;
@@ -157,9 +169,7 @@
       root.appendChild(renderCard(me, other, score, breakdown, top_reasons, as, demand, bond));
     });
 
-    document.getElementById("export-csv").addEventListener("click", () => {
-      window.NMAffinity.exportCSV(me, scored, as);
-    });
+    exportHandler = () => window.NMAffinity.exportCSV(me, scored, as);
   };
 
   /* ------------------------------------------------------------------ */
@@ -167,16 +177,20 @@
   /* ------------------------------------------------------------------ */
   NM.renderDemoScenarios = async function () {
     const root = document.getElementById("demo-results");
-    const [talent, startups, events] = await Promise.all([
+    const [talent, startups, events, institutions] = await Promise.all([
       fetch("data/talent.json").then((r) => r.json()).catch(() => []),
       fetch("data/startups.json").then((r) => r.json()).catch(() => []),
       fetch("data/handshake-events.json").then((r) => r.json()).catch(() => []),
+      fetch("data/institutions.json").then((r) => r.json()).catch(() => []),
     ]);
     if (window.NMMatch && window.NMMatch.setHandshakeEvents) {
       window.NMMatch.setHandshakeEvents(events);
     }
     if (window.NMMatch && window.NMMatch.setAllProfiles) {
       window.NMMatch.setAllProfiles([...talent, ...startups]);
+    }
+    if (window.NMMatch && window.NMMatch.setInstitutions) {
+      window.NMMatch.setInstitutions(institutions);
     }
     const scenarios = [
       { label: "Executive → Deep-tech startup", talentId: "t-001", startupId: "s-001" },

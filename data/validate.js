@@ -13,16 +13,19 @@ const path = require("path");
 
 const C = require("../core/constants.js");
 
-const here          = __dirname;
-const talentPath    = path.join(here, "talent.json");
-const startupsPath  = path.join(here, "startups.json");
+const here             = __dirname;
+const talentPath       = path.join(here, "talent.json");
+const startupsPath     = path.join(here, "startups.json");
+const institutionsPath = path.join(here, "institutions.json");
 
-const SECTORS    = new Set(C.SECTORS);
-const ROLE_TYPES = new Set(C.ROLE_TYPES);
-const STAGES     = new Set(C.STAGES);
-const AVAIL      = new Set(C.AVAILABILITY);
-const SCHOOLS    = new Set(C.SCHOOLS);
-const ORIGIN_OK  = (s) => C.ORIGIN_PATTERNS.some((re) => re.test(s));
+const SECTORS              = new Set(C.SECTORS);
+const ROLE_TYPES           = new Set(C.ROLE_TYPES);
+const STAGES               = new Set(C.STAGES);
+const AVAIL                = new Set(C.AVAILABILITY);
+const SCHOOLS              = new Set(C.SCHOOLS);
+const INSTITUTION_TYPES    = new Set(C.INSTITUTION_TYPES);
+const INSTITUTION_PARENTS  = new Set(C.INSTITUTION_PARENTS);
+const ORIGIN_OK            = (s) => C.ORIGIN_PATTERNS.some((re) => re.test(s));
 
 function fail(arr, id, msg) { arr.push({ id, msg }); }
 
@@ -78,6 +81,29 @@ function validateStartups(items) {
   return errs;
 }
 
+function validateInstitutions(items) {
+  const errs = [];
+  if (!Array.isArray(items)) { errs.push({ id: "(file)", msg: "not an array" }); return errs; }
+  const seen = new Set();
+  items.forEach((inst, i) => {
+    const id = inst.id || `(index ${i})`;
+    if (!inst.id || !/^i-\d{3,}$/.test(inst.id)) fail(errs, id, "id missing or wrong shape (expected i-NNN)");
+    if (seen.has(inst.id)) fail(errs, id, "duplicate id");
+    seen.add(inst.id);
+    if (!inst.name) fail(errs, id, "name missing");
+    if (!INSTITUTION_TYPES.has(inst.type)) fail(errs, id, `type invalid: ${inst.type}`);
+    if (!inst.mission) fail(errs, id, "mission missing");
+    if (!inst.location || !/, UT$/i.test(inst.location)) fail(errs, id, `location must end ", UT": ${inst.location}`);
+    (inst.domains || []).forEach((d) => {
+      if (!SECTORS.has(d)) fail(errs, id, `domain invalid: ${d}`);
+    });
+    if (inst.parent != null && inst.parent !== "" && !INSTITUTION_PARENTS.has(inst.parent)) {
+      fail(errs, id, `parent invalid (expected BYU / U of U / USU / UVU / null): ${inst.parent}`);
+    }
+  });
+  return errs;
+}
+
 function readJson(p) {
   try { return JSON.parse(fs.readFileSync(p, "utf8")); }
   catch (e) {
@@ -94,19 +120,22 @@ function report(name, count, errs) {
   return 1;
 }
 
-const talent   = readJson(talentPath);
-const startups = readJson(startupsPath);
+const talent       = readJson(talentPath);
+const startups     = readJson(startupsPath);
+const institutions = fs.existsSync(institutionsPath) ? readJson(institutionsPath) : [];
 
 const tErr = validateTalent(talent);
 const sErr = validateStartups(startups);
+const iErr = validateInstitutions(institutions);
 
 let bad = 0;
-bad += report("data/talent.json",   talent.length,   tErr);
-bad += report("data/startups.json", startups.length, sErr);
+bad += report("data/talent.json",       talent.length,       tErr);
+bad += report("data/startups.json",     startups.length,     sErr);
+bad += report("data/institutions.json", institutions.length, iErr);
 
 if (bad === 0) {
   console.log("");
-  console.log(`Counts: ${talent.length} talent · ${startups.length} startups`);
+  console.log(`Counts: ${talent.length} talent · ${startups.length} startups · ${institutions.length} institutions`);
   process.exit(0);
 } else {
   process.exit(1);

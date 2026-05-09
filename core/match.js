@@ -36,6 +36,7 @@
   // Module-level caches populated by callers before scoring.
   let _events = [];
   let _allProfiles = [];
+  let _institutions = [];
 
   const lc = C.lc;
 
@@ -94,17 +95,45 @@
   }
 
   // Utah-network bonus — high signal in a tight ecosystem.
-  // School-in-origin = warm-intro path. Same-city = easy in-person.
-  // Returns { bonus: 0..0.30, reasons: string[] }.
+  //   • Direct shared school (talent.school in startup.origin)  +0.20
+  //   • Institutional lineage (talent signal matches an institution
+  //     whose parent is the startup's origin school)            +0.10
+  //     — only fires when the direct school match did NOT, so this
+  //     is the "you came through their accelerator/lab even though
+  //     you didn't attend the school" path.
+  //   • Same-city                                                +0.10
+  // Capped at 0.30. Returns { bonus, reasons[] }.
   function networkBonus(t, s) {
     let bonus = 0;
     const reasons = [];
     const tag = C.schoolTag(t.school);
-    const sOrigin = lc(s.origin);
-    if (tag && sOrigin && sOrigin.includes(tag)) {
+    const sOriginTag = C.schoolFromOrigin(s.origin);
+
+    let directSchoolHit = false;
+    if (tag && sOriginTag && tag === sOriginTag) {
       bonus += 0.20;
       reasons.push(`Shared ${t.school} network — warm-intro path likely.`);
+      directSchoolHit = true;
     }
+
+    if (!directSchoolHit && sOriginTag && _institutions.length) {
+      const tSig = new Set((t.signals || []));
+      // Require at least one *lineage* signal in common — generic mission /
+      // niche tags don't imply an institutional pipeline.
+      const matched = _institutions.find((inst) => {
+        if (!inst || !inst.parent) return false;
+        const instParentTag = C.schoolTag(inst.parent);
+        if (instParentTag !== sOriginTag) return false;
+        return (inst.signals || []).some(
+          (sig) => sig.startsWith("lineage:") && tSig.has(sig)
+        );
+      });
+      if (matched) {
+        bonus += 0.10;
+        reasons.push(`Connected to ${matched.parent} through ${matched.name} — institutional warm-intro path.`);
+      }
+    }
+
     const tCity = lc(String(t.location || "").split(",")[0]);
     const sCity = lc(String(s.location || "").split(",")[0]);
     if (tCity && sCity && tCity === sCity) {
@@ -220,10 +249,15 @@
     _allProfiles = Array.isArray(profiles) ? profiles : [];
   }
 
+  function setInstitutions(institutions) {
+    _institutions = Array.isArray(institutions) ? institutions : [];
+  }
+
   window.NMMatch = {
     scoreTalentToStartup,
     setHandshakeEvents,
     setAllProfiles,
+    setInstitutions,
     WEIGHTS: W,
   };
 })();
