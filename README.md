@@ -3,7 +3,8 @@
 > Builder Day Hackathon · May 2026 · Nucleus Bounty
 > AI-powered, explainable matching between Utah deep-tech startups and the operators, executives, students, and advisors who can build them.
 
-**Live demo:** _add GitHub Pages URL after first push_
+**Live demo:** https://ialonsoa.github.io/nucleus-utah/
+**Repo:** https://github.com/ialonsoa/nucleus-utah
 
 ---
 
