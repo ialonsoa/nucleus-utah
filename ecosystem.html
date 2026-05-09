@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ecosystem · Nucleus</title>
+  <title>My Ecosystem · Nucleus</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
       <div class="nav-left">
         <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
         <div class="nav-links">
-          <a href="ecosystem.html" class="nav-link active">Ecosystem</a>
+          <a href="ecosystem.html" class="nav-link active">My Ecosystem</a>
           <a href="match.html" class="nav-link">Matches</a>
           <a href="demo.html" class="nav-link">Demo</a>
         </div>
@@ -49,6 +49,10 @@
             <button class="tab" data-tab="labs" onclick="switchTab('labs')">
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v5L2 13a2 2 0 0 0 2 3h8a2 2 0 0 0 2-3l-4-7V1M5 1h6"/></svg>
               Labs
+            </button>
+            <button class="tab" data-tab="ai" onclick="switchTab('ai')" style="background:linear-gradient(135deg,var(--blue-tint),rgba(124,58,237,0.08)); color:var(--blue-2); border:1px solid var(--blue-tint);">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1l1.5 3 3.5.5-2.5 2.5.5 3.5L8 9l-3 1.5.5-3.5L3 4.5 6.5 4 8 1z"/></svg>
+              AI Match
             </button>
           </div>
           <div class="row gap-8">
@@ -142,6 +146,42 @@
         </div>
         <div class="results-grid" id="labs-list"></div>
       </div>
+
+      <!-- AI Match panel -->
+      <div id="results-ai" hidden>
+        <div style="max-width:680px; margin:0 auto;">
+          <div style="margin-bottom:24px;">
+            <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">AI-powered matching</div>
+            <h3 style="font-size:22px; margin-bottom:8px;">Tell the AI what you're trying to build</h3>
+            <p class="muted" style="font-size:14px;">Describe your goal or challenge in plain English. Claude will scan Utah's full ecosystem and surface the most relevant people, labs, and startups.</p>
+          </div>
+
+          <!-- API key config -->
+          <div id="ai-key-row" style="display:flex; align-items:center; gap:8px; margin-bottom:16px; padding:12px 16px; background:var(--bg-mist); border:1px solid var(--line); border-radius:var(--r-md);">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ink-4); flex-shrink:0;"><path d="M11 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM8.5 7H2M5 5v4"/></svg>
+            <input id="ai-key-input" type="password" placeholder="Paste Claude API key (sk-ant-…)" style="flex:1; border:none; background:none; font-size:13px; font-family:inherit; color:var(--ink); outline:none;" />
+            <button onclick="saveKey()" class="btn btn-ghost btn-sm" style="padding:4px 10px; font-size:12px;">Save</button>
+          </div>
+
+          <div style="position:relative; margin-bottom:12px;">
+            <textarea id="ai-query" placeholder="e.g. I want to fund a robotics company that fixes essential tremor with a robotic exoskeleton" style="width:100%; min-height:100px; padding:14px 16px; border:1px solid var(--line-2); border-radius:var(--r-md); font-size:15px; font-family:inherit; line-height:1.55; resize:none; background:var(--bg-elev); outline:none; transition:border-color 0.15s, box-shadow 0.15s; box-sizing:border-box;"
+              onfocus="this.style.borderColor='var(--blue)';this.style.boxShadow='0 0 0 4px var(--blue-tint)'"
+              onblur="this.style.borderColor='var(--line-2)';this.style.boxShadow='none'"></textarea>
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;">
+            <button class="btn btn-primary" id="ai-submit" onclick="runAIMatch()" style="gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1l1.5 3 3.5.5-2.5 2.5.5 3.5L8 9l-3 1.5.5-3.5L3 4.5 6.5 4 8 1z"/></svg>
+              Find with AI
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="setAIExample('I want to fund a robotics company that fixes essential tremor with a robotic exoskeleton')">Try: Essential tremor robotics</button>
+            <button class="btn btn-ghost btn-sm" onclick="setAIExample('Looking for a co-founder with deep-tech manufacturing experience to scale a BYU materials spinout')">Try: Materials co-founder</button>
+          </div>
+
+          <div id="ai-results"></div>
+        </div>
+      </div>
+
     </div>
 
     <footer class="footer">
@@ -225,11 +265,13 @@
     people:['Fractional CTO · life sciences','VP Sales · energy','Founding scientist','Advisor · regulatory'],
     companies:['Pre-seed · life sciences','Series A · energy','iHub portfolio','Hiring CTO'],
     labs:['Protein design','Quantum sensors','Manufacturing','Open to industry partnership'],
+    ai:[],
   };
   const TAB_PLACEHOLDERS={
     people:'Find a cofounder, operator, advisor…',
     companies:'Find startups by sector, stage, need…',
     labs:'Find labs by domain, capability…',
+    ai:'Describe what you\'re building…',
   };
 
   function switchTab(tab){
@@ -237,13 +279,156 @@
       t.classList.toggle('tab-active',t.dataset.tab===tab);
       t.classList.toggle('tab-blue',t.dataset.tab===tab);
     });
-    ['people','companies','labs'].forEach(k=>{
+    ['people','companies','labs','ai'].forEach(k=>{
       document.getElementById('results-'+k).hidden=k!==tab;
     });
-    document.getElementById('eco-search').placeholder=TAB_PLACEHOLDERS[tab];
-    document.getElementById('eco-suggestions').innerHTML=TAB_SUGGESTIONS[tab].map(s=>
-      `<span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">${s}</span>`
-    ).join('');
+    const searchWrap = document.querySelector('.search-input-wrap');
+    const suggestWrap = document.getElementById('eco-suggestions');
+    if(tab==='ai'){
+      searchWrap.style.display='none';
+      suggestWrap.style.display='none';
+    } else {
+      searchWrap.style.display='';
+      suggestWrap.style.display='';
+      document.getElementById('eco-search').placeholder=TAB_PLACEHOLDERS[tab];
+      suggestWrap.innerHTML=TAB_SUGGESTIONS[tab].map(s=>
+        `<span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">${s}</span>`
+      ).join('');
+    }
+  }
+
+  /* ===== AI Match ===== */
+  function saveKey(){
+    const k=document.getElementById('ai-key-input').value.trim();
+    if(k){localStorage.setItem('nm_claude_key',k);showAIToast('API key saved ✓');}
+  }
+  function setAIExample(txt){document.getElementById('ai-query').value=txt;}
+  function showAIToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2000);
+  }
+
+  // Load API key from storage
+  (function(){
+    const k=localStorage.getItem('nm_claude_key');
+    if(k)document.getElementById('ai-key-input').value=k;
+  })();
+
+  async function runAIMatch(){
+    const key=localStorage.getItem('nm_claude_key')||(document.getElementById('ai-key-input').value.trim());
+    const query=(document.getElementById('ai-query').value||'').trim();
+    const resultsEl=document.getElementById('ai-results');
+    const btn=document.getElementById('ai-submit');
+
+    if(!key){
+      resultsEl.innerHTML=`<div style="padding:16px;background:var(--bg-mist);border:1px solid var(--line);border-radius:var(--r-md);font-size:14px;color:var(--ink-3);">⚠ Paste your Claude API key above to use AI Match.</div>`;
+      return;
+    }
+    if(!query){showAIToast('Describe what you\'re looking for first.');return;}
+
+    btn.disabled=true;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6" stroke-opacity="0.3"/><path d="M8 2a6 6 0 0 1 6 6"/></svg> Searching Utah\'s ecosystem…';
+    resultsEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:24px 0;color:var(--ink-4);font-size:14px;"><div id="spin" style="width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;"></div>Claude is reading the database…</div>';
+
+    // Inject spin keyframe once
+    if(!document.getElementById('spin-style')){
+      const s=document.createElement('style');
+      s.id='spin-style';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+      document.head.appendChild(s);
+    }
+
+    try{
+      if(!window._nmData){
+        const[talent,startups,institutions]=await Promise.all([
+          fetch('data/talent.json').then(r=>r.json()).catch(()=>[]),
+          fetch('data/startups.json').then(r=>r.json()).catch(()=>[]),
+          fetch('data/institutions.json').then(r=>r.json()).catch(()=>[]),
+        ]);
+        const tStr=talent.map(t=>`${t.id}|${t.name}|talent|${t.role_type||''}|${(t.domains||[]).join(',')}|${(t.skills||[]).join(',')}|${t.school||''}|${t.signature_edge||t.mission||''}`).join('\n');
+        const sStr=startups.map(s=>`${s.id}|${s.name}|startup|${s.sector||''}|${s.stage||''}|${(s.needs||[]).join(',')}|${s.mission||''}`).join('\n');
+        const iStr=institutions.map(i=>`${i.id}|${i.name}|institution|${i.type||''}|${(i.domains||[]).join(',')}|${i.signature_edge||i.mission||''}`).join('\n');
+        window._nmData=`TALENT (id|name|type|role|domains|skills|school|edge):\n${tStr}\n\nSTARTUPS (id|name|type|sector|stage|needs|mission):\n${sStr}\n\nINSTITUTIONS (id|name|type|subtype|domains|edge):\n${iStr}`;
+      }
+
+      const system=`You are Nucleus, Utah's AI matching engine. Given what a user wants to build or achieve, identify the 4-6 most relevant people, labs, startups, or institutions from the Utah database.
+
+Respond ONLY with valid JSON, no markdown, no text outside the JSON:
+{"summary":"one sentence describing what they need","matches":[{"id":"t-105","name":"Steven Charles","type":"talent","headline":"BYU · Neuroscience Center Director · Motor control","reason":"2 sentence explanation of why this is a strong match for their goal"}],"next_step":"One actionable sentence on how to start"}
+
+Rules:
+- type must be: talent, startup, or institution
+- For talent: profile_url = profile.html?id={id}&kind=talent
+- For startups: profile_url = profile.html?id={id}&kind=startup
+- For institutions: profile_url = byu.html (for BYU-related) or ecosystem.html
+- Prioritize specificity — match research areas and skills to the stated goal exactly
+- Include at least one researcher/faculty if relevant
+
+DATABASE:
+${window._nmData}`;
+
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'x-api-key':key,
+          'anthropic-version':'2023-06-01',
+          'anthropic-dangerous-direct-browser-access':'true',
+        },
+        body:JSON.stringify({
+          model:'claude-haiku-4-5-20251001',
+          max_tokens:1024,
+          system,
+          messages:[{role:'user',content:query}]
+        })
+      });
+
+      if(!resp.ok){
+        const err=await resp.json().catch(()=>({}));
+        throw new Error(err.error?.message||`API error ${resp.status}`);
+      }
+
+      const data=await resp.json();
+      const text=data.content[0].text;
+      const result=JSON.parse(text);
+      renderAIResults(result);
+    }catch(e){
+      resultsEl.innerHTML=`<div style="padding:16px;background:#FFF1F0;border:1px solid #FFCCC7;border-radius:var(--r-md);font-size:14px;color:#CC3333;">${e.message||'Something went wrong. Check your API key and try again.'}</div>`;
+    }finally{
+      btn.disabled=false;
+      btn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1l1.5 3 3.5.5-2.5 2.5.5 3.5L8 9l-3 1.5.5-3.5L3 4.5 6.5 4 8 1z"/></svg> Find with AI';
+    }
+  }
+
+  function renderAIResults(result){
+    const el=document.getElementById('ai-results');
+    const matches=result.matches||[];
+    const matchCards=matches.map(m=>{
+      const ini=initials(m.name);
+      const bg=avatarBg(m.id||m.name);
+      const href=m.type==='talent'?`profile.html?id=${m.id}&kind=talent`:m.type==='startup'?`profile.html?id=${m.id}&kind=startup`:'byu.html';
+      return `<a href="${href}" class="card" style="display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:start;text-decoration:none;margin-bottom:10px;padding:20px;">
+        <div class="avatar avatar-lg" style="background:${bg};">${ini}</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+            <span style="font-weight:600;font-size:15px;">${m.name}</span>
+            <span class="tag">${m.type}</span>
+          </div>
+          <div class="muted" style="font-size:13px;margin-bottom:8px;">${m.headline||''}</div>
+          <div style="font-size:13px;color:var(--ink-2);line-height:1.55;padding:10px 14px;background:var(--blue-tint);border-radius:var(--r-sm);">${m.reason||''}</div>
+        </div>
+      </a>`;
+    }).join('');
+
+    el.innerHTML=`
+      <div style="padding:16px 20px;background:var(--bg-tint);border:1px solid var(--blue-tint);border-radius:var(--r-md);margin-bottom:20px;">
+        <div class="eyebrow eyebrow-blue" style="margin-bottom:4px;">AI Summary</div>
+        <p style="font-size:15px;color:var(--ink-2);line-height:1.5;">${result.summary||''}</p>
+      </div>
+      <div class="group-head"><div class="group-title"><h3>Top matches</h3><span class="group-count">${matches.length} profiles · Utah ecosystem</span></div></div>
+      ${matchCards}
+      ${result.next_step?`<div style="margin-top:16px;padding:14px 18px;background:var(--bg-mist);border-left:3px solid var(--blue);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:14px;color:var(--ink-2);"><strong>Next step:</strong> ${result.next_step}</div>`:''}
+    `;
   }
 
   function setSearch(el){document.getElementById('eco-search').value=el.textContent;}

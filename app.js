@@ -67,9 +67,9 @@
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const data = collect(form, kind);
-      const key = kind === "talent" ? "nm_talent_profile" : "nm_startup_profile";
+      const key = kind === "talent" ? "nm_talent_profile" : kind === "startup" ? "nm_startup_profile" : "nm_institution_profile";
       localStorage.setItem(key, JSON.stringify(data));
-      window.location.href = `match.html?as=${kind}`;
+      window.location.href = kind === "institution" ? "byu.html" : `match.html?as=${kind}`;
     });
   };
 

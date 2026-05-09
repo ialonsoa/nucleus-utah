@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Join as an Institution · Nucleus</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="nav-left">
+        <a href="index.html" class="brand">nucleus<span class="brand-mark">^</span></a>
+      </div>
+      <div class="nav-right">
+        <a href="signin.html" class="btn btn-quiet btn-sm">Sign in</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="onb-shell">
+    <!-- Left panel -->
+    <div class="onb-left">
+      <div>
+        <a href="index.html" class="brand" style="margin-bottom:48px; display:inline-flex;">nucleus<span class="brand-mark">^</span></a>
+        <div class="onb-quote" style="margin-top:48px;">
+          "The research is already here. The gap is connecting it to the right operator before it leaves the state."
+        </div>
+        <div class="onb-quote-by">— BYU Tech Transfer Office</div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:12px;">Already on Nucleus</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#002E5D,#1E47E6); border-radius:6px; font-size:10px; font-weight:700; color:white; display:flex; align-items:center; justify-content:center; width:26px; height:26px;">BYU</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">Brigham Young University</div>
+              <div class="muted-2" style="font-size:11px;">Sandbox · Crocker · Rollins Center</div>
+            </div>
+          </div>
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#CC0000,#FF4444); border-radius:6px; font-size:10px; font-weight:700; color:white; display:flex; align-items:center; justify-content:center; width:26px; height:26px;">UU</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">University of Utah</div>
+              <div class="muted-2" style="font-size:11px;">Lassonde · PIVOT Center · CMI</div>
+            </div>
+          </div>
+          <div class="row gap-8">
+            <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#0F4C81,#1E7EC8); border-radius:6px; font-size:10px; font-weight:700; color:white; display:flex; align-items:center; justify-content:center; width:26px; height:26px;">iH</div>
+            <div>
+              <div style="font-size:13px; font-weight:500;">iHub Utah</div>
+              <div class="muted-2" style="font-size:11px;">Statewide innovation hub · 6 programs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel (form) -->
+    <div class="onb-right">
+      <div class="onb-form">
+        <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">For Institutions</div>
+        <h2 style="font-size:28px; margin-bottom:6px;">Connect your programs to Utah's ecosystem</h2>
+        <p class="muted" style="font-size:14px; margin-bottom:32px;">Tell us about your institution and the talent and startups you're looking for.</p>
+
+        <!-- Progress bar -->
+        <div class="onb-progress" id="inst-progress">
+          <div class="onb-step-bar active" data-bar="1"></div>
+          <div class="onb-step-bar" data-bar="2"></div>
+          <div class="onb-step-bar" data-bar="3"></div>
+        </div>
+
+        <form id="inst-form" autocomplete="off">
+
+          <!-- Step 1: Identity -->
+          <div class="form-step" data-step="1">
+            <div class="field">
+              <label for="inst-name">Institution name</label>
+              <input type="text" id="inst-name" name="name" required placeholder="BYU Sandbox" />
+            </div>
+            <div class="field">
+              <label for="inst-type">Type</label>
+              <select id="inst-type" name="type" required>
+                <option value="">Select…</option>
+                <option value="university">University</option>
+                <option value="accelerator">Accelerator / Incubator</option>
+                <option value="lab">Research Lab</option>
+                <option value="vc">Venture Capital</option>
+                <option value="innovation-hub">Innovation Hub</option>
+                <option value="community">Community / Association</option>
+                <option value="government">Government / Agency</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="inst-parent">Parent institution <span class="muted-2" style="font-weight:400;">(if applicable)</span></label>
+              <input type="text" id="inst-parent" name="parent" placeholder="BYU, U of U, Independent…" />
+            </div>
+            <div class="field">
+              <label for="inst-website">Website</label>
+              <input type="text" id="inst-website" name="url" placeholder="https://sandbox.byu.edu" />
+            </div>
+            <button type="button" class="btn btn-primary btn-block" data-next="2">Continue →</button>
+          </div>
+
+          <!-- Step 2: Focus -->
+          <div class="form-step" data-step="2" hidden>
+            <div class="field">
+              <label for="inst-location">Location</label>
+              <input type="text" id="inst-location" name="location" placeholder="Provo, UT" />
+            </div>
+            <div class="field">
+              <label for="inst-mission">Mission / tagline</label>
+              <input type="text" id="inst-mission" name="mission" placeholder="Studio-style program where students build companies." />
+            </div>
+            <div class="field">
+              <label>Focus sectors <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
+              <div class="chips" data-multi="domains" style="margin-top:8px;">
+                <span class="chip">Life Sciences</span>
+                <span class="chip">AI</span>
+                <span class="chip">Defense</span>
+                <span class="chip">Cyber</span>
+                <span class="chip">Energy</span>
+                <span class="chip">Advanced Mfg</span>
+                <span class="chip">Fintech</span>
+                <span class="chip">Software</span>
+              </div>
+            </div>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="3">Continue →</button>
+            </div>
+          </div>
+
+          <!-- Step 3: What you offer -->
+          <div class="form-step" data-step="3" hidden>
+            <div class="field">
+              <label>What you offer <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
+              <div class="chips" data-multi="offers" style="margin-top:8px;">
+                <span class="chip">Funding</span>
+                <span class="chip">Lab space</span>
+                <span class="chip">Mentorship</span>
+                <span class="chip">Tech transfer</span>
+                <span class="chip">Internships</span>
+                <span class="chip">Cohort program</span>
+                <span class="chip">IP licensing</span>
+                <span class="chip">Industry intros</span>
+                <span class="chip">Equipment access</span>
+              </div>
+            </div>
+            <div class="field">
+              <label>Looking for <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
+              <div class="chips" data-multi="looking_for" style="margin-top:8px;">
+                <span class="chip">Startups to support</span>
+                <span class="chip">Industry partners</span>
+                <span class="chip">Operators</span>
+                <span class="chip">Students</span>
+                <span class="chip">Researchers</span>
+                <span class="chip">Investors</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="inst-founded">Year founded</label>
+              <input type="text" id="inst-founded" name="founded" placeholder="2010" />
+            </div>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
+              <button type="submit" class="btn btn-primary flex-1" style="justify-content:center;">List my institution →</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+  <script>
+    NM.initStepForm("#inst-form", "institution");
+    (function() {
+      const bars = document.querySelectorAll('#inst-progress .onb-step-bar');
+      const obs = new MutationObserver(function() {
+        const steps = document.querySelectorAll('.form-step');
+        let cur = 1;
+        steps.forEach(function(s) { if (!s.hidden) cur = Number(s.dataset.step); });
+        bars.forEach(function(b, i) {
+          const n = i + 1;
+          b.classList.toggle('done',   n < cur);
+          b.classList.toggle('active', n === cur);
+        });
+      });
+      document.querySelectorAll('.form-step').forEach(function(s) {
+        obs.observe(s, { attributes: true });
+      });
+    })();
+  </script>
+</body>
+</html>
