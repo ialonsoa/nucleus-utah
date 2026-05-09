@@ -18,11 +18,14 @@
     </div>
   </nav>
 
-  <!-- Hidden legacy steps for app.js compatibility -->
+  <!-- Hidden legacy steps for app.js compatibility (6 steps) -->
   <div class="steps" aria-hidden="true">
     <div class="step active" data-step="1"></div>
     <div class="step" data-step="2"></div>
     <div class="step" data-step="3"></div>
+    <div class="step" data-step="4"></div>
+    <div class="step" data-step="5"></div>
+    <div class="step" data-step="6"></div>
   </div>
 
   <div class="onb-shell">
@@ -67,20 +70,103 @@
     <div class="onb-right">
       <div class="onb-form">
         <div class="eyebrow eyebrow-blue" style="margin-bottom:8px;">For Talent</div>
-        <h2 style="font-size:28px; margin-bottom:6px;">Tell Utah founders who you are</h2>
-        <p class="muted" style="font-size:14px; margin-bottom:32px;">90 seconds. No resume upload. We'll match you with founders who actually need you.</p>
+        <h2 id="onb-title" style="font-size:28px; margin-bottom:6px;">Create your account</h2>
+        <p id="onb-sub" class="muted" style="font-size:14px; margin-bottom:32px;">Takes 90 seconds. We'll match you with founders who actually need you.</p>
 
-        <!-- Progress bar -->
+        <!-- Progress bar (6 steps) -->
         <div class="onb-progress" id="talent-progress">
           <div class="onb-step-bar active" data-bar="1"></div>
           <div class="onb-step-bar" data-bar="2"></div>
           <div class="onb-step-bar" data-bar="3"></div>
+          <div class="onb-step-bar" data-bar="4"></div>
+          <div class="onb-step-bar" data-bar="5"></div>
+          <div class="onb-step-bar" data-bar="6"></div>
         </div>
+        <!-- Header pill that surfaces user's intent on later steps -->
+        <div id="intent-pill-host" hidden></div>
 
         <form id="talent-form" autocomplete="off">
 
-          <!-- Step 1: Basics -->
+          <!-- ============================================================ -->
+          <!-- Step 1: Account                                                -->
+          <!-- ============================================================ -->
           <div class="form-step" data-step="1">
+            <button type="button" class="btn-google" id="google-signin">
+              <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+                <path fill="#4285F4" d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.614z"/>
+                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+              </svg>
+              Continue with Google
+            </button>
+
+            <div class="or-divider">or</div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <div class="field">
+              <label for="password">Password <span class="muted-2" style="font-weight:400;">(8+ characters)</span></label>
+              <input type="password" id="password" name="password" required minlength="8" placeholder="••••••••" autocomplete="new-password" />
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="muted-2" style="font-weight:400;">(optional)</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="(801) 555-0123" autocomplete="tel" />
+            </div>
+            <button type="button" class="btn btn-primary btn-block" id="account-continue">Create account →</button>
+            <p class="help" style="margin-top:14px; text-align:center;">
+              By continuing you agree to our <a href="#" style="color:var(--blue-2);">terms</a> and <a href="#" style="color:var(--blue-2);">privacy notice</a>.
+            </p>
+          </div>
+
+          <!-- ============================================================ -->
+          <!-- Step 2: What brings you here? (intent picker)                  -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="2" hidden>
+            <div class="intent-grid" id="intent-grid">
+              <button type="button" class="intent-card" data-intent="find-role">
+                <span class="icon">💼</span>
+                <span class="title">Find my next role</span>
+                <span class="sub">Full-time at a Utah startup</span>
+              </button>
+              <button type="button" class="intent-card" data-intent="find-cofounder">
+                <span class="icon">🤝</span>
+                <span class="title">Find a co-founder</span>
+                <span class="sub">Start something together</span>
+              </button>
+              <button type="button" class="intent-card" data-intent="fractional">
+                <span class="icon">📈</span>
+                <span class="title">Fractional / advisory</span>
+                <span class="sub">5–20 hrs/week with founders</span>
+              </button>
+              <button type="button" class="intent-card" data-intent="internship">
+                <span class="icon">🎓</span>
+                <span class="title">Land an internship</span>
+                <span class="sub">Hands-on while you study</span>
+              </button>
+              <button type="button" class="intent-card" data-intent="mentor">
+                <span class="icon">💡</span>
+                <span class="title">Mentor or advise</span>
+                <span class="sub">Give back to the community</span>
+              </button>
+              <button type="button" class="intent-card" data-intent="explore">
+                <span class="icon">🔭</span>
+                <span class="title">Just exploring</span>
+                <span class="sub">Discover the ecosystem</span>
+              </button>
+            </div>
+            <p class="help" style="margin-top:14px;">You can pick more than one later — this just helps us prioritize what we show you.</p>
+            <div class="row" style="margin-top:18px;">
+              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
+            </div>
+          </div>
+
+          <!-- ============================================================ -->
+          <!-- Step 3: Basics                                                 -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="3" hidden>
             <div class="field">
               <label for="name">Full name</label>
               <input type="text" id="name" name="name" required placeholder="Maya Chen" />
@@ -117,11 +203,16 @@
               <label for="location">Where in Utah?</label>
               <input type="text" id="location" name="location" placeholder="Salt Lake City" />
             </div>
-            <button type="button" class="btn btn-primary btn-block" data-next="2">Continue →</button>
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="4">Continue →</button>
+            </div>
           </div>
 
-          <!-- Step 2: Skills + Domains -->
-          <div class="form-step" data-step="2" hidden>
+          <!-- ============================================================ -->
+          <!-- Step 4: Skills + Sectors                                       -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="4" hidden>
             <div class="field">
               <label>Skills <span class="muted-2" style="font-weight:400;">(pick all that apply)</span></label>
               <div class="chips" data-multi="skills" style="margin-top:8px;">
@@ -155,23 +246,16 @@
               </div>
             </div>
             <div class="row">
-              <button type="button" class="btn btn-ghost" data-back="1">← Back</button>
-              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="3">Continue →</button>
+              <button type="button" class="btn btn-ghost" data-back="3">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="5">Continue →</button>
             </div>
           </div>
 
-          <!-- Step 3: Preferences -->
-          <div class="form-step" data-step="3" hidden>
-            <div class="field">
-              <label>Stage preference</label>
-              <div class="chips" data-multi="stage_pref" style="margin-top:8px;">
-                <span class="chip" data-value="idea">Idea</span>
-                <span class="chip" data-value="pre-seed">Pre-seed</span>
-                <span class="chip" data-value="seed">Seed</span>
-                <span class="chip" data-value="series-a">Series A</span>
-                <span class="chip" data-value="growth">Growth</span>
-              </div>
-            </div>
+          <!-- ============================================================ -->
+          <!-- Step 5: Availability + Risk + Mission + INTENT-SPECIFIC block  -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="5" hidden>
+            <!-- Common fields (always visible) -->
             <div class="field">
               <label for="availability">Availability</label>
               <select id="availability" name="availability" required>
@@ -192,37 +276,627 @@
               <label for="mission">Your mission, in one sentence</label>
               <textarea id="mission" name="mission" rows="2" placeholder="Help Utah-grown deep tech reach national markets."></textarea>
             </div>
+
+            <!-- ===== Intent-specific blocks (only one shown at a time) ===== -->
+            <!-- find-role: looking for a salaried W-2 role -->
+            <div class="intent-block" data-intent-block="find-role" hidden>
+              <div class="intent-block-header">Role specifics <span class="label">— help us match you with the right offer</span></div>
+              <div class="field">
+                <label for="comp_target">Target compensation</label>
+                <select id="comp_target" name="comp_target">
+                  <option value="">Select…</option>
+                  <option value="80-120k">$80–120k</option>
+                  <option value="120-180k">$120–180k</option>
+                  <option value="180-250k">$180–250k</option>
+                  <option value="250k+">$250k+</option>
+                  <option value="open">Open / depends on equity</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="start_window">When can you start?</label>
+                <select id="start_window" name="start_window">
+                  <option value="">Select…</option>
+                  <option value="now">Available now</option>
+                  <option value="1mo">Within 1 month</option>
+                  <option value="3mo">Within 3 months</option>
+                  <option value="6mo">3–6 months out</option>
+                  <option value="passive">Passively looking</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- find-cofounder: looking for a co-founder partnership -->
+            <div class="intent-block" data-intent-block="find-cofounder" hidden>
+              <div class="intent-block-header">Co-founder specifics <span class="label">— what kind of partnership are you after?</span></div>
+              <div class="field">
+                <label for="idea_space">What problem space are you drawn to?</label>
+                <textarea id="idea_space" name="idea_space" rows="2" placeholder="Defense-grade additive manufacturing for hypersonic vehicles."></textarea>
+              </div>
+              <div class="field">
+                <label for="cofounder_kind">I'm looking for a co-founder who is…</label>
+                <select id="cofounder_kind" name="cofounder_kind">
+                  <option value="">Select…</option>
+                  <option value="technical">Technical (engineering / research lead)</option>
+                  <option value="business">Business (sales / fundraising / GTM)</option>
+                  <option value="domain">Domain expert (regulatory / clinical / industry)</option>
+                  <option value="open">Open — best person wins</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="equity_comfort">Equity expectation</label>
+                <select id="equity_comfort" name="equity_comfort">
+                  <option value="">Select…</option>
+                  <option value="20-30">20–30% (true co-founder)</option>
+                  <option value="10-20">10–20%</option>
+                  <option value="5-10">5–10%</option>
+                  <option value="open">Open — depends on stage</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- fractional: part-time advisor / fractional exec -->
+            <div class="intent-block" data-intent-block="fractional" hidden>
+              <div class="intent-block-header">Fractional specifics <span class="label">— hours, comp model, scope</span></div>
+              <div class="field">
+                <label for="hours_week">Hours per week you can offer</label>
+                <select id="hours_week" name="hours_week">
+                  <option value="">Select…</option>
+                  <option value="under-5">&lt; 5 hrs/wk (light advisory)</option>
+                  <option value="5-10">5–10 hrs/wk</option>
+                  <option value="10-20">10–20 hrs/wk</option>
+                  <option value="20+">20+ hrs/wk (heavy fractional)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="comp_model">Preferred compensation model</label>
+                <select id="comp_model" name="comp_model">
+                  <option value="">Select…</option>
+                  <option value="cash">Cash retainer</option>
+                  <option value="equity">Advisory equity (0.25–1%)</option>
+                  <option value="cash-equity">Mix of cash + equity</option>
+                  <option value="open">Open</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- internship: student looking for project / internship -->
+            <div class="intent-block" data-intent-block="internship" hidden>
+              <div class="intent-block-header">Internship specifics <span class="label">— grad date, portfolio, work mode</span></div>
+              <div class="field">
+                <label for="grad_date">Expected graduation</label>
+                <input type="text" id="grad_date" name="grad_date" placeholder="May 2027" />
+              </div>
+              <div class="field">
+                <label for="portfolio_url">Portfolio / GitHub / project URL</label>
+                <input type="url" id="portfolio_url" name="portfolio_url" placeholder="https://github.com/your-handle" />
+              </div>
+              <div class="field">
+                <label for="work_mode">Work mode</label>
+                <select id="work_mode" name="work_mode">
+                  <option value="">Select…</option>
+                  <option value="in-person">In-person (Utah)</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="remote">Remote-only</option>
+                  <option value="either">Either</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- mentor: experienced operator giving back -->
+            <div class="intent-block" data-intent-block="mentor" hidden>
+              <div class="intent-block-header">Mentor specifics <span class="label">— experience, frequency, format</span></div>
+              <div class="field">
+                <label for="years_experience">Years of operating experience</label>
+                <select id="years_experience" name="years_experience">
+                  <option value="">Select…</option>
+                  <option value="3-7">3–7 years</option>
+                  <option value="7-15">7–15 years</option>
+                  <option value="15+">15+ years</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="mentor_frequency">How often can you meet?</label>
+                <select id="mentor_frequency" name="mentor_frequency">
+                  <option value="">Select…</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="biweekly">Every 2 weeks</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="ad-hoc">Ad-hoc / quarterly</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="mentor_format">Format</label>
+                <select id="mentor_format" name="mentor_format">
+                  <option value="">Select…</option>
+                  <option value="1-1">1:1 mentorship</option>
+                  <option value="group">Group / cohort</option>
+                  <option value="either">Either</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- explore: just kicking tires — no extra fields -->
+            <div class="intent-block" data-intent-block="explore" hidden>
+              <div class="intent-block-header">Just exploring</div>
+              <p class="muted" style="margin:0; font-size:13px;">No extra questions — we'll show you a wide net so you can see what's out there.</p>
+            </div>
+
             <div class="row">
-              <button type="button" class="btn btn-ghost" data-back="2">← Back</button>
-              <button type="submit" class="btn btn-primary flex-1" style="justify-content:center;">Find my matches →</button>
+              <button type="button" class="btn btn-ghost" data-back="4">← Back</button>
+              <button type="button" class="btn btn-primary flex-1" style="justify-content:center;" data-next="6">Continue →</button>
             </div>
           </div>
 
+          <!-- ============================================================ -->
+          <!-- Step 6: Enhance with AI (optional)                             -->
+          <!-- ============================================================ -->
+          <div class="form-step" data-step="6" hidden>
+            <div class="ai-enhance-card">
+              <div class="eyebrow eyebrow-blue">Optional · powered by Claude</div>
+              <h3>Want richer matches? Let AI read your story.</h3>
+              <p class="muted">Drop your resume or paste a LinkedIn URL. We'll extract the niche signals (lab lineage, alumni networks, niche specialties) that make for unusually good matches — without overwriting anything you already filled in.</p>
+
+              <!-- LinkedIn URL -->
+              <div class="field">
+                <label for="ai-url">LinkedIn or faculty page URL</label>
+                <input type="url" id="ai-url" name="ai-url" placeholder="https://www.linkedin.com/in/maya-chen" />
+              </div>
+
+              <!-- Resume drop zone -->
+              <div class="field">
+                <label>Upload resume <span class="muted-2" style="font-weight:400;">(PDF, .txt, or .md — &lt;5 MB)</span></label>
+                <label class="upload-drop" id="upload-drop" for="ai-resume">
+                  <div class="upload-icon">⬆</div>
+                  <div class="upload-title" id="upload-title">Drop a file or click to browse</div>
+                  <div class="upload-sub" id="upload-sub">We extract text only — no storage, no sharing.</div>
+                  <input type="file" id="ai-resume" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown" hidden />
+                </label>
+              </div>
+
+              <!-- Inline status -->
+              <div id="ai-status" class="ai-status" hidden>
+                <span id="ai-status-icon">✨</span>
+                <span id="ai-status-text"></span>
+              </div>
+
+              <!-- Claude key controls -->
+              <div class="ai-key-row">
+                <span class="badge" id="ai-badge">
+                  <span class="dot"></span>
+                  <span id="ai-badge-text">Claude · local mode</span>
+                </span>
+                <a id="ai-key-toggle">Use my own Claude key</a>
+              </div>
+              <div id="ai-keybox" hidden style="margin-top:10px;">
+                <div class="field">
+                  <label for="ai-key">Claude API key <span class="muted-2" style="font-weight:400;">(stored in your browser only)</span></label>
+                  <input type="password" id="ai-key" placeholder="sk-ant-..." autocomplete="off" />
+                </div>
+                <div class="row">
+                  <button type="button" class="btn btn-secondary btn-sm" id="ai-key-save">Save key</button>
+                  <button type="button" class="btn btn-ghost btn-sm" id="ai-key-clear">Clear</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <button type="button" class="btn btn-ghost" data-back="5">← Back</button>
+              <button type="button" class="btn btn-secondary" id="skip-finish">Skip & finish</button>
+              <button type="submit" class="btn btn-primary flex-1" style="justify-content:center;" id="enhance-finish">Enhance & finish →</button>
+            </div>
+          </div>
+
+          <!-- Hidden fields populated programmatically -->
+          <input type="hidden" name="intent" id="intent-hidden" />
+          <input type="hidden" name="signals" id="signals-hidden" />
+          <input type="hidden" name="signature_edge" id="signature-hidden" />
+          <input type="hidden" name="auth_provider" id="auth-provider-hidden" value="email" />
         </form>
       </div>
     </div>
   </div>
 
   <div id="toast" class="toast"></div>
+
   <script src="app.js"></script>
+  <script src="core/constants.js"></script>
+  <script src="integrations/anthropic.js"></script>
+  <script src="profile-builder.js"></script>
   <script>
     NM.initStepForm("#talent-form", "talent");
-    // Sync new progress bar with step changes
-    (function() {
+
+    // ---------- Step header copy by step ----------
+    const STEP_TITLES = {
+      1: { title: "Create your account",        sub: "Takes 90 seconds. We'll match you with founders who actually need you." },
+      2: { title: "What brings you here?",      sub: "Tell us what you're looking for — we'll tune everything else around it." },
+      3: { title: "Tell Utah founders who you are", sub: "The basics — what we'll show on your match cards." },
+      4: { title: "What you bring",             sub: "Skills + sectors. Pick anything that fits, even if it's not your day job." },
+      5: { title: "How you want to work",       sub: "Availability, risk tolerance, and the mission that motivates you." },
+      6: { title: "One last thing — make it richer", sub: "Optional: drop your resume or LinkedIn so AI can extract niche signals." },
+    };
+    const titleEl = document.getElementById("onb-title");
+    const subEl   = document.getElementById("onb-sub");
+
+    // ---------- Intent metadata ----------
+    const INTENT_META = {
+      "find-role":      { label: "Looking for my next role",  availability: "full-time",  risk: 3 },
+      "find-cofounder": { label: "Looking for a co-founder",  availability: "full-time",  risk: 5 },
+      "fractional":     { label: "Fractional / advisory work",availability: "fractional", risk: 4 },
+      "internship":     { label: "Looking for an internship", availability: "internship", risk: 5 },
+      "mentor":         { label: "Mentoring / advising",      availability: "advisory",   risk: 3 },
+      "explore":        { label: "Just exploring",            availability: "",           risk: null },
+    };
+
+    // ---------- Progress bar + header sync (observes step visibility) ----------
+    const intentHidden = document.getElementById("intent-hidden");
+    const intentPillHost = document.getElementById("intent-pill-host");
+
+    function renderIntentPill(currentStep) {
+      const v = intentHidden.value;
+      const meta = INTENT_META[v];
+      // Show only on steps after the intent step (3+) and only when set.
+      if (!meta || currentStep < 3) {
+        intentPillHost.hidden = true;
+        intentPillHost.innerHTML = "";
+        return;
+      }
+      intentPillHost.hidden = false;
+      intentPillHost.innerHTML =
+        `<span class="intent-pill">${meta.label.toUpperCase()}<span class="change" id="intent-change">change</span></span>`;
+      document.getElementById("intent-change").addEventListener("click", () => gotoStepGlobal(2));
+    }
+
+    // Shared step-jumper used by intent pill + Google sign-in mock.
+    function gotoStepGlobal(n) {
+      document.querySelectorAll(".form-step").forEach((s) => {
+        s.hidden = String(s.dataset.step) !== String(n);
+      });
+      document.querySelectorAll(".steps .step").forEach((s) => {
+        s.classList.toggle("active", Number(s.dataset.step) <= n);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    (function () {
       const bars = document.querySelectorAll('#talent-progress .onb-step-bar');
-      const obs = new MutationObserver(function() {
+      function sync() {
         const steps = document.querySelectorAll('.form-step');
         let cur = 1;
-        steps.forEach(function(s) { if (!s.hidden) cur = Number(s.dataset.step); });
-        bars.forEach(function(b, i) {
+        steps.forEach((s) => { if (!s.hidden) cur = Number(s.dataset.step); });
+        bars.forEach((b, i) => {
           const n = i + 1;
           b.classList.toggle('done',   n < cur);
           b.classList.toggle('active', n === cur);
         });
+        const t = STEP_TITLES[cur];
+        if (t) { titleEl.textContent = t.title; subEl.textContent = t.sub; }
+        renderIntentPill(cur);
+        renderIntentBlock();
+      }
+      // Show only the intent-specific block matching the current intent value.
+      function renderIntentBlock() {
+        const v = intentHidden.value;
+        document.querySelectorAll('.intent-block').forEach((blk) => {
+          blk.hidden = blk.dataset.intentBlock !== v;
+        });
+      }
+      const obs = new MutationObserver(sync);
+      document.querySelectorAll('.form-step').forEach((s) => obs.observe(s, { attributes: true }));
+      sync();
+    })();
+
+    // ====================================================================
+    // Step 2 — Intent picker
+    // ====================================================================
+    (function () {
+      const grid = document.getElementById("intent-grid");
+      const availEl = document.getElementById("availability");
+      const riskEl  = document.getElementById("risk_tolerance");
+      const riskVal = document.getElementById("risk_val");
+
+      grid.addEventListener("click", (e) => {
+        const card = e.target.closest(".intent-card");
+        if (!card) return;
+        const v = card.dataset.intent;
+        const meta = INTENT_META[v];
+        if (!meta) return;
+        intentHidden.value = v;
+        // Visual selection state (mostly useful if user comes back to change).
+        grid.querySelectorAll(".intent-card").forEach((c) => c.classList.remove("selected"));
+        card.classList.add("selected");
+        // Smart pre-fills — but never overwrite if user already touched these.
+        if (meta.availability && availEl && !availEl.value) {
+          availEl.value = meta.availability;
+        }
+        if (meta.risk != null && riskEl && riskEl.value === riskEl.defaultValue) {
+          riskEl.value = meta.risk;
+          if (riskVal) riskVal.textContent = String(meta.risk);
+        }
+        // Auto-advance — feels natural for a single-pick step.
+        setTimeout(() => gotoStepGlobal(3), 220);
       });
-      document.querySelectorAll('.form-step').forEach(function(s) {
-        obs.observe(s, { attributes: true });
+    })();
+
+    // ====================================================================
+    // Step 1 — Account
+    // ====================================================================
+    (function () {
+      const emailEl    = document.getElementById("email");
+      const pwEl       = document.getElementById("password");
+      const phoneEl    = document.getElementById("phone");
+      const continueBtn= document.getElementById("account-continue");
+      const googleBtn  = document.getElementById("google-signin");
+      const authHidden = document.getElementById("auth-provider-hidden");
+
+      function validEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || "").trim()); }
+
+      continueBtn.addEventListener("click", () => {
+        const email = emailEl.value.trim();
+        const pw    = pwEl.value;
+        if (!validEmail(email)) { NM.toast("Enter a valid email."); emailEl.focus(); return; }
+        if (!pw || pw.length < 8) { NM.toast("Password must be 8+ characters."); pwEl.focus(); return; }
+        authHidden.value = "email";
+        gotoStepGlobal(2);
       });
+
+      // Google sign-in is mocked: real OAuth requires a Google Cloud project +
+      // Identity Services. For the demo we prefill a believable email + advance.
+      googleBtn.addEventListener("click", () => {
+        NM.toast("Demo: Google sign-in is a backend feature — using mock account.");
+        emailEl.value = emailEl.value || "alex.demo@gmail.com";
+        pwEl.value    = pwEl.value    || "demo-google-sso-1234";
+        authHidden.value = "google";
+        setTimeout(() => gotoStepGlobal(2), 700);
+      });
+    })();
+
+    // ====================================================================
+    // Step 5 — AI Enhance (LinkedIn URL or resume upload, optional)
+    // ====================================================================
+    (function () {
+      const form        = document.getElementById("talent-form");
+      const urlInput    = document.getElementById("ai-url");
+      const fileInput   = document.getElementById("ai-resume");
+      const dropEl      = document.getElementById("upload-drop");
+      const upTitle     = document.getElementById("upload-title");
+      const upSub       = document.getElementById("upload-sub");
+      const statusEl    = document.getElementById("ai-status");
+      const statusIcon  = document.getElementById("ai-status-icon");
+      const statusText  = document.getElementById("ai-status-text");
+      const skipBtn     = document.getElementById("skip-finish");
+      const enhanceBtn  = document.getElementById("enhance-finish");
+      const signalsHid  = document.getElementById("signals-hidden");
+      const signatureHid= document.getElementById("signature-hidden");
+
+      const badge       = document.getElementById("ai-badge");
+      const badgeText   = document.getElementById("ai-badge-text");
+      const keyToggle   = document.getElementById("ai-key-toggle");
+      const keyBox      = document.getElementById("ai-keybox");
+      const keyInput    = document.getElementById("ai-key");
+      const keySave     = document.getElementById("ai-key-save");
+      const keyClear    = document.getElementById("ai-key-clear");
+
+      let resumeText = "";
+      let resumeFileName = "";
+
+      function refreshBadge() {
+        const live = window.NMProfileBuilder && window.NMProfileBuilder.hasApiKey();
+        badge.classList.toggle("live", !!live);
+        badgeText.textContent = live ? "Claude · live" : "Claude · local mode";
+      }
+      refreshBadge();
+
+      keyToggle.addEventListener("click", () => {
+        keyBox.hidden = !keyBox.hidden;
+        if (!keyBox.hidden) {
+          keyInput.value = window.NMProfileBuilder.getApiKey();
+          keyInput.focus();
+        }
+      });
+      keySave.addEventListener("click", () => {
+        window.NMProfileBuilder.setApiKey(keyInput.value);
+        refreshBadge();
+        NM.toast(window.NMProfileBuilder.hasApiKey() ? "Claude key saved · live mode on" : "Claude key cleared");
+        keyBox.hidden = true;
+      });
+      keyClear.addEventListener("click", () => {
+        window.NMProfileBuilder.setApiKey("");
+        keyInput.value = "";
+        refreshBadge();
+        NM.toast("Claude key cleared · local mode");
+      });
+
+      function setStatus(kind, text) {
+        statusEl.hidden = false;
+        statusEl.classList.remove("ok", "err");
+        if (kind === "ok") statusEl.classList.add("ok");
+        if (kind === "err") statusEl.classList.add("err");
+        statusIcon.textContent = kind === "ok" ? "✓" : kind === "err" ? "!" : "…";
+        statusText.textContent = text;
+      }
+
+      // --- Resume reading: .txt/.md straight, .pdf via lazy-loaded pdf.js ---
+      let pdfjsReady = null;
+      function loadPdfJs() {
+        if (pdfjsReady) return pdfjsReady;
+        pdfjsReady = new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+          s.onload = () => {
+            try {
+              window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+                "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+              resolve(window.pdfjsLib);
+            } catch (e) { reject(e); }
+          };
+          s.onerror = () => reject(new Error("pdf.js failed to load"));
+          document.head.appendChild(s);
+        });
+        return pdfjsReady;
+      }
+
+      async function extractPdfText(file) {
+        const pdfjs = await loadPdfJs();
+        const buf   = await file.arrayBuffer();
+        const doc   = await pdfjs.getDocument({ data: buf }).promise;
+        const pages = [];
+        const max = Math.min(doc.numPages, 6); // first 6 pages is plenty for a resume
+        for (let i = 1; i <= max; i++) {
+          const page = await doc.getPage(i);
+          const tx   = await page.getTextContent();
+          pages.push(tx.items.map((it) => it.str).join(" "));
+        }
+        return pages.join("\n");
+      }
+
+      async function readFile(file) {
+        if (!file) return "";
+        if (file.size > 5 * 1024 * 1024) throw new Error("File is larger than 5 MB.");
+        const lc = (file.name || "").toLowerCase();
+        if (lc.endsWith(".pdf") || file.type === "application/pdf") {
+          return await extractPdfText(file);
+        }
+        return await file.text();
+      }
+
+      async function ingestFile(file) {
+        if (!file) return;
+        resumeFileName = file.name;
+        upTitle.textContent = file.name;
+        upSub.textContent   = `${(file.size / 1024).toFixed(1)} KB · reading…`;
+        dropEl.classList.add("has-file");
+        try {
+          resumeText = await readFile(file);
+          upSub.textContent = `${(file.size / 1024).toFixed(1)} KB · ${resumeText.length.toLocaleString()} chars extracted`;
+          setStatus("ok", `Resume "${file.name}" loaded — click "Enhance & finish" to extract signals.`);
+        } catch (e) {
+          resumeText = "";
+          dropEl.classList.remove("has-file");
+          upTitle.textContent = "Drop a file or click to browse";
+          upSub.textContent   = "We extract text only — no storage, no sharing.";
+          setStatus("err", `Couldn't read that file: ${e.message || e}. Try .txt or paste into a LinkedIn URL.`);
+        }
+      }
+
+      fileInput.addEventListener("change", (e) => ingestFile(e.target.files[0]));
+      ["dragenter", "dragover"].forEach((ev) => dropEl.addEventListener(ev, (e) => {
+        e.preventDefault(); e.stopPropagation(); dropEl.classList.add("dragover");
+      }));
+      ["dragleave", "drop"].forEach((ev) => dropEl.addEventListener(ev, (e) => {
+        e.preventDefault(); e.stopPropagation(); dropEl.classList.remove("dragover");
+      }));
+      dropEl.addEventListener("drop", (e) => {
+        const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) ingestFile(f);
+      });
+
+      // --- Augment-only application: never overwrite a field the user filled ---
+      function applyAugment(profile, formEl) {
+        const filledMap = {
+          name:         "input[name='name']",
+          headline:     "input[name='headline']",
+          role_type:    "select[name='role_type']",
+          school:       "select[name='school']",
+          location:     "input[name='location']",
+          availability: "select[name='availability']",
+          mission:      "textarea[name='mission']",
+        };
+        let added = 0;
+        Object.entries(filledMap).forEach(([k, sel]) => {
+          const el = formEl.querySelector(sel);
+          if (el && !el.value && profile[k]) {
+            el.value = profile[k];
+            el.classList.add("ai-filled");
+            setTimeout(() => el.classList.remove("ai-filled"), 1800);
+            added++;
+          }
+        });
+        // Risk tolerance: only set if user kept default 3 and AI gives non-3
+        const rt = formEl.querySelector("input[name='risk_tolerance']");
+        if (rt && Number(rt.value) === 3 && profile.risk_tolerance && profile.risk_tolerance !== 3) {
+          rt.value = profile.risk_tolerance;
+          const rv = document.getElementById("risk_val");
+          if (rv) rv.textContent = String(profile.risk_tolerance);
+          added++;
+        }
+        // Chips: add new selections without un-selecting user's picks
+        ["skills", "domains"].forEach((mname) => {
+          const wanted = (profile[mname] || []).map((v) => String(v).toLowerCase());
+          if (!wanted.length) return;
+          const group = formEl.querySelector(`.chips[data-multi="${mname}"]`);
+          if (!group) return;
+          group.querySelectorAll(".chip").forEach((chip) => {
+            const v = (chip.dataset.value || chip.textContent.trim()).toLowerCase();
+            if (wanted.includes(v) && !chip.classList.contains("active")) {
+              chip.classList.add("active", "ai-pulse");
+              setTimeout(() => chip.classList.remove("ai-pulse"), 1800);
+              added++;
+            }
+          });
+        });
+        return added;
+      }
+
+      async function runEnhance() {
+        const url  = urlInput.value.trim();
+        const text = resumeText.trim();
+        if (!url && !text) return null;
+        setStatus("info", window.NMProfileBuilder.hasApiKey()
+          ? "Calling Claude to extract signals…"
+          : "Extracting signals locally…");
+        try {
+          const profile = await window.NMProfileBuilder.extract(url, text);
+          const added   = applyAugment(profile, form);
+          // Stash signals + signature_edge for the matcher (if profile-builder ever returns them).
+          if (Array.isArray(profile.signals) && profile.signals.length) {
+            signalsHid.value = JSON.stringify(profile.signals);
+          }
+          if (profile.signature_edge) signatureHid.value = profile.signature_edge;
+          setStatus("ok", `Profile enriched — ${added} field${added === 1 ? "" : "s"} added from ${profile._source || "your input"}.`);
+          NM.toast(`✨ Profile enriched (${added} added)`);
+          return profile;
+        } catch (e) {
+          setStatus("err", `Couldn't extract signals: ${e.message || e}. Submitting your profile as-is.`);
+          return null;
+        }
+      }
+
+      // We use a sentinel to distinguish "Skip & finish" / post-enhance submits
+      // from a fresh "Enhance & finish" click — otherwise our capture-phase
+      // listener would re-trigger AI extraction on the second pass.
+      let skipEnhance = false;
+
+      function finalSubmit() {
+        skipEnhance = true;
+        form.requestSubmit ? form.requestSubmit() : form.submit();
+      }
+
+      skipBtn.addEventListener("click", finalSubmit);
+
+      // Enhance & finish — capture-phase listener runs BEFORE app.js's
+      // submit handler. If user has URL or resume content, we run extraction
+      // first, then re-submit with the skipEnhance flag so app.js takes over.
+      form.addEventListener("submit", async (e) => {
+        if (skipEnhance) return; // post-enhance pass — let app.js submit
+        const stepLast = document.querySelector('.form-step[data-step="6"]');
+        if (!stepLast || stepLast.hidden) return; // submit fired from another step
+        const url  = urlInput.value.trim();
+        const text = resumeText.trim();
+        if (!url && !text) return; // nothing to enhance — let app.js handle it
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        enhanceBtn.disabled = true;
+        const orig = enhanceBtn.textContent;
+        enhanceBtn.textContent = "Enriching…";
+        try {
+          await runEnhance();
+        } finally {
+          enhanceBtn.disabled = false;
+          enhanceBtn.textContent = orig;
+        }
+        finalSubmit();
+      }, true);
     })();
   </script>
 </body>

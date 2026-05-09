@@ -97,7 +97,11 @@
     .hs-event .bookmark {
       color: var(--muted); cursor: pointer; flex: 0 0 auto;
       width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; line-height: 1; user-select: none;
+      transition: transform 120ms ease, color 120ms ease;
     }
+    .hs-event .bookmark:hover { color: var(--sandstone); transform: scale(1.15); }
+    .hs-event .bookmark.saved { color: var(--sandstone); }
     .hs-event h3 { font-size: 1.05rem; line-height: 1.3; margin: 0; }
     .hs-event .meta { font-size: 0.86rem; color: var(--muted); }
     .hs-event .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -238,6 +242,26 @@
 
     let activeFilter = "all";
 
+    // Persist saved/bookmarked event ids in localStorage so the ♡ toggle survives reloads.
+    const SAVED_KEY = "nm_handshake_saved";
+    const savedSet = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || "[]"));
+    function persistSaved() {
+      localStorage.setItem(SAVED_KEY, JSON.stringify([...savedSet]));
+    }
+
+    function escapeAttr(s) {
+      return String(s == null ? "" : s).replace(/"/g, "&quot;").replace(/&/g, "&amp;");
+    }
+
+    function showToast(msg, ms) {
+      const t = document.getElementById("toast");
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => t.classList.remove("show"), ms || 1600);
+    }
+
     function tagClass(t) {
       if (!t) return "";
       if (t.startsWith("HIRING")) return "HIRING";
@@ -274,14 +298,17 @@
         return hay.includes(q);
       });
 
-      grid.innerHTML = filtered.map((ev) => `
-        <div class="hs-event">
+      grid.innerHTML = filtered.map((ev) => {
+        const evId = ev.id || ev.title;
+        const isSaved = savedSet.has(evId);
+        return `
+        <div class="hs-event" data-event-id="${escapeAttr(evId)}">
           <div class="top">
             <div class="emp">
               <span class="emp-logo">${ev.employer_initials || "•"}</span>
               <span class="emp-name">${ev.employer || ""}</span>
             </div>
-            <span class="bookmark" title="Save">♡</span>
+            <span class="bookmark${isSaved ? " saved" : ""}" role="button" tabindex="0" title="${isSaved ? "Remove from shortlist" : "Save to your shortlist"}">${isSaved ? "♥" : "♡"}</span>
           </div>
           <h3>${ev.title}</h3>
           <div class="meta">
@@ -296,12 +323,31 @@
             <span style="font-size:0.78rem;">${(ev.schools || []).join(" · ")}</span>
           </div>
         </div>
-      `).join("");
+      `;
+      }).join("");
 
-      // Update top-line stats based on filter (purely cosmetic).
-      document.getElementById("stat-saved").textContent = Math.min(7, filtered.length);
+      // Saved count reflects real bookmarks; registered stays cosmetic.
+      document.getElementById("stat-saved").textContent = savedSet.size;
       document.getElementById("stat-reg").textContent = Math.min(3, filtered.length);
     }
+
+    // Bookmark toggle (event delegation — survives re-renders).
+    grid.addEventListener("click", (e) => {
+      const bm = e.target.closest(".bookmark");
+      if (!bm) return;
+      const card = bm.closest(".hs-event");
+      const id = card && card.dataset.eventId;
+      if (!id) return;
+      if (savedSet.has(id)) {
+        savedSet.delete(id);
+        showToast("Removed from shortlist");
+      } else {
+        savedSet.add(id);
+        showToast("✓ Saved to your shortlist");
+      }
+      persistSaved();
+      render();
+    });
 
     filterEls.forEach((el) => {
       el.addEventListener("click", () => {

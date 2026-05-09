@@ -46,6 +46,22 @@
     "Utah Valley University",
   ];
 
+  // Allowed institution.type values used by data/institutions.json.
+  // Labs are a sub-category here rather than a separate file.
+  const INSTITUTION_TYPES = [
+    "university",
+    "accelerator",
+    "lab",
+    "innovation-hub",
+    "community",
+    "vc",
+    "govt-program",
+    "industry-anchor",
+  ];
+
+  // Short parent tags accepted on institution.parent (canonical short form).
+  const INSTITUTION_PARENTS = ["BYU", "U of U", "USU", "UVU"];
+
   // Lowercased aliases → canonical short tag used in startup.origin strings.
   // Used by the matcher (network bonus) and the ecosystem map (graph anchors).
   const SCHOOL_TAGS = {
@@ -168,6 +184,8 @@
     SCHOOLS,
     SCHOOL_TAGS,
     SCHOOL_DISPLAY,
+    INSTITUTION_TYPES,
+    INSTITUTION_PARENTS,
     SECTOR_ADJ,
     NEED_SKILL_MAP,
     STAGE_RISK,

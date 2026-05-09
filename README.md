@@ -91,6 +91,7 @@ The **explanation layer** (`explain.js`) takes the breakdown and the top reasons
 ├── integrations/
 │   ├── affinity.js         webhook + CSV export (URL via localStorage)
 │   ├── handshake.js        Handshake API mock (load events, demand signal)
+│   ├── anthropic.js        Claude API transport (key, model, vocab clamping)
 │   └── test.html           internal Affinity webhook tester
 └── PLAN.md                 full hackathon plan & team split
 ```
@@ -99,6 +100,52 @@ The **explanation layer** (`explain.js`) takes the breakdown and the top reasons
 school, or scoring weight is a one-line change in `core/constants.js` — every
 consumer (matcher, ecosystem map, Handshake, validator, integrations) reads from
 that one module.
+
+## AI Profile Builder — Claude integration
+
+The talent signup page has an "AI Profile Builder" panel that turns a LinkedIn
+URL or pasted bio into a structured Nucleus profile. It uses a four-layer
+fallback chain so the demo never breaks, regardless of network or API state:
+
+| Layer | When it fires | Source |
+|---|---|---|
+| 1. URL fixture lookup | Known LinkedIn / faculty URLs (Maya / Jacob / Brad) | `profile-builder.js` |
+| 2. Claude API | An API key is set in browser localStorage | `integrations/anthropic.js` |
+| 3. Local heuristic extraction | Keyword + regex over pasted text | `profile-builder.js` |
+| 4. URL-only stub | Last-resort school/role from the domain | `profile-builder.js` |
+
+### How the Claude call works
+
+`integrations/anthropic.js` POSTs directly to `https://api.anthropic.com/v1/messages`
+from the browser using Anthropic's `anthropic-dangerous-direct-browser-access: true`
+header — designed for prototypes that don't have a backend. Three things make
+this safe-ish for a hackathon:
+
+1. **No API key in source.** Each user supplies their own key via the AI
+   Settings panel. Stored in their own browser's `localStorage` under
+   `nm_anthropic_key`. Nothing transmitted anywhere except to Anthropic.
+2. **Vocabulary clamping.** Claude's free-text answers are normalized against
+   `core/constants.js` before they touch the form — `"AI/ML"` becomes `"ML / AI"`,
+   `"brigham young university"` becomes `"BYU"`, out-of-vocab values are dropped.
+3. **Graceful fallback.** Network errors, 401s, or unparseable JSON return
+   `null`; the builder drops to the heuristic layer instead of breaking the demo.
+
+### Setting up
+
+In the talent.html page, click the **"Powered by Claude"** badge to expand the
+key entry box. Paste your `sk-ant-…` key, hit Save. The badge flips to
+`Powered by Claude · live` and subsequent extractions use Claude.
+
+The default model is `claude-haiku-4-5` (fast + cheap, plenty for extraction).
+Override with `localStorage.setItem("nm_anthropic_model", "claude-sonnet-4-5")`
+in DevTools if you want higher accuracy.
+
+### Production migration
+
+Before this ships beyond Builder Day, the Anthropic call **must** move behind
+a server proxy (Cloudflare Worker, Vercel function, etc.) so Nucleus can use
+its own server-side key without exposing it. The client-side flow here is
+deliberately for the hackathon demo only.
 
 ## Running locally
 

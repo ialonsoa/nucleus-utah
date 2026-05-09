@@ -137,6 +137,31 @@
       phrase: "Both connected to Lucid Software — Utah's largest privately-built SaaS company.",
       category: "lineage",
     },
+    "lineage:domo-alum": {
+      label: "Domo alum",
+      phrase: "Both connected to Domo's data-platform DNA.",
+      category: "lineage",
+    },
+    "lineage:bamboo-alum": {
+      label: "BambooHR alum",
+      phrase: "Both connected to BambooHR's people-ops culture.",
+      category: "lineage",
+    },
+    "lineage:ancestry-alum": {
+      label: "Ancestry alum",
+      phrase: "Both connected to Ancestry's consumer-data scaling story.",
+      category: "lineage",
+    },
+    "lineage:adobe-lehi-alum": {
+      label: "Adobe Lehi alum",
+      phrase: "Both shaped by Adobe Lehi — the Utah outpost of one of the world's largest creative-software companies.",
+      category: "lineage",
+    },
+    "lineage:vivint-alum": {
+      label: "Vivint alum",
+      phrase: "Both connected to Vivint Smart Home's consumer-IoT culture.",
+      category: "lineage",
+    },
 
     // ------- Niche specialties -------
     "niche:compliant-mechanisms": {

@@ -1,24 +1,27 @@
 /* Nucleus Match — AI Profile Builder.
 
    Paste a LinkedIn URL, a faculty page URL, or any bio/resume text and we
-   return a fully structured Nucleus profile in under a second. The builder
-   uses a layered approach:
+   return a fully structured Nucleus profile. The builder uses a layered
+   approach with graceful fallback at every step:
 
      1. URL fixture lookup — known LinkedIn / .edu URLs map to canonical
-        Utah profiles already in our dataset. Lets demos feel magical.
-     2. Claude API (when configured) — if the user has stored a Claude
-        API key in localStorage under nm_claude_key, we call Anthropic's
-        Messages API with a strict-JSON prompt scoped to our chip
-        vocabulary. Powered-by-Claude badge flips to "live" when active.
-     3. Local AI inference — keyword + regex extraction over pasted text
-        that maps detected phrases to our canonical chip vocabularies.
-        Always available, no auth required.
+        Utah profiles already in our dataset. Instant + deterministic.
+     2. Claude (Anthropic) extraction — when the user has set an API key
+        via the AI Settings panel, we delegate to integrations/anthropic.js.
+        That module handles transport, prompting, and clamps Claude's
+        output to our canonical chip vocabularies (core/constants.js).
+     3. Local heuristic inference — keyword + regex over the pasted text.
+        Always available, no auth required, ~1s simulated delay.
+     4. URL-only stub — last-resort school/role inference from the domain.
 
    Public surface (window.NMProfileBuilder):
      extract(url, text)            -> Promise<Profile>
      applyToForm(profile, formEl)  -> number (count of fields filled)
-     getApiKey() / setApiKey(key)  -> Claude API key persistence
-     hasApiKey()                   -> boolean
+     SAMPLE_TEXTS                  -> { maya, jacob, brad }
+
+   Claude API key + model are managed by window.NMAnthropic (see
+   integrations/anthropic.js); back-compat shims below preserve the older
+   getApiKey / setApiKey / hasApiKey surface for any existing callers.
 */
 (function () {
   // ------------------------------------------------------------------
@@ -65,10 +68,10 @@
     "board":      ["board member", "board director"],
   };
   const SCHOOL_KEYWORDS = {
-    "BYU": ["byu", "brigham young university", "marriott school"],
-    "University of Utah": ["university of utah", "u of u", "uofu", "ut austin"],
-    "Utah State University": ["utah state university", "usu", "utah state"],
-    "Utah Valley University": ["utah valley university", "uvu"],
+    "BYU":                  ["byu", "brigham young university", "marriott school"],
+    "University of Utah":   ["university of utah", "u of u", "uofu"],
+    "Utah State University":["utah state university", "usu", "utah state"],
+    "Utah Valley University":["utah valley university", "uvu"],
   };
   const UTAH_CITIES = [
     "Salt Lake City", "Provo", "Lehi", "Ogden", "Logan", "Park City",
@@ -122,12 +125,14 @@
         role_type: "advisor",
         school: "BYU",
         location: "Provo",
-        skills: ["materials science", "microstructure", "EBSD", "research", "engineering"],
+        // Only chip-canonical values here so auto-fill actually activates the form chips.
+        // Niche specialties (materials science, microstructure, EBSD) live in the headline + mission.
+        skills: ["research", "engineering", "manufacturing"],
         domains: ["advanced-manufacturing"],
         stage_pref: ["idea", "pre-seed", "seed"],
         availability: "advisory",
         risk_tolerance: 4,
-        mission: "Translate BYU materials research into Utah deep-tech ventures.",
+        mission: "Translate BYU materials microstructure & EBSD research into Utah deep-tech ventures.",
         _source: "BYU faculty page",
       },
     },
@@ -254,90 +259,10 @@
   }
 
   // ------------------------------------------------------------------
-  // Claude API — production path when a key is configured.
-  // ------------------------------------------------------------------
-  const KEY_STORAGE = "nm_claude_key";
-  const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-  const CLAUDE_MODEL = "claude-3-5-haiku-20241022"; // fast + cheap, perfect for extraction
-
-  function getApiKey() {
-    try { return localStorage.getItem(KEY_STORAGE) || ""; }
-    catch (_) { return ""; }
-  }
-  function setApiKey(key) {
-    try {
-      if (key) localStorage.setItem(KEY_STORAGE, String(key).trim());
-      else localStorage.removeItem(KEY_STORAGE);
-    } catch (_) {}
-  }
-  function hasApiKey() { return !!getApiKey(); }
-
-  // Strict-JSON prompt scoped to our controlled vocabulary so Claude's output
-  // drops straight into the matcher with no post-processing.
-  function buildPrompt(url, text) {
-    return `You are extracting structured profile data for "Nucleus Match", a Utah talent ↔ deep-tech-startup matching platform. Return ONLY a single JSON object — no prose, no markdown fences.
-
-Schema (every key required, use "" or [] when unknown):
-{
-  "name":            string,
-  "headline":        string (≤ 80 chars),
-  "role_type":       "executive" | "operator" | "student" | "intern" | "advisor" | "mentor" | "board" | "",
-  "school":          "BYU" | "University of Utah" | "Utah State University" | "Utah Valley University" | "",
-  "location":        string (Utah city only, e.g. "Lehi"),
-  "skills":          string[] (subset of: ${SKILL_VOCAB.map(JSON.stringify).join(", ")}),
-  "domains":         string[] (subset of: ${Object.keys(DOMAIN_KEYWORDS).map(JSON.stringify).join(", ")}),
-  "stage_pref":      string[] (subset of: "idea","pre-seed","seed","series-a","growth"),
-  "availability":    "full-time" | "fractional" | "advisory" | "internship" | "",
-  "risk_tolerance":  integer 1-5,
-  "mission":         string (one sentence, first-person)
-}
-
-Rules:
-- Choose role_type by seniority + intent: VP/Founder/CEO → executive; engineer/sales/PM → operator; PhD/MS candidate → student; professor/faculty → advisor.
-- Map availability heuristically: executives default fractional; students default internship; faculty default advisory.
-- risk_tolerance: students/founders/faculty advising spinouts → 4-5; senior operators → 3.
-- Only output values from the allowed enums and vocabularies.
-
-Profile URL: ${url || "(none)"}
-Profile text:
-"""
-${text || "(none)"}
-"""`;
-  }
-
-  async function extractWithClaude(url, text, key) {
-    const res = await fetch(ANTHROPIC_URL, {
-      method: "POST",
-      headers: {
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: CLAUDE_MODEL,
-        max_tokens: 800,
-        messages: [{ role: "user", content: buildPrompt(url, text) }],
-      }),
-    });
-    if (!res.ok) {
-      const body = await res.text().catch(() => "");
-      throw new Error(`Claude API ${res.status}: ${body.slice(0, 200)}`);
-    }
-    const data = await res.json();
-    const raw = (data.content && data.content[0] && data.content[0].text) || "";
-    // Defensively strip code fences in case Claude adds them.
-    const jsonStr = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
-    const profile = JSON.parse(jsonStr);
-    profile._source = "Claude";
-    return profile;
-  }
-
-  // ------------------------------------------------------------------
-  // Public API
+  // Public extract — layered fallback chain.
   // ------------------------------------------------------------------
   async function extract(url, text) {
-    // 1) Known-URL fixture — instant, deterministic, perfect for demos.
+    // Layer 1: known-URL fixture — instant, deterministic, perfect for demos.
     if (url) {
       for (const fx of URL_FIXTURES) {
         if (fx.pattern.test(url)) {
@@ -348,22 +273,21 @@ ${text || "(none)"}
       }
     }
 
-    // 2) Claude API — if configured, give it the URL + text and trust the JSON.
-    if (hasApiKey() && (url || (text && text.trim().length > 10))) {
-      try {
-        return await extractWithClaude(url || "", text || "", getApiKey());
-      } catch (e) {
-        console.warn("Claude extraction failed, falling back to local:", e);
-        // Fall through to local extractor.
-      }
+    // Layer 2: Claude (Anthropic) — only when an API key is configured.
+    // Output is already vocabulary-clamped by integrations/anthropic.js.
+    if (window.NMAnthropic && window.NMAnthropic.isConfigured() &&
+        (url || (text && text.trim().length > 10))) {
+      const fromClaude = await window.NMAnthropic.extractProfile({ url, text });
+      if (fromClaude) return fromClaude;
+      // null → fell through (network / parse error) → drop to local heuristics.
     }
 
-    // 3) Local AI inference — keyword + regex extraction.
+    // Layer 3: local heuristic inference — keyword + regex over pasted text.
     await new Promise((r) => setTimeout(r, 850 + Math.random() * 350));
     const fromText = inferFromText(text);
     if (fromText) return fromText;
 
-    // 4) Last-resort: pull the school/role from URL alone.
+    // Layer 4: last-resort school/role inference from the URL alone.
     if (url) {
       const u = lc(url);
       const out = {
@@ -371,15 +295,22 @@ ${text || "(none)"}
         skills: [], domains: [], stage_pref: [], availability: "",
         risk_tolerance: 3, mission: "", _source: "URL",
       };
-      if (u.includes("byu.edu")) { out.school = "BYU"; out.role_type = "advisor"; }
-      else if (u.includes("utah.edu")) { out.school = "University of Utah"; out.role_type = "advisor"; }
-      else if (u.includes("usu.edu")) { out.school = "Utah State University"; out.role_type = "advisor"; }
+      if      (u.includes("byu.edu"))      { out.school = "BYU";                    out.role_type = "advisor";  }
+      else if (u.includes("utah.edu"))     { out.school = "University of Utah";     out.role_type = "advisor";  }
+      else if (u.includes("usu.edu"))      { out.school = "Utah State University";  out.role_type = "advisor";  }
       else if (u.includes("linkedin.com")) { out.role_type = "operator"; }
       return out;
     }
 
     return { _source: "empty", name: "", headline: "" };
   }
+
+  // Back-compat shims for any existing caller wired before the Claude
+  // transport moved into integrations/anthropic.js. New code should call
+  // window.NMAnthropic directly.
+  function getApiKey()  { return window.NMAnthropic ? window.NMAnthropic.getApiKey()  : ""; }
+  function setApiKey(k) { if (window.NMAnthropic) window.NMAnthropic.setApiKey(k); }
+  function hasApiKey()  { return window.NMAnthropic ? window.NMAnthropic.isConfigured() : false; }
 
   function setVal(form, name, value) {
     if (!value && value !== 0) return false;

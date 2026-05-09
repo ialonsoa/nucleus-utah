@@ -64,8 +64,11 @@
           <span class="search-icon">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 11l3 3M7 12.5A5.5 5.5 0 1 1 7 1.5a5.5 5.5 0 0 1 0 11Z"/></svg>
           </span>
-          <input class="search-input" id="eco-search" placeholder="Find a cofounder, operator, advisor…" />
+          <input class="search-input" id="eco-search" placeholder="Find a cofounder, operator, advisor…" autocomplete="off" />
           <span class="search-kbd">⌘K</span>
+
+          <!-- Live search dropdown — populated by searchQuery() in the script below. -->
+          <div class="search-dropdown" id="search-dropdown" hidden></div>
         </div>
 
         <div class="search-suggestions" id="eco-suggestions">
@@ -75,6 +78,52 @@
           <span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">Advisor · regulatory</span>
         </div>
       </div>
+
+      <div class="spacer-md"></div>
+
+      <!-- ============================================================ -->
+      <!-- Build your network                                            -->
+      <!-- ============================================================ -->
+      <section class="network-builder" id="build-network">
+        <div class="network-builder-head">
+          <div>
+            <div class="eyebrow eyebrow-blue">Build your network</div>
+            <h3>Pull in the people you already know.</h3>
+            <p class="muted" style="font-size:13px; margin-top:4px;">Better matches start with a real network. Import or add a few contacts and we'll surface 2nd-degree paths to founders.</p>
+          </div>
+          <div class="stat-row">
+            <span><span class="num" id="contact-count">0</span> contacts</span>
+            <span><span class="num" id="suggestion-count">0</span> suggestions</span>
+          </div>
+        </div>
+
+        <div class="import-grid" style="grid-template-columns:repeat(2,1fr);">
+          <button class="import-btn import-btn-google" id="import-google" type="button">
+            <span class="ico">
+              <svg viewBox="0 0 18 18" width="18" height="18" aria-hidden="true">
+                <path fill="#4285F4" d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.614z"/>
+                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+              </svg>
+            </span>
+            <span>
+              <span class="label">Import from Google</span>
+              <span class="sub">Gmail contacts · OAuth</span>
+            </span>
+          </button>
+          <button class="import-btn import-btn-linkedin" id="import-linkedin" type="button">
+            <span class="ico">in</span>
+            <span>
+              <span class="label">Import from LinkedIn</span>
+              <span class="sub">Connections · CSV upload</span>
+            </span>
+          </button>
+        </div>
+        <p class="help" style="margin-top:12px;">
+          Looking for a single person? Use the search above — you can add anyone from our 49-profile Utah talent database (BYU faculty, ex-operators, students) or create a new contact if they're not in there.
+        </p>
+      </section>
 
       <div class="spacer-md"></div>
 
@@ -122,13 +171,24 @@
 
       <!-- People results -->
       <div id="results-people">
+        <!-- Your contacts (rendered only if any exist) -->
+        <div id="contacts-section" hidden>
+          <div class="group-head">
+            <div class="group-title"><h3>Your contacts</h3><span class="group-count" id="contacts-count-label">0 added</span></div>
+            <button class="btn btn-quiet btn-sm" id="contacts-clear" type="button">Clear all</button>
+          </div>
+          <div class="contacts-list" id="contacts-list"></div>
+          <div class="spacer-md"></div>
+        </div>
+
         <div class="group-head">
           <div class="group-title"><h3>Best matches</h3><span class="group-count">3 people · this week</span></div>
           <button class="btn btn-quiet btn-sm">View all <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M8 4l4 4-4 4"/></svg></button>
         </div>
         <div class="results-grid" id="people-best"></div>
+
         <div class="group-head">
-          <div class="group-title"><h3>Worth knowing</h3><span class="group-count">2nd &amp; 3rd degree</span></div>
+          <div class="group-title"><h3>People you might know</h3><span class="group-count" id="suggestions-count-label">based on your school + sectors</span></div>
         </div>
         <div class="results-grid" id="people-worth"></div>
       </div>
@@ -218,34 +278,98 @@
   ];
   const EDGES=[['carlos','byu'],['carlos','jamie'],['jamie','lucid'],['marcus','lucid'],['marcus','kiln'],['sarah','kiln'],['sarah','recursion'],['sarah','priya'],['sarah','amelia'],['priya','patel'],['priya','ridgeline'],['amelia','patel'],['amelia','ridgeline'],['ridgeline','patel'],['ridgeline','ihub'],['patel','uofu'],['ihub','uofu']];
   const PATH=['carlos','jamie','lucid','marcus','sarah','priya','ridgeline'];
-  const nodeMap=Object.fromEntries(NODES.map(n=>[n.id,n]));
   let hoveredNode=null;
   function colorFor(k){return k==='person'?'#1E47E6':k==='company'?'#0F8B5C':k==='lab'?'#9333EA':'#B8730E';}
 
+  // ====================================================================
+  // Contact-driven nodes/edges — added live when the user builds their
+  // network. Sits in a separate array so the demo fixtures stay untouched.
+  // ====================================================================
+  let CONTACT_NODES = [];
+  let CONTACT_EDGES = [];
+
+  // Pick a deterministic position for contact #idx in an arc *above* YOU,
+  // spreading into a second ring after 5 contacts. Avoids the dense
+  // bottom-right cluster of demo fixtures.
+  function placeContactPosition(idx) {
+    const cx = 140, cy = 240;            // 'YOU' coords
+    const slotsPerRing = 5;
+    const ring = Math.floor(idx / slotsPerRing);
+    const slot = idx % slotsPerRing;
+    // Upper arc: -150° (upper-left) → -30° (upper-right). Each new ring rotates 18°.
+    const baseAngles = [-150, -120, -90, -60, -30];
+    const angleDeg = baseAngles[slot] + ring * 18;
+    const angle = angleDeg * Math.PI / 180;
+    const radius = 95 + ring * 50;
+    return { x: cx + Math.cos(angle) * radius, y: cy + Math.sin(angle) * radius };
+  }
+
+  // Talent ids start with "t-", startup ids with "s-", manual entries with "manual-".
+  function kindForContactId(id) {
+    const s = String(id || '');
+    if (s.startsWith('s-')) return 'company';
+    return 'person';
+  }
+
+  // Rebuild CONTACT_NODES + CONTACT_EDGES from the localStorage contacts list,
+  // then redraw. Called from refreshNetworkSections so every add/remove
+  // immediately reflects in the diagram.
+  function syncContactsToBrain() {
+    const contacts = (typeof loadContacts === 'function') ? loadContacts() : [];
+    CONTACT_NODES = contacts.map((c, i) => {
+      const pos = placeContactPosition(i);
+      return {
+        id: 'contact-' + c.id,
+        x: pos.x, y: pos.y, r: 13,
+        kind: kindForContactId(c.id),
+        label: c.name || 'Contact',
+        isContact: true,
+      };
+    });
+    CONTACT_EDGES = contacts.map((c) => ['carlos', 'contact-' + c.id, true]); // 3rd arg = isContact edge
+    renderBrain();
+  }
+
   function renderBrain(){
+    // Merge fixture nodes/edges with live contact-driven additions.
+    const allNodes = [...NODES, ...CONTACT_NODES];
+    const allEdges = [...EDGES, ...CONTACT_EDGES];
+    const localMap = Object.fromEntries(allNodes.map((n) => [n.id, n]));
+
     const el=document.getElementById('edges-layer');
     const nl=document.getElementById('nodes-layer');
     el.innerHTML=''; nl.innerHTML='';
-    EDGES.forEach(([a,b])=>{
-      const A=nodeMap[a],B=nodeMap[b]; if(!A||!B)return;
+    allEdges.forEach((edge)=>{
+      const a = edge[0], b = edge[1], isContactEdge = edge[2] === true;
+      const A=localMap[a],B=localMap[b]; if(!A||!B)return;
       const onPath=PATH.includes(a)&&PATH.includes(b)&&Math.abs(PATH.indexOf(a)-PATH.indexOf(b))===1;
       const active=hoveredNode&&(hoveredNode===a||hoveredNode===b);
       const line=document.createElementNS('http://www.w3.org/2000/svg','line');
       line.setAttribute('x1',A.x);line.setAttribute('y1',A.y);line.setAttribute('x2',B.x);line.setAttribute('y2',B.y);
-      line.setAttribute('class','edge'+(onPath||active?' edge-active':''));
+      // Contact edges get a dashed style so users can see what they personally added.
+      let cls = 'edge' + (onPath||active?' edge-active':'');
+      if (isContactEdge) {
+        cls += ' edge-contact';
+        line.setAttribute('stroke-dasharray','3,3');
+      }
+      line.setAttribute('class', cls);
       el.appendChild(line);
     });
-    NODES.forEach(n=>{
+    allNodes.forEach(n=>{
       const c=colorFor(n.kind);const isYou=n.id==='carlos';const isHov=hoveredNode===n.id;
-      const dim=hoveredNode&&hoveredNode!==n.id&&!EDGES.some(([a,b])=>(a===hoveredNode&&b===n.id)||(b===hoveredNode&&a===n.id));
+      const dim=hoveredNode&&hoveredNode!==n.id&&!allEdges.some((e)=>(e[0]===hoveredNode&&e[1]===n.id)||(e[1]===hoveredNode&&e[0]===n.id));
       const g=document.createElementNS('http://www.w3.org/2000/svg','g');
-      g.setAttribute('class','node');g.style.opacity=dim?'0.25':'1';g.style.transition='opacity 0.2s';
+      g.setAttribute('class','node' + (n.isContact ? ' node-contact' : ''));g.style.opacity=dim?'0.25':'1';g.style.transition='opacity 0.2s';
       const bg=document.createElementNS('http://www.w3.org/2000/svg','circle');
       bg.setAttribute('cx',n.x);bg.setAttribute('cy',n.y);bg.setAttribute('r',n.r+4);bg.setAttribute('fill','white');
       const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
       circle.setAttribute('cx',n.x);circle.setAttribute('cy',n.y);circle.setAttribute('r',n.r);
       circle.setAttribute('fill',isYou?c:'white');circle.setAttribute('stroke',c);
       circle.setAttribute('stroke-width',isYou?'0':(isHov?'2.5':'1.5'));
+      // Tag fresh contact nodes with a subtle dashed ring + tooltip.
+      if (n.isContact) {
+        circle.setAttribute('stroke-dasharray','3,2');
+      }
       const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
       txt.setAttribute('x',n.x);txt.setAttribute('y',n.y+4);txt.setAttribute('text-anchor','middle');
       txt.setAttribute('font-size','11');txt.setAttribute('font-weight','600');
@@ -254,11 +378,54 @@
       const lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
       lbl.setAttribute('x',n.x);lbl.setAttribute('y',n.y+n.r+16);lbl.setAttribute('text-anchor','middle');
       lbl.setAttribute('class','node-label');lbl.textContent=n.label;
+      // Native title for contacts so hovering shows "Added to your network".
+      if (n.isContact) {
+        const title=document.createElementNS('http://www.w3.org/2000/svg','title');
+        title.textContent = `${n.label} — added to your network`;
+        g.appendChild(title);
+      }
       g.appendChild(bg);g.appendChild(circle);g.appendChild(txt);g.appendChild(lbl);
       g.addEventListener('mouseenter',()=>{hoveredNode=n.id;renderBrain();});
       g.addEventListener('mouseleave',()=>{hoveredNode=null;renderBrain();});
       nl.appendChild(g);
     });
+
+    // Live network depth — recomputed on each render so the overlay reflects
+    // the user's actual added contacts.
+    updateNetworkDepth(allNodes, allEdges);
+  }
+
+  // Counts of 1° / 2° / 3° away from "carlos" (YOU). Walks the merged graph
+  // breadth-first, depth-capped at 3.
+  function updateNetworkDepth(allNodes, allEdges) {
+    const overlay = document.querySelector('.brain-overlay');
+    if (!overlay) return;
+    const adj = new Map();
+    allNodes.forEach((n) => adj.set(n.id, new Set()));
+    allEdges.forEach((e) => {
+      const [a, b] = e;
+      if (adj.has(a) && adj.has(b)) {
+        adj.get(a).add(b); adj.get(b).add(a);
+      }
+    });
+    // BFS from 'carlos' tracking depth.
+    const dist = new Map([['carlos', 0]]);
+    const queue = ['carlos'];
+    while (queue.length) {
+      const cur = queue.shift();
+      if (dist.get(cur) >= 3) continue;
+      (adj.get(cur) || new Set()).forEach((n) => {
+        if (!dist.has(n)) { dist.set(n, dist.get(cur) + 1); queue.push(n); }
+      });
+    }
+    let d1 = 0, d2 = 0, d3 = 0;
+    dist.forEach((v) => { if (v === 1) d1++; else if (v === 2) d2++; else if (v === 3) d3++; });
+    const numEls = overlay.querySelectorAll('div[style*="font-family"]');
+    if (numEls.length >= 3) {
+      numEls[0].textContent = String(d1);
+      numEls[1].textContent = String(d2);
+      numEls[2].textContent = String(d3);
+    }
   }
 
   const TAB_SUGGESTIONS={
@@ -274,7 +441,9 @@
     ai:'Describe what you\'re building…',
   };
 
+  var _activeTab = 'people';
   function switchTab(tab){
+    _activeTab = tab;
     document.querySelectorAll('.tab').forEach(t=>{
       t.classList.toggle('tab-active',t.dataset.tab===tab);
       t.classList.toggle('tab-blue',t.dataset.tab===tab);
@@ -294,6 +463,9 @@
       suggestWrap.innerHTML=TAB_SUGGESTIONS[tab].map(s=>
         `<span class="chip chip-outline" style="cursor:pointer;" onclick="setSearch(this)">${s}</span>`
       ).join('');
+      const q = (document.getElementById('eco-search').value || '').trim();
+      if (q) renderSearchDropdown(q);
+      else { const dd = document.getElementById('search-dropdown'); if (dd) { dd.hidden = true; dd.innerHTML = ''; } }
     }
   }
 
@@ -309,7 +481,6 @@
     setTimeout(()=>t.classList.remove('show'),2000);
   }
 
-  // Load API key from storage (or use default demo key)
   const DEMO_KEY='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';
   (function(){
     if(!localStorage.getItem('nm_claude_key'))localStorage.setItem('nm_claude_key',DEMO_KEY);
@@ -333,7 +504,6 @@
     btn.innerHTML='<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="8" r="6" stroke-opacity="0.3"/><path d="M8 2a6 6 0 0 1 6 6"/></svg> Searching Utah\'s ecosystem…';
     resultsEl.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:24px 0;color:var(--ink-4);font-size:14px;"><div id="spin" style="width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin 0.7s linear infinite;"></div>Claude is reading the database…</div>';
 
-    // Inject spin keyframe once
     if(!document.getElementById('spin-style')){
       const s=document.createElement('style');
       s.id='spin-style';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
@@ -353,21 +523,7 @@
         window._nmData=`TALENT (id|name|type|role|domains|skills|school|edge):\n${tStr}\n\nSTARTUPS (id|name|type|sector|stage|needs|mission):\n${sStr}\n\nINSTITUTIONS (id|name|type|subtype|domains|edge):\n${iStr}`;
       }
 
-      const system=`You are Nucleus, Utah's AI matching engine. Given what a user wants to build or achieve, identify the 4-6 most relevant people, labs, startups, or institutions from the Utah database.
-
-Respond ONLY with valid JSON, no markdown, no text outside the JSON:
-{"summary":"one sentence describing what they need","matches":[{"id":"t-105","name":"Steven Charles","type":"talent","headline":"BYU · Neuroscience Center Director · Motor control","reason":"2 sentence explanation of why this is a strong match for their goal"}],"next_step":"One actionable sentence on how to start"}
-
-Rules:
-- type must be: talent, startup, or institution
-- For talent: profile_url = profile.html?id={id}&kind=talent
-- For startups: profile_url = profile.html?id={id}&kind=startup
-- For institutions: profile_url = byu.html (for BYU-related) or ecosystem.html
-- Prioritize specificity — match research areas and skills to the stated goal exactly
-- Include at least one researcher/faculty if relevant
-
-DATABASE:
-${window._nmData}`;
+      const system=`You are Nucleus, Utah\'s AI matching engine. Given what a user wants to build or achieve, identify the 4-6 most relevant people, labs, startups, or institutions from the Utah database.\n\nRespond ONLY with valid JSON, no markdown, no text outside the JSON:\n{"summary":"one sentence describing what they need","matches":[{"id":"t-105","name":"Steven Charles","type":"talent","headline":"BYU · Neuroscience Center Director · Motor control","reason":"2 sentence explanation of why this is a strong match for their goal"}],"next_step":"One actionable sentence on how to start"}\n\nRules:\n- type must be: talent, startup, or institution\n- Prioritize specificity — match research areas and skills to the stated goal exactly\n- Include at least one researcher/faculty if relevant\n\nDATABASE:\n${window._nmData}`;
 
       const resp=await fetch('https://api.anthropic.com/v1/messages',{
         method:'POST',
@@ -391,7 +547,12 @@ ${window._nmData}`;
       }
 
       const data=await resp.json();
-      const text=data.content[0].text;
+      let text=data.content[0].text;
+<<<<<<< Updated upstream
+=======
+      // Strip markdown code fences if present
+>>>>>>> Stashed changes
+      text=text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,'').trim();
       const result=JSON.parse(text);
       renderAIResults(result);
     }catch(e){
@@ -432,8 +593,14 @@ ${window._nmData}`;
       ${result.next_step?`<div style="margin-top:16px;padding:14px 18px;background:var(--bg-mist);border-left:3px solid var(--blue);border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:14px;color:var(--ink-2);"><strong>Next step:</strong> ${result.next_step}</div>`:''}
     `;
   }
+  }
 
-  function setSearch(el){document.getElementById('eco-search').value=el.textContent;}
+  function setSearch(el){
+    const inp = document.getElementById('eco-search');
+    inp.value = el.textContent;
+    renderSearchDropdown(inp.value.trim());
+    inp.focus();
+  }
 
   function resultCard(id,name,subtitle,why,score,href){
     return`<a href="${href||'profile.html?id='+encodeURIComponent(id)}" class="result-card" style="text-decoration:none;">
@@ -450,19 +617,156 @@ ${window._nmData}`;
     </a>`;
   }
 
+  // ====================================================================
+  // Contacts + suggestions
+  // ====================================================================
+  const CONTACTS_KEY = 'nm_contacts';
+
+  function loadContacts() {
+    try { return JSON.parse(localStorage.getItem(CONTACTS_KEY) || '[]'); }
+    catch (_) { return []; }
+  }
+  function saveContacts(list) {
+    localStorage.setItem(CONTACTS_KEY, JSON.stringify(list));
+  }
+  function addContact(c) {
+    const list = loadContacts();
+    if (list.some((x) => x.id === c.id)) return false;
+    list.push({ ...c, addedAt: Date.now() });
+    saveContacts(list);
+    return true;
+  }
+  function removeContact(id) {
+    const list = loadContacts().filter((x) => x.id !== id);
+    saveContacts(list);
+  }
+  function clearContacts() {
+    saveContacts([]);
+  }
+
+  function getViewerProfile(talent) {
+    try {
+      const stored = JSON.parse(localStorage.getItem('nm_talent_profile') || 'null');
+      if (stored) return stored;
+    } catch (_) {}
+    // Fall back to t-001 (Maya) for the demo when nobody has signed up yet.
+    return talent.find((t) => t.id === 't-001') || talent[0] || {};
+  }
+
+  // Score how relevant a candidate is to the viewer.
+  // Returns { score, reason } — reason is the strongest single signal.
+  function rankSuggestion(viewer, c) {
+    let score = 0;
+    let reason = '';
+    if (viewer.school && c.school === viewer.school) {
+      score += 30;
+      reason = `Same school · ${c.school}`;
+    }
+    const vsigs = new Set(viewer.signals || []);
+    const csigs = new Set(c.signals || []);
+    const sharedSig = [...vsigs].filter((s) => csigs.has(s));
+    if (sharedSig.length) {
+      score += sharedSig.length * 18;
+      if (!reason) {
+        // Strip "lineage:"/"mission:" prefix for display; signals.js can label it nicer.
+        const human = sharedSig[0].replace(/^[a-z]+:/, '').replace(/-/g, ' ');
+        reason = `Shared signal · ${human}`;
+      }
+    }
+    const vdom = new Set(viewer.domains || []);
+    const cdom = new Set(c.domains || []);
+    const sharedDom = [...vdom].filter((d) => cdom.has(d));
+    if (sharedDom.length) {
+      score += sharedDom.length * 8;
+      if (!reason) reason = `Both work in ${sharedDom[0].replace(/-/g, ' ')}`;
+    }
+    const vcity = String(viewer.location || '').split(',')[0].trim();
+    const ccity = String(c.location || '').split(',')[0].trim();
+    if (vcity && vcity === ccity) {
+      score += 6;
+      if (!reason) reason = `Both in ${vcity}`;
+    }
+    const vsk = new Set(viewer.skills || []);
+    const csk = new Set(c.skills || []);
+    const sharedSk = [...vsk].filter((s) => csk.has(s));
+    if (sharedSk.length) {
+      score += sharedSk.length * 4;
+      if (!reason) reason = `Shared skill · ${sharedSk[0]}`;
+    }
+    if (!reason) reason = 'Worth knowing in Utah';
+    return { score, reason };
+  }
+
+  function suggestionCard(t, reason) {
+    return `<div class="result-card" data-id="${t.id}" style="cursor:default;">
+      <div class="avatar avatar-lg" style="background:${avatarBg(t.id)};">${initials(t.name)}</div>
+      <div>
+        <div class="result-name">${t.name}</div>
+        <div class="result-meta">${(t.role_type || 'talent')} · ${(t.location || 'Utah')}${t.school ? ' · ' + t.school : ''}</div>
+        <div class="result-meta" style="color:var(--blue-2); margin-top:4px;">${reason}</div>
+      </div>
+      <div class="result-score">
+        <button class="add-suggest-btn" data-add="${t.id}" type="button">+ Add</button>
+      </div>
+    </div>`;
+  }
+
+  function contactRow(c) {
+    return `<div class="contact-row" data-id="${c.id}">
+      <div class="avatar avatar-lg" style="background:${avatarBg(c.id)};">${initials(c.name)}</div>
+      <div class="info">
+        <div class="name">${c.name}</div>
+        <div class="meta">${c.headline || c.role_type || ''}${c.school ? ' · ' + c.school : ''}${c.location ? ' · ' + c.location : ''}</div>
+      </div>
+      <span class="source-pill ${c.source}">${c.source}</span>
+      <button class="contact-remove" data-remove="${c.id}" type="button">Remove</button>
+    </div>`;
+  }
+
+  // ====================================================================
+  // Mock import flows (Google + LinkedIn)
+  // Real OAuth requires a Google Cloud project / LinkedIn Marketing API.
+  // For the demo we add 4–5 known Utah profiles so suggestions update visibly.
+  // ====================================================================
+  const MOCK_GMAIL_IDS    = ['t-001', 't-002', 't-003', 't-201', 't-205'];
+  const MOCK_LINKEDIN_IDS = ['t-100', 't-101', 't-104', 't-202'];
+
+  function importMock(talentIndex, source, ids) {
+    let added = 0;
+    ids.forEach((id) => {
+      const t = talentIndex.get(id);
+      if (!t) return;
+      const ok = addContact({
+        id: t.id, name: t.name, headline: t.headline,
+        role_type: t.role_type, school: t.school, location: t.location,
+        source,
+      });
+      if (ok) added++;
+    });
+    return added;
+  }
+
+  // ====================================================================
+  // Page-level wiring
+  // ====================================================================
+  let TALENT = [];
+  let TALENT_INDEX = new Map();
+
   async function loadResults(){
     const[talent,startups]=await Promise.all([
       fetch('data/talent.json').then(r=>r.json()).catch(()=>[]),
       fetch('data/startups.json').then(r=>r.json()).catch(()=>[]),
     ]);
+    TALENT = talent;
+    TALENT_INDEX = new Map(talent.map((t) => [t.id, t]));
+    window.__STARTUPS = startups;
+
+    // Best matches (top 3, unchanged)
     const best=talent.slice(0,3);
-    const worth=talent.slice(3,5);
     document.getElementById('people-best').innerHTML=best.map((t,i)=>
       resultCard(t.id,t.name,`${t.role_type||'talent'} · ${t.location||'Utah'}`,t.mission||'',94-i*7,`profile.html?id=${t.id}&kind=talent`)
     ).join('');
-    document.getElementById('people-worth').innerHTML=worth.map((t,i)=>
-      resultCard(t.id,t.name,`${t.role_type||'talent'} · ${t.location||'Utah'}`,t.mission||'',76-i*5,`profile.html?id=${t.id}&kind=talent`)
-    ).join('');
+
     document.getElementById('co-count').textContent=`${startups.length} companies`;
     document.getElementById('companies-list').innerHTML=startups.slice(0,5).map((s,i)=>
       resultCard(s.id,s.name,`${s.sector} · ${s.stage} · ${s.location||'Utah'}`,
@@ -472,9 +776,309 @@ ${window._nmData}`;
       {id:'patel-lab',name:'Patel Lab',sub:'U of U · Biomedical Engineering',why:'3 spinouts · protein design · open rotation slot',score:89},
       {id:'mhc-byu',name:'Materials Horizon Center',sub:'BYU · Mechanical Engineering',why:'Advanced manufacturing · industry partnerships',score:68},
     ].map(l=>resultCard(l.id,l.name,l.sub,l.why,l.score,'#')).join('');
+
+    refreshNetworkSections();
   }
 
-  renderBrain();
+  // Re-renders contacts + suggestions + counters whenever the network changes.
+  function refreshNetworkSections() {
+    const contacts = loadContacts();
+    const taken = new Set(contacts.map((c) => c.id));
+    // Also exclude the top-3 "best matches" from suggestions to avoid double display.
+    TALENT.slice(0, 3).forEach((t) => taken.add(t.id));
+
+    // Your contacts
+    const cs = document.getElementById('contacts-section');
+    const cl = document.getElementById('contacts-list');
+    cs.hidden = contacts.length === 0;
+    cl.innerHTML = contacts.map(contactRow).join('');
+    document.getElementById('contacts-count-label').textContent =
+      `${contacts.length} added`;
+
+    // Suggestions
+    const viewer = getViewerProfile(TALENT);
+    const ranked = TALENT
+      .filter((t) => !taken.has(t.id) && t.id !== viewer.id)
+      .map((t) => ({ t, ...rankSuggestion(viewer, t) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+
+    document.getElementById('people-worth').innerHTML =
+      ranked.map(({ t, reason }) => suggestionCard(t, reason)).join('');
+    document.getElementById('suggestions-count-label').textContent =
+      `${ranked.length} based on ${viewer.name ? viewer.name.split(' ')[0] + "'s" : 'your'} school + sectors`;
+
+    // Counters
+    document.getElementById('contact-count').textContent = contacts.length;
+    document.getElementById('suggestion-count').textContent = ranked.length;
+
+    // Reflect contacts as live nodes in the brain visualization.
+    syncContactsToBrain();
+  }
+
+  // ====================================================================
+  // Live search — wired into the existing #eco-search input.
+  // Filters TALENT/STARTUPS by name/headline/school/role_type/location/sector.
+  // Tab-aware: People tab → talent, Companies tab → startups, Labs → mock.
+  // ====================================================================
+  function searchTalent(q) {
+    const lc = q.toLowerCase();
+    return TALENT.filter((t) => {
+      const haystack = [
+        t.name, t.headline, t.role_type, t.school,
+        t.location, t.research_area, t.office,
+        ...(t.skills || []), ...(t.domains || []), ...(t.signals || []),
+      ].filter(Boolean).join(' ').toLowerCase();
+      // Word-boundary-ish: any token of query must appear somewhere.
+      return lc.split(/\s+/).filter(Boolean).every((tok) => haystack.includes(tok));
+    });
+  }
+  function searchStartups(q) {
+    // Reads the closure'd variable that loadResults captured when results loaded.
+    if (!Array.isArray(window.__STARTUPS)) return [];
+    const lc = q.toLowerCase();
+    return window.__STARTUPS.filter((s) => {
+      const haystack = [
+        s.name, s.mission, s.sector, s.stage, s.location, s.origin,
+        ...(s.needs || []), ...(s.signals || []),
+      ].filter(Boolean).join(' ').toLowerCase();
+      return lc.split(/\s+/).filter(Boolean).every((tok) => haystack.includes(tok));
+    });
+  }
+
+  function searchResultRow(t, alreadyAdded) {
+    const meta = [
+      t.role_type, t.school, t.location || (t.sector ? `${t.sector} · ${t.stage || ''}` : ''),
+    ].filter(Boolean).join(' · ');
+    const btn = alreadyAdded
+      ? '<button class="add-mini added" disabled type="button">✓ Added</button>'
+      : `<button class="add-mini" type="button" data-search-add="${t.id}">+ Add</button>`;
+    return `<div class="search-result" data-id="${t.id}">
+      <div class="avatar avatar-sm" style="background:${avatarBg(t.id)};">${initials(t.name)}</div>
+      <div>
+        <div class="name">${t.name}</div>
+        <div class="meta">${meta}</div>
+      </div>
+      ${btn}
+    </div>`;
+  }
+
+  function currentTab() { return _activeTab; }
+
+  function renderSearchDropdown(q) {
+    const dd = document.getElementById('search-dropdown');
+    if (!q) { dd.hidden = true; dd.innerHTML = ''; return; }
+    const tab = currentTab();
+    const taken = new Set(loadContacts().map((c) => c.id));
+    let rows = [];
+    let canAddNew = false;
+    if (tab === 'people') {
+      const matches = searchTalent(q).slice(0, 6);
+      rows = matches.map((t) => searchResultRow(t, taken.has(t.id)));
+      canAddNew = true;
+    } else if (tab === 'companies') {
+      const matches = searchStartups(q).slice(0, 6);
+      rows = matches.map((t) => searchResultRow(t, taken.has(t.id)));
+    } else {
+      rows = [];
+    }
+
+    dd.hidden = false;
+    if (rows.length === 0 && !canAddNew) {
+      dd.innerHTML = `<div class="search-empty">No matches for "<strong>${escapeHtml(q)}</strong>" in ${tab}.</div>`;
+      return;
+    }
+    let html = rows.join('');
+    if (canAddNew) {
+      html += `
+        <div class="search-newperson" id="search-newperson-cta">
+          <span>${rows.length ? "Don't see them?" : `No matches for "<strong>${escapeHtml(q)}</strong>".`}</span>
+          <span class="add-link" data-add-new="${escapeHtml(q)}">+ Add "${escapeHtml(q)}" as a new contact →</span>
+        </div>`;
+    }
+    dd.innerHTML = html;
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function showAddNewForm(prefillName) {
+    const dd = document.getElementById('search-dropdown');
+    dd.hidden = false;
+    dd.innerHTML = `
+      <div class="search-newperson-form">
+        <div class="field field-full">
+          <label for="np-name">Full name</label>
+          <input type="text" id="np-name" value="${escapeHtml(prefillName || '')}" />
+        </div>
+        <div class="field field-full">
+          <label for="np-role">Role / headline</label>
+          <input type="text" id="np-role" placeholder="VP Engineering · ex-Vivint" />
+        </div>
+        <div class="field">
+          <label for="np-school">School (optional)</label>
+          <select id="np-school">
+            <option value="">—</option>
+            <option>BYU</option>
+            <option>University of Utah</option>
+            <option>Utah State University</option>
+            <option>Utah Valley University</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="np-loc">Location (optional)</label>
+          <input type="text" id="np-loc" placeholder="Lehi" />
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary btn-sm" type="button" id="np-save">Add to network</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="np-cancel">Cancel</button>
+        </div>
+      </div>`;
+    document.getElementById('np-name').focus();
+  }
+
+  // ---- Page-level wiring ----
+  document.addEventListener('DOMContentLoaded', () => {
+    const gBtn   = document.getElementById('import-google');
+    const lBtn   = document.getElementById('import-linkedin');
+    const search = document.getElementById('eco-search');
+    const dd     = document.getElementById('search-dropdown');
+
+    // Local toast — ecosystem.html doesn't load app.js, so we ship our own
+    // mini implementation here. Falls through to NM.toast if it ever gets loaded.
+    let _toastTimer = null;
+    function toast(msg) {
+      if (window.NM && window.NM.toast) { window.NM.toast(msg); return; }
+      const el = document.getElementById('toast');
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    gBtn.addEventListener('click', () => {
+      gBtn.disabled = true;
+      gBtn.querySelector('.label').textContent = 'Connecting to Google…';
+      setTimeout(() => {
+        const added = importMock(TALENT_INDEX, 'gmail', MOCK_GMAIL_IDS);
+        gBtn.disabled = false;
+        gBtn.querySelector('.label').textContent = 'Import from Google';
+        toast(added ? `✓ Imported ${added} contacts from Google (demo)` : 'Already imported · nothing new');
+        refreshNetworkSections();
+      }, 800);
+    });
+
+    lBtn.addEventListener('click', () => {
+      lBtn.disabled = true;
+      lBtn.querySelector('.label').textContent = 'Reading LinkedIn export…';
+      setTimeout(() => {
+        const added = importMock(TALENT_INDEX, 'linkedin', MOCK_LINKEDIN_IDS);
+        lBtn.disabled = false;
+        lBtn.querySelector('.label').textContent = 'Import from LinkedIn';
+        toast(added ? `✓ Imported ${added} contacts from LinkedIn (demo)` : 'Already imported · nothing new');
+        refreshNetworkSections();
+      }, 800);
+    });
+
+    // Search input → dropdown
+    search.addEventListener('input', (e) => renderSearchDropdown(e.target.value.trim()));
+    search.addEventListener('focus', (e) => {
+      if (e.target.value.trim()) renderSearchDropdown(e.target.value.trim());
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-input-wrap')) {
+        dd.hidden = true;
+      }
+    });
+
+    // Delegated handlers — search dropdown buttons + result rows + suggestion + Add + Remove
+    document.body.addEventListener('click', (e) => {
+      // Add a known profile (from search dropdown)
+      const sAdd = e.target.closest('[data-search-add]');
+      if (sAdd) {
+        e.stopPropagation();
+        const id = sAdd.dataset.searchAdd;
+        const t = TALENT_INDEX.get(id) || (window.__STARTUPS || []).find((s) => s.id === id);
+        if (!t) return;
+        addContact({
+          id: t.id, name: t.name, headline: t.headline || t.mission,
+          role_type: t.role_type, school: t.school,
+          location: t.location, source: 'search',
+        });
+        toast(`✓ ${t.name} added to your network`);
+        sAdd.classList.add('added'); sAdd.textContent = '✓ Added'; sAdd.disabled = true;
+        refreshNetworkSections();
+        return;
+      }
+      // Add a new person not in the database
+      const newCta = e.target.closest('[data-add-new]');
+      if (newCta) {
+        e.stopPropagation();
+        showAddNewForm(newCta.dataset.addNew);
+        return;
+      }
+      if (e.target.id === 'np-save') {
+        e.stopPropagation();
+        const name = (document.getElementById('np-name').value || '').trim();
+        const role = (document.getElementById('np-role').value || '').trim();
+        const school = document.getElementById('np-school').value;
+        const loc  = (document.getElementById('np-loc').value || '').trim();
+        if (!name) { toast('Name is required.'); return; }
+        const id = 'manual-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Date.now().toString(36);
+        addContact({ id, name, headline: role, school, location: loc, source: 'manual' });
+        toast(`✓ ${name} added to your network`);
+        document.getElementById('search-dropdown').hidden = true;
+        document.getElementById('eco-search').value = '';
+        refreshNetworkSections();
+        return;
+      }
+      if (e.target.id === 'np-cancel') {
+        e.stopPropagation();
+        document.getElementById('search-dropdown').hidden = true;
+        return;
+      }
+      // Click outside fields inside dropdown shouldn't close it
+      if (e.target.closest('#search-dropdown')) return;
+
+      // Suggestion + Add buttons (rendered into people-worth)
+      const addBtn = e.target.closest('[data-add]');
+      if (addBtn) {
+        const id = addBtn.dataset.add;
+        const t = TALENT_INDEX.get(id);
+        if (t) {
+          addContact({
+            id: t.id, name: t.name, headline: t.headline,
+            role_type: t.role_type, school: t.school, location: t.location,
+            source: 'suggestion',
+          });
+          toast(`✓ ${t.name} added to your network`);
+          refreshNetworkSections();
+        }
+        return;
+      }
+      // Contact remove
+      const remBtn = e.target.closest('[data-remove]');
+      if (remBtn) {
+        removeContact(remBtn.dataset.remove);
+        refreshNetworkSections();
+        return;
+      }
+      if (e.target.id === 'contacts-clear') {
+        if (confirm('Remove all contacts from your network?')) {
+          clearContacts();
+          refreshNetworkSections();
+        }
+      }
+    });
+  });
+
+  // Initial paint: brain fixtures + any contacts the user already saved
+  // from a previous session, then async load talent/startup data.
+  syncContactsToBrain();
   loadResults();
   </script>
 </body>

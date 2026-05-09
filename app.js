@@ -73,6 +73,18 @@
     });
   };
 
+  // Inferred when the talent UI doesn't ask for it (we hide stage_pref because it
+  // confuses non-VC users). Matcher still uses the field, so we keep it populated.
+  const STAGE_BY_ROLE = {
+    executive: ["pre-seed", "seed", "series-a"],
+    operator:  ["seed", "series-a", "growth"],
+    student:   ["idea", "pre-seed"],
+    intern:    ["idea", "pre-seed"],
+    advisor:   ["idea", "pre-seed", "seed"],
+    mentor:    ["pre-seed", "seed"],
+    board:     ["seed", "series-a"],
+  };
+
   function collect(form, kind) {
     const fd = new FormData(form);
     const obj = {};
@@ -83,6 +95,14 @@
     obj.id = (kind === "talent" ? "t-" : "s-") + Date.now().toString(36);
     if (obj.risk_tolerance) obj.risk_tolerance = Number(obj.risk_tolerance);
     if (obj.trl) obj.trl = Number(obj.trl);
+    // Auto-infer stage_pref from role_type for talent (UI no longer asks).
+    if (kind === "talent" && (!obj.stage_pref || obj.stage_pref.length === 0)) {
+      obj.stage_pref = STAGE_BY_ROLE[obj.role_type] || ["seed"];
+    }
+    // Strip secrets we collect for sign-up but should never go into the matcher.
+    if (kind === "talent") {
+      delete obj.password;
+    }
     return obj;
   }
 
@@ -98,16 +118,28 @@
     const title = document.getElementById("match-title");
     const sub = document.getElementById("match-subtitle");
 
-    const [talent, startups, events] = await Promise.all([
+    // Wire export-csv up front so it never silently no-ops on early returns.
+    // We rebind with the real payload once scoring succeeds.
+    const exportBtn = document.getElementById("export-csv");
+    let exportHandler = () => NM.toast("No matches to export yet — load a profile first.");
+    if (exportBtn) {
+      exportBtn.addEventListener("click", (e) => exportHandler(e));
+    }
+
+    const [talent, startups, events, institutions] = await Promise.all([
       fetch("data/talent.json").then((r) => r.json()).catch(() => []),
       fetch("data/startups.json").then((r) => r.json()).catch(() => []),
       fetch("data/handshake-events.json").then((r) => r.json()).catch(() => []),
+      fetch("data/institutions.json").then((r) => r.json()).catch(() => []),
     ]);
     if (window.NMMatch && window.NMMatch.setHandshakeEvents) {
       window.NMMatch.setHandshakeEvents(events);
     }
     if (window.NMMatch && window.NMMatch.setAllProfiles) {
       window.NMMatch.setAllProfiles([...talent, ...startups]);
+    }
+    if (window.NMMatch && window.NMMatch.setInstitutions) {
+      window.NMMatch.setInstitutions(institutions);
     }
 
     let me;
@@ -157,9 +189,7 @@
       root.appendChild(renderCard(me, other, score, breakdown, top_reasons, as, demand, bond));
     });
 
-    document.getElementById("export-csv").addEventListener("click", () => {
-      window.NMAffinity.exportCSV(me, scored, as);
-    });
+    exportHandler = () => window.NMAffinity.exportCSV(me, scored, as);
   };
 
   /* ------------------------------------------------------------------ */
@@ -167,16 +197,20 @@
   /* ------------------------------------------------------------------ */
   NM.renderDemoScenarios = async function () {
     const root = document.getElementById("demo-results");
-    const [talent, startups, events] = await Promise.all([
+    const [talent, startups, events, institutions] = await Promise.all([
       fetch("data/talent.json").then((r) => r.json()).catch(() => []),
       fetch("data/startups.json").then((r) => r.json()).catch(() => []),
       fetch("data/handshake-events.json").then((r) => r.json()).catch(() => []),
+      fetch("data/institutions.json").then((r) => r.json()).catch(() => []),
     ]);
     if (window.NMMatch && window.NMMatch.setHandshakeEvents) {
       window.NMMatch.setHandshakeEvents(events);
     }
     if (window.NMMatch && window.NMMatch.setAllProfiles) {
       window.NMMatch.setAllProfiles([...talent, ...startups]);
+    }
+    if (window.NMMatch && window.NMMatch.setInstitutions) {
+      window.NMMatch.setInstitutions(institutions);
     }
     const scenarios = [
       { label: "Executive → Deep-tech startup", talentId: "t-001", startupId: "s-001" },
